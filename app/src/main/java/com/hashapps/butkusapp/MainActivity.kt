@@ -1,12 +1,26 @@
 package com.hashapps.butkusapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            ButkusAppTheme {
+                ButkusApp()
+            }
+        }
+    }
+}
+
+@Composable
+fun ButkusApp() { }
+
+/*class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,4 +38,4 @@ class MainActivity : AppCompatActivity() {
             println(text)
         }
     }
-}
+}*/
