@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
+/*@Composable
 fun ButkusApp(modifier: Modifier = Modifier) {
     // TODO: This is bad and forces the UI to wait to load! For testing only!
     val context = LocalContext.current
@@ -52,4 +52,4 @@ fun ButkusApp(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.body1,
         )
     }
-}
+}*/

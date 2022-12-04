@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +25,7 @@ fun ButkusAppBar(
     currentScreen: ButkusScreen,
     canSwitchScreen: Boolean,
     switchScreen: () -> Unit,
+    share: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -37,6 +39,14 @@ fun ButkusAppBar(
                         contentDescription = stringResource(R.string.switch_button),
                     )
                 }
+            }
+        },
+        actions = {
+            IconButton(onClick = share) {
+                Icon(
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = stringResource(R.string.share_button),
+                )
             }
         }
     )
@@ -60,7 +70,8 @@ fun ButkusApp(
             ButkusAppBar(
                 currentScreen = currentScreen,
                 canSwitchScreen = true,
-                switchScreen = { /* TODO: Implement switch-screen button */ }
+                switchScreen = { /* TODO: Implement switch-screen button */ },
+                share = { /* TODO: Implement share button */ },
             )
         }
     ) { innerPadding ->
