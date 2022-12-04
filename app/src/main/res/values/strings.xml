@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ButkusApp</string>
     <string name="test_message">Butkus: Your friendly little censorship circumventor!</string>
+    <string name="encode">Encode</string>
+    <string name="decode">Decode</string>
+    <string name="switch_button">Switch screens.</string>
 </resources>
