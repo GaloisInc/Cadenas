@@ -9,15 +9,17 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.ui.ButkusViewModel
+import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 enum class ButkusScreen(@StringRes val title: Int) {
-    Encode(title = R.string.encode),
-    Decode(title = R.string.decode),
+    Encode(title = R.string.encode_title),
+    Decode(title = R.string.decode_title),
 }
 
 @Composable
@@ -30,6 +32,7 @@ fun ButkusAppBar(
 ) {
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
+        backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier,
         navigationIcon = {
             if (canSwitchScreen) {
@@ -90,5 +93,21 @@ fun ButkusApp(
                 // TODO: Composable for the decode screen
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ButkusAppPreview() {
+    ButkusAppTheme {
+        ButkusApp()
+    }
+}
+
+@Preview
+@Composable
+fun ButkusAppDarkPreview() {
+    ButkusAppTheme(darkTheme = true) {
+        ButkusApp()
     }
 }
