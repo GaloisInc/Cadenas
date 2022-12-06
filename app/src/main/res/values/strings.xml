@@ -1,8 +1,15 @@
 <resources>
-    <string name="app_name">ButkusApp</string>
+    <string name="app_name">Butkus</string>
     <string name="test_message">Butkus: Your friendly little censorship circumventor!</string>
-    <string name="encode_title">Butkus - Encode</string>
-    <string name="decode_title">Butkus - Decode</string>
     <string name="switch_button">Switch screens.</string>
     <string name="share_button">Share to other apps.</string>
+    <string name="plaintext_message_label">Plaintext Message</string>
+    <string name="plaintext_message_placeholder">Enter your message</string>
+    <string name="encode">Encode</string>
+    <string name="decode">Decode</string>
+    <string name="encode_output_label">Encoded text</string>
+    <string name="add_tag">Add Tag</string>
+    <string name="tag_placeholder">(Optional) Enter a tag</string>
+    <string name="delete">Delete</string>
+    <string name="encoded_message_length">Encoded message length: %1$d characters</string>
 </resources>

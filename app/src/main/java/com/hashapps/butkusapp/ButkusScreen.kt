@@ -15,18 +15,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.ui.ButkusViewModel
+import com.hashapps.butkusapp.ui.EncodeScreen
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 enum class ButkusScreen(@StringRes val title: Int) {
-    Encode(title = R.string.encode_title),
-    Decode(title = R.string.decode_title),
+    Encode(title = R.string.encode),
+    Decode(title = R.string.decode),
 }
 
 @Composable
 fun ButkusAppBar(
     currentScreen: ButkusScreen,
     canSwitchScreen: Boolean,
-    switchScreen: () -> Unit,
+    onSwitchScreen: () -> Unit,
     share: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -36,7 +37,7 @@ fun ButkusAppBar(
         modifier = modifier,
         navigationIcon = {
             if (canSwitchScreen) {
-                IconButton(onClick = switchScreen) {
+                IconButton(onClick = onSwitchScreen) {
                     Icon(
                         imageVector = Icons.Filled.Refresh,
                         contentDescription = stringResource(R.string.switch_button),
@@ -45,11 +46,13 @@ fun ButkusAppBar(
             }
         },
         actions = {
-            IconButton(onClick = share) {
-                Icon(
-                    imageVector = Icons.Filled.Share,
-                    contentDescription = stringResource(R.string.share_button),
-                )
+            if (currentScreen.name == ButkusScreen.Encode.name) {
+                IconButton(onClick = share) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = stringResource(R.string.share_button),
+                    )
+                }
             }
         }
     )
@@ -60,7 +63,7 @@ fun ButkusApp(
     modifier: Modifier = Modifier,
     viewModel: ButkusViewModel = ButkusViewModel(),
 ) {
-    val navController = rememberNavController();
+    val navController = rememberNavController()
 
     val backStackEntry by navController.currentBackStackEntryAsState()
 
@@ -73,12 +76,12 @@ fun ButkusApp(
             ButkusAppBar(
                 currentScreen = currentScreen,
                 canSwitchScreen = true,
-                switchScreen = { /* TODO: Implement switch-screen button */ },
+                onSwitchScreen = { /* TODO: Implement switch-screen button */ },
                 share = { /* TODO: Implement share button */ },
             )
         }
     ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
+        val encodeUiState by viewModel.encodeUiState.collectAsState()
 
         NavHost(
             navController = navController,
@@ -86,7 +89,25 @@ fun ButkusApp(
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
-                // TODO: Composable for the encode screen
+                EncodeScreen(
+                    encodeUiState = encodeUiState,
+                    onMessageChanged = {
+                        viewModel.updatePlaintextMessage(it)
+                    },
+                    onTagToAddChanged = {
+                        viewModel.updateTagToAdd(it)
+                    },
+                    onAddTag = {
+                        if (encodeUiState.tagToAdd != "") {
+                            viewModel.addTag(encodeUiState.tagToAdd)
+                            viewModel.updateTagToAdd("")
+                        }
+                    },
+                    onDeleteTag = {
+                        { viewModel.removeTag(it) }
+                    },
+                    onEncode = { viewModel.encodeMessage() },
+                )
             }
 
             composable(route = ButkusScreen.Decode.name) {
