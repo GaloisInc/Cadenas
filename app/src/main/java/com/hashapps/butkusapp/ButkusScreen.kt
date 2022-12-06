@@ -27,7 +27,6 @@ enum class ButkusScreen(@StringRes val title: Int) {
 @Composable
 fun ButkusAppBar(
     currentScreen: ButkusScreen,
-    canSwitchScreen: Boolean,
     onSwitchScreen: () -> Unit,
     share: () -> Unit,
     modifier: Modifier = Modifier,
@@ -37,13 +36,11 @@ fun ButkusAppBar(
         backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier,
         navigationIcon = {
-            if (canSwitchScreen) {
-                IconButton(onClick = onSwitchScreen) {
-                    Icon(
-                        imageVector = Icons.Filled.Refresh,
-                        contentDescription = stringResource(R.string.switch_button),
-                    )
-                }
+            IconButton(onClick = onSwitchScreen) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = stringResource(R.string.switch_button),
+                )
             }
         },
         actions = {
@@ -74,7 +71,6 @@ fun ButkusApp(
         topBar = {
             ButkusAppBar(
                 currentScreen = currentScreen,
-                canSwitchScreen = true,
                 onSwitchScreen = { /* TODO: Implement switch-screen button */ },
                 share = { /* TODO: Implement share button */ },
             )
