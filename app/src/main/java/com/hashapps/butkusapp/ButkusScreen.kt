@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.ui.ButkusViewModel
+import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
@@ -46,13 +47,11 @@ fun ButkusAppBar(
             }
         },
         actions = {
-            if (currentScreen.name == ButkusScreen.Encode.name) {
-                IconButton(onClick = share) {
-                    Icon(
-                        imageVector = Icons.Filled.Share,
-                        contentDescription = stringResource(R.string.share_button),
-                    )
-                }
+            IconButton(onClick = share) {
+                Icon(
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = stringResource(R.string.share_button),
+                )
             }
         }
     )
@@ -82,10 +81,11 @@ fun ButkusApp(
         }
     ) { innerPadding ->
         val encodeUiState by viewModel.encodeUiState.collectAsState()
+        val decodeUiState by viewModel.decodeUiState.collectAsState()
 
         NavHost(
             navController = navController,
-            startDestination = ButkusScreen.Encode.name,
+            startDestination = ButkusScreen.Decode.name,
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
@@ -111,7 +111,13 @@ fun ButkusApp(
             }
 
             composable(route = ButkusScreen.Decode.name) {
-                // TODO: Composable for the decode screen
+                DecodeScreen(
+                    decodeUiState = decodeUiState,
+                    onMessageChanged = {
+                        viewModel.updateEncodedMessage(it)
+                    },
+                    onDecode = { viewModel.decodeMessage() },
+                )
             }
         }
     }
