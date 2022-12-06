@@ -12,4 +12,7 @@
     <string name="tag_placeholder">(Optional) Enter a tag</string>
     <string name="delete">Delete</string>
     <string name="encoded_message_length">Encoded message length: %1$d characters</string>
+    <string name="encoded_message_label">Encoded Message</string>
+    <string name="encoded_message_placeholder">Enter your encoded message</string>
+    <string name="decode_output_label">Decoded text</string>
 </resources>
