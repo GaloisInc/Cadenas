@@ -1,5 +1,7 @@
 package com.hashapps.butkusapp
 
+import android.content.Context
+import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -8,6 +10,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
@@ -67,6 +70,11 @@ fun ButkusApp(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
 
+    val encodeUiState by viewModel.encodeUiState.collectAsState()
+    val decodeUiState by viewModel.decodeUiState.collectAsState()
+
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             ButkusAppBar(
@@ -77,13 +85,15 @@ fun ButkusApp(
                          ButkusScreen.Decode -> navController.navigate(ButkusScreen.Encode.name)
                      }
                 },
-                share = { /* TODO: Implement share button */ },
+                share = {
+                    when (currentScreen) {
+                        ButkusScreen.Encode -> shareMessage(context, encodeUiState.encodedMessage)
+                        ButkusScreen.Decode -> shareMessage(context, decodeUiState.decodedMessage)
+                    }
+                },
             )
         }
     ) { innerPadding ->
-        val encodeUiState by viewModel.encodeUiState.collectAsState()
-        val decodeUiState by viewModel.decodeUiState.collectAsState()
-
         NavHost(
             navController = navController,
             startDestination = ButkusScreen.Encode.name,
@@ -121,6 +131,21 @@ fun ButkusApp(
                 )
             }
         }
+    }
+}
+
+fun shareMessage(context: Context, message: String?) {
+    if (message != null) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, message)
+        }
+        context.startActivity(
+            Intent.createChooser(
+                intent,
+                context.getString(R.string.butkus_message)
+            )
+        )
     }
 }
 
