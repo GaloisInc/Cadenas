@@ -71,7 +71,12 @@ fun ButkusApp(
         topBar = {
             ButkusAppBar(
                 currentScreen = currentScreen,
-                onSwitchScreen = { /* TODO: Implement switch-screen button */ },
+                onSwitchScreen = {
+                     when (currentScreen) {
+                         ButkusScreen.Encode -> navController.navigate(ButkusScreen.Decode.name)
+                         ButkusScreen.Decode -> navController.navigate(ButkusScreen.Encode.name)
+                     }
+                },
                 share = { /* TODO: Implement share button */ },
             )
         }
@@ -81,7 +86,7 @@ fun ButkusApp(
 
         NavHost(
             navController = navController,
-            startDestination = ButkusScreen.Decode.name,
+            startDestination = ButkusScreen.Encode.name,
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
