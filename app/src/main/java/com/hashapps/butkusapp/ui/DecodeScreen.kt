@@ -1,9 +1,6 @@
 package com.hashapps.butkusapp.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +32,8 @@ fun DecodeScreen(
             label = { Text(stringResource(R.string.encoded_message_label)) },
             placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
         )
+        
+        Spacer(modifier = modifier.weight(1f))
 
         Button(
             modifier = modifier.fillMaxWidth(),
