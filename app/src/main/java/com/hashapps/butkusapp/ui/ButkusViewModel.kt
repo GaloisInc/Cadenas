@@ -17,8 +17,6 @@ class ButkusViewModel : ViewModel() {
     val encodeUiState: StateFlow<EncodeUiState> = _encodeUiState.asStateFlow()
     val decodeUiState: StateFlow<DecodeUiState> = _decodeUiState.asStateFlow()
 
-    // TODO: Do that same thing for the decoding screen
-
     fun updatePlaintextMessage(plaintext: String) {
         _encodeUiState.update { currentState ->
             currentState.copy(message = plaintext)
