@@ -157,7 +157,7 @@ fun EncodeScreenPreviewDefault() {
 @Preview(showBackground = true)
 @Composable
 fun EncodeScreenPreviewNoTagsEncodedMessage() {
-    val encodeUiState = EncodeUiState(encodedMessage = "i'm hiding a secret")
+    val encodeUiState = EncodeUiState(encodedMessage = "I'm hiding a secret")
     ButkusAppTheme {
         EncodeScreen(
             encodeUiState = encodeUiState,
