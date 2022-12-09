@@ -6,9 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.data.DecodeUiState
+import com.hashapps.butkusapp.data.EncodeUiState
+import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 @Composable
 fun DecodeScreen(
@@ -73,5 +76,33 @@ fun DecodeScreen(
                 label = { Text(stringResource(R.string.decode_output_label)) }
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DecodeScreenPreviewDefault() {
+    val encodeUiState = DecodeUiState()
+    ButkusAppTheme {
+        DecodeScreen(
+            decodeUiState = encodeUiState,
+            onMessageChanged = { },
+            onDecode = { },
+            onReset = { },
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DecodeScreenPreviewDecodedMessage() {
+    val decodeUiState = DecodeUiState(decodedMessage = "Secret message")
+    ButkusAppTheme {
+        DecodeScreen(
+            decodeUiState = decodeUiState,
+            onMessageChanged = { },
+            onDecode = { },
+            onReset = { },
+        )
     }
 }
