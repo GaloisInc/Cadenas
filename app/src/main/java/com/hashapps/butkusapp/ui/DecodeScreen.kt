@@ -15,6 +15,7 @@ fun DecodeScreen(
     decodeUiState: DecodeUiState,
     onMessageChanged: (String) -> Unit,
     onDecode: () -> Unit,
+    onReset: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -35,14 +36,30 @@ fun DecodeScreen(
         
         Spacer(modifier = modifier.weight(1f))
 
-        Button(
+        Row(
             modifier = modifier.fillMaxWidth(),
-            onClick = onDecode,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.decode),
-                style = MaterialTheme.typography.h6,
-            )
+            Button(
+                modifier = modifier.weight(0.5f),
+                onClick = onDecode,
+            ) {
+                Text(
+                    text = stringResource(R.string.decode),
+                    style = MaterialTheme.typography.h6,
+                )
+            }
+
+            Button(
+                modifier = modifier.weight(0.5f),
+                onClick = onReset,
+            ) {
+                Text(
+                    text = stringResource(R.string.reset),
+                    style = MaterialTheme.typography.h6,
+                )
+            }
         }
 
         if (decodeUiState.decodedMessage != null) {

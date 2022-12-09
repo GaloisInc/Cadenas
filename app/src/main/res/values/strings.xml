@@ -16,4 +16,5 @@
     <string name="encoded_message_placeholder">Enter your encoded message</string>
     <string name="decode_output_label">Decoded text</string>
     <string name="butkus_message">Butkus Message</string>
+    <string name="reset">Reset</string>
 </resources>

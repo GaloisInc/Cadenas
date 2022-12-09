@@ -48,6 +48,10 @@ class ButkusViewModel : ViewModel() {
         }
     }
 
+    fun resetEncodeState() {
+        _encodeUiState.value = EncodeUiState()
+    }
+
     /* ********************************************************************* */
 
     fun updateEncodedMessage(encoded: String) {
@@ -61,5 +65,9 @@ class ButkusViewModel : ViewModel() {
         _decodeUiState.update { currentState ->
             currentState.copy(decodedMessage = "Secret message")
         }
+    }
+
+    fun resetDecodeState() {
+        _decodeUiState.value = DecodeUiState()
     }
 }

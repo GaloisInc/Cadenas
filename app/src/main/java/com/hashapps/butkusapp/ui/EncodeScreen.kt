@@ -24,6 +24,7 @@ fun EncodeScreen(
     onAddTag: () -> Unit,
     onDeleteTag: (String) -> () -> Unit,
     onEncode: () -> Unit,
+    onReset: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -69,14 +70,30 @@ fun EncodeScreen(
             }
         }
 
-        Button(
+        Row(
             modifier = modifier.fillMaxWidth(),
-            onClick = onEncode,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.encode),
-                style = MaterialTheme.typography.h6,
-            )
+            Button(
+                modifier = modifier.weight(0.5f),
+                onClick = onEncode,
+            ) {
+                Text(
+                    text = stringResource(R.string.encode),
+                    style = MaterialTheme.typography.h6,
+                )
+            }
+
+            Button(
+                modifier = modifier.weight(0.5f),
+                onClick = onReset,
+            ) {
+                Text(
+                    text = stringResource(R.string.reset),
+                    style = MaterialTheme.typography.h6,
+                )
+            }
         }
 
         if (encodeUiState.encodedMessage != null) {
@@ -131,7 +148,9 @@ fun EncodeScreenPreviewDefault() {
             onTagToAddChanged = { },
             onAddTag = { },
             onDeleteTag = {_ -> { } },
-            onEncode = { })
+            onEncode = { },
+            onReset = { },
+        )
     }
 }
 
@@ -146,7 +165,9 @@ fun EncodeScreenPreviewNoTagsEncodedMessage() {
             onTagToAddChanged = { },
             onAddTag = { },
             onDeleteTag = {_ -> { } },
-            onEncode = { })
+            onEncode = { },
+            onReset = { },
+        )
     }
 }
 
@@ -161,6 +182,8 @@ fun EncodeScreenPreviewTags() {
             onTagToAddChanged = { },
             onAddTag = { },
             onDeleteTag = {_ -> { } },
-            onEncode = { })
+            onEncode = { },
+            onReset = { },
+        )
     }
 }

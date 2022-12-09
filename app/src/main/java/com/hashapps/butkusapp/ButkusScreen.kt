@@ -118,6 +118,7 @@ fun ButkusApp(
                         { viewModel.removeTag(it) }
                     },
                     onEncode = { viewModel.encodeMessage() },
+                    onReset = { viewModel.resetEncodeState() },
                 )
             }
 
@@ -128,6 +129,7 @@ fun ButkusApp(
                         viewModel.updateEncodedMessage(it)
                     },
                     onDecode = { viewModel.decodeMessage() },
+                    onReset = { viewModel.resetDecodeState() },
                 )
             }
         }
