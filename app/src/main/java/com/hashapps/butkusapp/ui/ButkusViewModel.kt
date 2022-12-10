@@ -1,5 +1,8 @@
 package com.hashapps.butkusapp.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.hashapps.butkusapp.data.DecodeUiState
 import com.hashapps.butkusapp.data.EncodeUiState
@@ -16,6 +19,10 @@ class ButkusViewModel : ViewModel() {
     // screen.
     val encodeUiState: StateFlow<EncodeUiState> = _encodeUiState.asStateFlow()
     val decodeUiState: StateFlow<DecodeUiState> = _decodeUiState.asStateFlow()
+
+    // State shared by all screens
+    var canSwitchScreen by mutableStateOf(true)
+    var canShare by mutableStateOf(false)
 
     fun updatePlaintextMessage(plaintext: String) {
         _encodeUiState.update { currentState ->
@@ -46,10 +53,12 @@ class ButkusViewModel : ViewModel() {
         _encodeUiState.update { currentState ->
             currentState.copy(encodedMessage = "I'm hiding a secret")
         }
+        canShare = true
     }
 
     fun resetEncodeState() {
         _encodeUiState.value = EncodeUiState()
+        canShare = false
     }
 
     /* ********************************************************************* */

@@ -30,7 +30,9 @@ enum class ButkusScreen(@StringRes val title: Int) {
 @Composable
 fun ButkusAppBar(
     currentScreen: ButkusScreen,
+    canSwitchScreen: Boolean,
     onSwitchScreen: () -> Unit,
+    canShare: Boolean,
     share: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -39,19 +41,24 @@ fun ButkusAppBar(
         backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier,
         navigationIcon = {
-            IconButton(onClick = onSwitchScreen) {
-                Icon(
-                    imageVector = Icons.Filled.Refresh,
-                    contentDescription = stringResource(R.string.switch_button),
-                )
+            if (canSwitchScreen) {
+                IconButton(onClick = onSwitchScreen) {
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = stringResource(R.string.switch_button),
+                    )
+                }
             }
         },
         actions = {
-            IconButton(onClick = share) {
-                Icon(
-                    imageVector = Icons.Filled.Share,
-                    contentDescription = stringResource(R.string.share_button),
-                )
+            // TODO: Do we care about being able to share from the decode screen?
+            if (currentScreen == ButkusScreen.Encode && canShare) {
+                IconButton(onClick = share) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = stringResource(R.string.share_button),
+                    )
+                }
             }
         }
     )
@@ -79,12 +86,14 @@ fun ButkusApp(
         topBar = {
             ButkusAppBar(
                 currentScreen = currentScreen,
+                canSwitchScreen = viewModel.canSwitchScreen,
                 onSwitchScreen = {
                      when (currentScreen) {
                          ButkusScreen.Encode -> navController.navigate(ButkusScreen.Decode.name)
                          ButkusScreen.Decode -> navController.navigate(ButkusScreen.Encode.name)
                      }
                 },
+                canShare = viewModel.canShare,
                 share = {
                     when (currentScreen) {
                         ButkusScreen.Encode -> shareMessage(context, encodeUiState.encodedMessage)
@@ -117,7 +126,9 @@ fun ButkusApp(
                     onDeleteTag = {
                         { viewModel.removeTag(it) }
                     },
-                    onEncode = { viewModel.encodeMessage() },
+                    onEncode = {
+                        viewModel.encodeMessage()
+                    },
                     onReset = { viewModel.resetEncodeState() },
                 )
             }
