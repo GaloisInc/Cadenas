@@ -101,8 +101,6 @@ fun ButkusApp(
     val encodeUiState by viewModel.encodeUiState.collectAsState()
     val decodeUiState by viewModel.decodeUiState.collectAsState()
 
-    val context = LocalContext.current
-
     Scaffold(
         topBar = {
             ButkusAppBar(
