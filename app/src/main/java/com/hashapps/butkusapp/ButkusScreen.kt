@@ -41,24 +41,25 @@ fun ButkusAppBar(
         backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier,
         navigationIcon = {
-            if (canSwitchScreen) {
-                IconButton(onClick = onSwitchScreen) {
-                    Icon(
-                        imageVector = Icons.Filled.Refresh,
-                        contentDescription = stringResource(R.string.switch_button),
-                    )
-                }
+            IconButton(
+                onClick = onSwitchScreen,
+                enabled = canSwitchScreen,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = stringResource(R.string.switch_button),
+                )
             }
         },
         actions = {
-            // TODO: Do we care about being able to share from the decode screen?
-            if (currentScreen == ButkusScreen.Encode && canShare) {
-                IconButton(onClick = share) {
-                    Icon(
-                        imageVector = Icons.Filled.Share,
-                        contentDescription = stringResource(R.string.share_button),
-                    )
-                }
+            IconButton(
+                onClick = share,
+                enabled = canShare,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = stringResource(R.string.share_button),
+                )
             }
         }
     )
