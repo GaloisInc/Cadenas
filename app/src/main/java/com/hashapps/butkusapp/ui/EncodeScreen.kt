@@ -65,7 +65,7 @@ fun EncodeScreen(
         }
 
         LazyColumn(modifier = modifier.weight(1f)) {
-            items(encodeUiState.addedTags) { tag ->
+            items(encodeUiState.addedTags.toList()) { tag ->
                 TagEntry(tag, onTagRemove = onDeleteTag(tag))
             }
         }
@@ -174,7 +174,7 @@ fun EncodeScreenPreviewNoTagsEncodedMessage() {
 @Preview(showBackground = true)
 @Composable
 fun EncodeScreenPreviewTags() {
-    val encodeUiState = EncodeUiState(addedTags = listOf("funny", "meme", "random"))
+    val encodeUiState = EncodeUiState(addedTags = setOf("funny", "meme", "random"))
     ButkusAppTheme {
         EncodeScreen(
             encodeUiState = encodeUiState,
