@@ -17,6 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hashapps.butkusapp.data.DecodeUiState
+import com.hashapps.butkusapp.data.EncodeUiState
 import com.hashapps.butkusapp.ui.ButkusViewModel
 import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
@@ -30,12 +32,30 @@ enum class ButkusScreen(@StringRes val title: Int) {
 @Composable
 fun ButkusAppBar(
     currentScreen: ButkusScreen,
-    canSwitchScreen: Boolean,
+    encodeUiState: EncodeUiState,
+    decodeUiState: DecodeUiState,
     onSwitchScreen: () -> Unit,
-    canShare: Boolean,
-    share: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
+    val canSwitchScreen = when (currentScreen) {
+        ButkusScreen.Encode -> encodeUiState.canSwitchScreen
+        ButkusScreen.Decode -> decodeUiState.canSwitchScreen
+    }
+
+    val share = {
+        when (currentScreen) {
+            ButkusScreen.Encode -> shareMessage(context, encodeUiState.encodedMessage)
+            ButkusScreen.Decode -> shareMessage(context, decodeUiState.decodedMessage)
+        }
+    }
+
+    val canShare = when (currentScreen) {
+        ButkusScreen.Encode -> encodeUiState.canShare
+        ButkusScreen.Decode -> decodeUiState.canShare
+    }
+
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
         backgroundColor = MaterialTheme.colors.primary,
@@ -87,19 +107,13 @@ fun ButkusApp(
         topBar = {
             ButkusAppBar(
                 currentScreen = currentScreen,
-                canSwitchScreen = viewModel.canSwitchScreen,
+                encodeUiState = encodeUiState,
+                decodeUiState = decodeUiState,
                 onSwitchScreen = {
                      when (currentScreen) {
                          ButkusScreen.Encode -> navController.navigate(ButkusScreen.Decode.name)
                          ButkusScreen.Decode -> navController.navigate(ButkusScreen.Encode.name)
                      }
-                },
-                canShare = viewModel.canShare,
-                share = {
-                    when (currentScreen) {
-                        ButkusScreen.Encode -> shareMessage(context, encodeUiState.encodedMessage)
-                        ButkusScreen.Decode -> shareMessage(context, decodeUiState.decodedMessage)
-                    }
                 },
             )
         }
