@@ -38,7 +38,7 @@ fun Drawer(
     Column(
         modifier
             .fillMaxSize()
-            .padding(start = 24.dp, top = 48.dp)
+            .padding(start = 24.dp, top = 24.dp)
     ) {
         ButkusScreen.values().forEach {
             val screen = stringResource(it.title)
