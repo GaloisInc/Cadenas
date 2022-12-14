@@ -75,13 +75,13 @@ fun ButkusAppBar(
     val share = {
         when (currentScreen) {
             ButkusScreen.Encode -> shareMessage(context, encodeUiState.encodedMessage)
-            ButkusScreen.Decode -> shareMessage(context, decodeUiState.decodedMessage)
+            ButkusScreen.Decode -> {}
         }
     }
 
     val canShare = when (currentScreen) {
         ButkusScreen.Encode -> encodeUiState.canShare
-        ButkusScreen.Decode -> decodeUiState.canShare
+        ButkusScreen.Decode -> false
     }
 
     TopAppBar(
