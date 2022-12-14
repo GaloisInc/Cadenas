@@ -43,7 +43,7 @@ class ButkusViewModel : ViewModel() {
     // TODO: Make this do something interesting!
     fun encodeMessage() {
         _encodeUiState.update { currentState ->
-            currentState.copy(encodedMessage = "I'm hiding a secret", canShare = true)
+            currentState.copy(encodedMessage = "I'm hiding a secret")
         }
     }
 
