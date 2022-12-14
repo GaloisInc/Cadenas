@@ -62,7 +62,7 @@ class ButkusViewModel : ViewModel() {
     // TODO: Make this do something interesting!
     fun decodeMessage() {
         _decodeUiState.update { currentState ->
-            currentState.copy(decodedMessage = "Secret message", canShare = true)
+            currentState.copy(decodedMessage = "Secret message")
         }
     }
 
