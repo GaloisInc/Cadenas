@@ -45,6 +45,7 @@ fun DecodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
+                enabled = decodeUiState.message.isNotEmpty(),
                 onClick = onDecode,
             ) {
                 Text(

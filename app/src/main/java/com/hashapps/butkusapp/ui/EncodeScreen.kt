@@ -77,6 +77,7 @@ fun EncodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
+                enabled = encodeUiState.message.isNotEmpty(),
                 onClick = onEncode,
             ) {
                 Text(
