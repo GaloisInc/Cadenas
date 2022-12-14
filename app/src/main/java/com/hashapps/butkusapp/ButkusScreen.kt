@@ -3,16 +3,18 @@ package com.hashapps.butkusapp
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -23,6 +25,7 @@ import com.hashapps.butkusapp.ui.ButkusViewModel
 import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
+import kotlinx.coroutines.launch
 
 enum class ButkusScreen(@StringRes val title: Int) {
     Encode(title = R.string.encode),
@@ -30,18 +33,43 @@ enum class ButkusScreen(@StringRes val title: Int) {
 }
 
 @Composable
+fun Drawer(
+    modifier: Modifier = Modifier,
+    onDestinationClicked: (String) -> Unit,
+) {
+    Column(
+        modifier
+            .fillMaxSize()
+            .padding(start = 24.dp, top = 48.dp)
+    ) {
+        ButkusScreen.values().forEach {
+            val screen = stringResource(it.title)
+            Text(
+                text = screen,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.clickable {
+                    onDestinationClicked(screen)
+                }
+            )
+
+            Spacer(Modifier.height(24.dp))
+        }
+    }
+}
+
+@Composable
 fun ButkusAppBar(
     currentScreen: ButkusScreen,
     encodeUiState: EncodeUiState,
     decodeUiState: DecodeUiState,
-    onSwitchScreen: () -> Unit,
+    onOpenDrawer: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
 
-    val canSwitchScreen = when (currentScreen) {
-        ButkusScreen.Encode -> encodeUiState.canSwitchScreen
-        ButkusScreen.Decode -> decodeUiState.canSwitchScreen
+    val canOpenDrawer = when (currentScreen) {
+        ButkusScreen.Encode -> encodeUiState.canOpenDrawer
+        ButkusScreen.Decode -> decodeUiState.canOpenDrawer
     }
 
     val share = {
@@ -62,11 +90,11 @@ fun ButkusAppBar(
         modifier = modifier,
         navigationIcon = {
             IconButton(
-                onClick = onSwitchScreen,
-                enabled = canSwitchScreen,
+                onClick = onOpenDrawer,
+                enabled = canOpenDrawer,
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Refresh,
+                    imageVector = Icons.Filled.Menu,
                     contentDescription = stringResource(R.string.switch_button),
                 )
             }
@@ -98,21 +126,40 @@ fun ButkusApp(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
 
+    val scope = rememberCoroutineScope()
+    val scaffoldState = ScaffoldState(
+        drawerState = rememberDrawerState(DrawerValue.Closed),
+        snackbarHostState = SnackbarHostState(),
+    )
+    val openDrawer = {
+        scope.launch {
+            scaffoldState.drawerState.open()
+        }
+    }
+
     val encodeUiState by viewModel.encodeUiState.collectAsState()
     val decodeUiState by viewModel.decodeUiState.collectAsState()
 
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             ButkusAppBar(
                 currentScreen = currentScreen,
                 encodeUiState = encodeUiState,
                 decodeUiState = decodeUiState,
-                onSwitchScreen = {
-                     when (currentScreen) {
-                         ButkusScreen.Encode -> navController.navigate(ButkusScreen.Decode.name)
-                         ButkusScreen.Decode -> navController.navigate(ButkusScreen.Encode.name)
-                     }
-                },
+                onOpenDrawer = { openDrawer() },
+            )
+        },
+        drawerGesturesEnabled = true,
+        drawerContent = {
+            Drawer(
+                onDestinationClicked = { route ->
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                    }
+
+                    navController.navigate(route)
+                }
             )
         }
     ) { innerPadding ->

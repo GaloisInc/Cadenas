@@ -17,4 +17,5 @@
     <string name="decode_output_label">Decoded text</string>
     <string name="butkus_message">Butkus Message</string>
     <string name="reset">Reset</string>
+    <string name="settings">Settings</string>
 </resources>
