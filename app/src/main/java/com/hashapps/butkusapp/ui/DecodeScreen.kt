@@ -10,7 +10,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.data.DecodeUiState
-import com.hashapps.butkusapp.data.EncodeUiState
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 @Composable
