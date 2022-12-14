@@ -22,12 +22,14 @@ import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.ui.ButkusViewModel
 import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
+import com.hashapps.butkusapp.ui.SettingsScreen
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
 
 enum class ButkusScreen(@StringRes val title: Int) {
     Encode(title = R.string.encode),
     Decode(title = R.string.decode),
+    Settings(title = R.string.settings),
 }
 
 @Composable
@@ -120,6 +122,7 @@ fun ButkusApp(
     // Get the actual UI state to control the app view
     val encodeUiState by viewModel.encodeUiState.collectAsState()
     val decodeUiState by viewModel.decodeUiState.collectAsState()
+    val settingsUiState by viewModel.settingsUiState.collectAsState()
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -129,6 +132,7 @@ fun ButkusApp(
                 canOpenDrawer = when(currentScreen) {
                     ButkusScreen.Encode -> encodeUiState.canOpenDrawer
                     ButkusScreen.Decode -> decodeUiState.canOpenDrawer
+                    ButkusScreen.Settings -> settingsUiState.canOpenDrawer
                 },
                 onOpenDrawer = {
                     scope.launch {
@@ -191,6 +195,12 @@ fun ButkusApp(
                     },
                     onDecode = { viewModel.decodeMessage() },
                     onReset = { viewModel.resetDecodeState() },
+                )
+            }
+
+            composable(route = ButkusScreen.Settings.name) {
+                SettingsScreen(
+                    settingsUiState = settingsUiState,
                 )
             }
         }
