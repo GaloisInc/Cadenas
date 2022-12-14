@@ -106,9 +106,7 @@ fun ButkusApp(
 
     // Navigation setup
     val navController = rememberNavController()
-
     val backStackEntry by navController.currentBackStackEntryAsState()
-
     val currentScreen = ButkusScreen.valueOf(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
