@@ -19,8 +19,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hashapps.butkusapp.data.DecodeUiState
-import com.hashapps.butkusapp.data.EncodeUiState
 import com.hashapps.butkusapp.ui.ButkusViewModel
 import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
@@ -60,30 +58,12 @@ fun Drawer(
 @Composable
 fun ButkusAppBar(
     currentScreen: ButkusScreen,
-    encodeUiState: EncodeUiState,
-    decodeUiState: DecodeUiState,
+    canOpenDrawer: Boolean,
     onOpenDrawer: () -> Unit,
+    canShare: Boolean,
+    onShare: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-
-    val canOpenDrawer = when (currentScreen) {
-        ButkusScreen.Encode -> encodeUiState.canOpenDrawer
-        ButkusScreen.Decode -> decodeUiState.canOpenDrawer
-    }
-
-    val share = {
-        when (currentScreen) {
-            ButkusScreen.Encode -> shareMessage(context, encodeUiState.encodedMessage)
-            ButkusScreen.Decode -> {}
-        }
-    }
-
-    val canShare = when (currentScreen) {
-        ButkusScreen.Encode -> encodeUiState.canShare
-        ButkusScreen.Decode -> false
-    }
-
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
         backgroundColor = MaterialTheme.colors.primary,
@@ -101,7 +81,7 @@ fun ButkusAppBar(
         },
         actions = {
             IconButton(
-                onClick = share,
+                onClick = onShare,
                 enabled = canShare,
             ) {
                 Icon(
@@ -118,6 +98,13 @@ fun ButkusApp(
     modifier: Modifier = Modifier,
     viewModel: ButkusViewModel = ButkusViewModel(),
 ) {
+    // Get the app context
+    val context = LocalContext.current
+
+    // Get the whole-app coroutine scope
+    val scope = rememberCoroutineScope()
+
+    // Navigation setup
     val navController = rememberNavController()
 
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -126,17 +113,13 @@ fun ButkusApp(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
 
-    val scope = rememberCoroutineScope()
+    // Manual scaffold state so we control the drawer
     val scaffoldState = ScaffoldState(
         drawerState = rememberDrawerState(DrawerValue.Closed),
         snackbarHostState = SnackbarHostState(),
     )
-    val openDrawer = {
-        scope.launch {
-            scaffoldState.drawerState.open()
-        }
-    }
 
+    // Get the actual UI state to control the app view
     val encodeUiState by viewModel.encodeUiState.collectAsState()
     val decodeUiState by viewModel.decodeUiState.collectAsState()
 
@@ -145,9 +128,17 @@ fun ButkusApp(
         topBar = {
             ButkusAppBar(
                 currentScreen = currentScreen,
-                encodeUiState = encodeUiState,
-                decodeUiState = decodeUiState,
-                onOpenDrawer = { openDrawer() },
+                canOpenDrawer = when(currentScreen) {
+                    ButkusScreen.Encode -> encodeUiState.canOpenDrawer
+                    ButkusScreen.Decode -> decodeUiState.canOpenDrawer
+                },
+                onOpenDrawer = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                },
+                canShare = (currentScreen == ButkusScreen.Encode) && encodeUiState.canShare,
+                onShare = { shareMessage(context, encodeUiState.encodedMessage) }
             )
         },
         drawerGesturesEnabled = true,
