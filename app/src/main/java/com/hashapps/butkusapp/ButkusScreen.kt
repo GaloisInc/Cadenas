@@ -24,7 +24,6 @@ import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
 import com.hashapps.butkusapp.ui.SettingsScreen
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 enum class ButkusScreen(@StringRes val title: Int) {
