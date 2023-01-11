@@ -140,11 +140,7 @@ fun ButkusApp(
         topBar = {
             ButkusAppBar(
                 currentScreen = currentScreen,
-                canOpenDrawer = when(currentScreen) {
-                    ButkusScreen.Encode -> encodeUiState.canOpenDrawer
-                    ButkusScreen.Decode -> decodeUiState.canOpenDrawer
-                    ButkusScreen.Settings -> settingsUiState.canOpenDrawer
-                },
+                canOpenDrawer = true,
                 onOpenDrawer = {
                     scope.launch {
                         scaffoldState.drawerState.open()

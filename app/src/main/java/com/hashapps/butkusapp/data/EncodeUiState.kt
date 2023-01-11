@@ -4,9 +4,6 @@ package com.hashapps.butkusapp.data
  * Data class for the encode screen's UI state.
  */
 data class EncodeUiState (
-    /** Whether the drawer can be opened. */
-    val canOpenDrawer: Boolean = true,
-
     /** The message to encode. */
     val message: String = "",
 
