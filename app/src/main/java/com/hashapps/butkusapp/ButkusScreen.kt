@@ -201,7 +201,17 @@ fun ButkusApp(
             }
 
             composable(route = ButkusScreen.Decode.name) {
+                if (viewModel.isDecoding) {
+                    val processingAlert = stringResource(R.string.processing_alert)
+                    LaunchedEffect(Unit) {
+                        scaffoldState.snackbarHostState.showSnackbar(message = processingAlert)
+                        viewModel.decodeMessage()
+                        viewModel.isDecoding = false
+                    }
+                }
+
                 DecodeScreen(
+                    uiEnabled = viewModel.uiEnabled(),
                     decodeUiState = decodeUiState,
                     onMessageChanged = {
                         viewModel.updateEncodedMessage(it)

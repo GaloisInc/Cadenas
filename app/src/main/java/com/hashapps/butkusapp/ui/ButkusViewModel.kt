@@ -95,10 +95,12 @@ class ButkusViewModel : ViewModel() {
         }
     }
 
-    // TODO: Make this do something interesting!
-    fun decodeMessage() {
+    suspend fun decodeMessage() {
+        val untaggedMessage = _decodeUiState.value.message.substringBefore(delimiter = " #")
+        val decodedMessage = Butkus.getInstance().decode(untaggedMessage)
+
         _decodeUiState.update { currentState ->
-            currentState.copy(decodedMessage = "Secret message")
+            currentState.copy(decodedMessage = decodedMessage)
         }
     }
 

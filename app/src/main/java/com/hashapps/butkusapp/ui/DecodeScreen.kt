@@ -14,6 +14,7 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 @Composable
 fun DecodeScreen(
+    uiEnabled: Boolean,
     decodeUiState: DecodeUiState,
     onMessageChanged: (String) -> Unit,
     canDecode: Boolean,
@@ -30,6 +31,7 @@ fun DecodeScreen(
     ) {
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
+            enabled = uiEnabled,
             value = decodeUiState.message,
             onValueChange = onMessageChanged,
             singleLine = false,
@@ -46,7 +48,7 @@ fun DecodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
-                enabled = canDecode,
+                enabled = uiEnabled && canDecode,
                 onClick = onDecode,
             ) {
                 Text(
@@ -57,6 +59,7 @@ fun DecodeScreen(
 
             Button(
                 modifier = modifier.weight(0.5f),
+                enabled = uiEnabled,
                 onClick = onReset,
             ) {
                 Text(
@@ -86,6 +89,7 @@ fun DecodeScreenPreviewDefault() {
     val encodeUiState = DecodeUiState()
     ButkusAppTheme {
         DecodeScreen(
+            uiEnabled = true,
             decodeUiState = encodeUiState,
             onMessageChanged = { },
             canDecode = true,
@@ -101,6 +105,7 @@ fun DecodeScreenPreviewDecodedMessage() {
     val decodeUiState = DecodeUiState(decodedMessage = "Secret message")
     ButkusAppTheme {
         DecodeScreen(
+            uiEnabled = true,
             decodeUiState = decodeUiState,
             onMessageChanged = { },
             canDecode = true,
