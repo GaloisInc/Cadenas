@@ -35,27 +35,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-/*@Composable
-fun ButkusApp(modifier: Modifier = Modifier) {
-    // TODO: This is bad and forces the UI to wait to load! For testing only!
-    val context = LocalContext.current
-    runBlocking {
-        coroutineScope {
-            val butkusInit = async { Butkus.initialize(context) }
-            butkusInit.await()
-            println(Butkus.getInstance().encode("Hello"))
-        }
-    }
-
-    Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxSize(),
-    ) {
-        Text(
-            text = stringResource(R.string.test_message),
-            style = MaterialTheme.typography.body1,
-        )
-    }
-}*/
