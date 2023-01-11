@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.hashapps.butkusapp.Butkus
 import com.hashapps.butkusapp.data.DecodeUiState
 import com.hashapps.butkusapp.data.EncodeUiState
 import com.hashapps.butkusapp.data.SettingsUiState
@@ -20,10 +21,33 @@ class ButkusViewModel : ViewModel() {
     // Has Butkus been initialized yet?
     var butkusInitialized by mutableStateOf(false)
 
+    // Is encoding occurring?
+    var isEncoding by mutableStateOf(false)
+
+    // Is decoding occurring?
+    var isDecoding by mutableStateOf(false)
+
     // Avoids state changes from other classes for UI elements on the screens.
     val encodeUiState: StateFlow<EncodeUiState> = _encodeUiState.asStateFlow()
     val decodeUiState: StateFlow<DecodeUiState> = _decodeUiState.asStateFlow()
     val settingsUiState: StateFlow<SettingsUiState> = _settingsUiState.asStateFlow()
+
+    /* ********************************************************************* */
+    /* Queries */
+    fun uiEnabled(): Boolean {
+        return !(isEncoding || isDecoding)
+    }
+
+    fun canEncode(): Boolean {
+        return butkusInitialized && !isEncoding && _encodeUiState.value.message.isNotEmpty()
+    }
+
+    fun canDecode(): Boolean {
+        return butkusInitialized && !isDecoding && _decodeUiState.value.message.isNotEmpty()
+    }
+
+    /* ********************************************************************* */
+    /* Encoding UI updates */
 
     fun updatePlaintextMessage(plaintext: String) {
         _encodeUiState.update { currentState ->
@@ -49,10 +73,13 @@ class ButkusViewModel : ViewModel() {
         }
     }
 
-    // TODO: Make this do something interesting!
-    fun encodeMessage() {
+    suspend fun encodeMessage() {
+        val encodedMessage = Butkus.getInstance().encode(_encodeUiState.value.message)
+        val tagsString =
+            _encodeUiState.value.addedTags.joinToString(separator = " ", prefix = " ") { "#$it" }
+
         _encodeUiState.update { currentState ->
-            currentState.copy(encodedMessage = "I'm hiding a secret")
+            currentState.copy(encodedMessage = encodedMessage + tagsString)
         }
     }
 

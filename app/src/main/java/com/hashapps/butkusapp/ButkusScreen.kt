@@ -60,8 +60,8 @@ fun Drawer(
 
 @Composable
 fun ButkusAppBar(
+    uiEnabled: Boolean,
     currentScreen: ButkusScreen,
-    canOpenDrawer: Boolean,
     onOpenDrawer: () -> Unit,
     canShare: Boolean,
     onShare: () -> Unit,
@@ -74,7 +74,7 @@ fun ButkusAppBar(
         navigationIcon = {
             IconButton(
                 onClick = onOpenDrawer,
-                enabled = canOpenDrawer,
+                enabled = uiEnabled,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -85,7 +85,7 @@ fun ButkusAppBar(
         actions = {
             IconButton(
                 onClick = onShare,
-                enabled = canShare,
+                enabled = uiEnabled && canShare,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Share,
@@ -139,8 +139,8 @@ fun ButkusApp(
         scaffoldState = scaffoldState,
         topBar = {
             ButkusAppBar(
+                uiEnabled = viewModel.uiEnabled(),
                 currentScreen = currentScreen,
-                canOpenDrawer = true,
                 onOpenDrawer = {
                     scope.launch {
                         scaffoldState.drawerState.open()
@@ -151,7 +151,7 @@ fun ButkusApp(
                 onShare = { shareMessage(context, encodeUiState.encodedMessage) }
             )
         },
-        drawerGesturesEnabled = true,
+        drawerGesturesEnabled = viewModel.uiEnabled(),
         drawerContent = {
             Drawer(
                 onDestinationClicked = { route ->
@@ -170,7 +170,17 @@ fun ButkusApp(
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
+                if (viewModel.isEncoding) {
+                    val processingAlert = stringResource(R.string.processing_alert)
+                    LaunchedEffect(Unit) {
+                        scaffoldState.snackbarHostState.showSnackbar(message = processingAlert)
+                        viewModel.encodeMessage()
+                        viewModel.isEncoding = false
+                    }
+                }
+
                 EncodeScreen(
+                    uiEnabled = viewModel.uiEnabled(),
                     encodeUiState = encodeUiState,
                     onMessageChanged = {
                         viewModel.updatePlaintextMessage(it)
@@ -187,10 +197,8 @@ fun ButkusApp(
                     onDeleteTag = {
                         { viewModel.removeTag(it) }
                     },
-                    canEncode = viewModel.butkusInitialized && encodeUiState.message.isNotEmpty(),
-                    onEncode = {
-                        viewModel.encodeMessage()
-                    },
+                    canEncode = viewModel.canEncode(),
+                    onEncode = { viewModel.isEncoding = true },
                     onReset = { viewModel.resetEncodeState() },
                 )
             }
@@ -201,8 +209,8 @@ fun ButkusApp(
                     onMessageChanged = {
                         viewModel.updateEncodedMessage(it)
                     },
-                    canDecode = viewModel.butkusInitialized && decodeUiState.message.isNotEmpty(),
-                    onDecode = { viewModel.decodeMessage() },
+                    canDecode = viewModel.canDecode(),
+                    onDecode = { viewModel.isDecoding = true },
                     onReset = { viewModel.resetDecodeState() },
                 )
             }
