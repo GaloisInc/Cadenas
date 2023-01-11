@@ -18,6 +18,7 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 @Composable
 fun EncodeScreen(
+    uiEnabled: Boolean,
     encodeUiState: EncodeUiState,
     onMessageChanged: (String) -> Unit,
     onTagToAddChanged: (String) -> Unit,
@@ -37,6 +38,7 @@ fun EncodeScreen(
     ) {
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
+            enabled = uiEnabled,
             value = encodeUiState.message,
             onValueChange = onMessageChanged,
             singleLine = false,
@@ -51,13 +53,14 @@ fun EncodeScreen(
         ) {
             OutlinedTextField(
                 modifier = Modifier.padding(end = 8.dp),
+                enabled = uiEnabled,
                 value = encodeUiState.tagToAdd,
                 onValueChange = onTagToAddChanged,
                 singleLine = true,
                 placeholder = { Text(stringResource(R.string.tag_placeholder)) },
             )
 
-            OutlinedButton(onClick = onAddTag) {
+            OutlinedButton(enabled = uiEnabled, onClick = onAddTag) {
                 Text(
                     text = stringResource(R.string.add_tag),
                     textAlign = TextAlign.Center,
@@ -67,7 +70,11 @@ fun EncodeScreen(
 
         LazyColumn(modifier = modifier.weight(1f)) {
             items(encodeUiState.addedTags.toList()) { tag ->
-                TagEntry(tag, onTagRemove = onDeleteTag(tag))
+                TagEntry(
+                    globalUiControl = uiEnabled,
+                    tag = tag,
+                    onTagRemove = onDeleteTag(tag)
+                )
             }
         }
 
@@ -78,7 +85,7 @@ fun EncodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
-                enabled = canEncode,
+                enabled = uiEnabled && canEncode,
                 onClick = onEncode,
             ) {
                 Text(
@@ -89,6 +96,7 @@ fun EncodeScreen(
 
             Button(
                 modifier = modifier.weight(0.5f),
+                enabled = uiEnabled,
                 onClick = onReset,
             ) {
                 Text(
@@ -121,6 +129,7 @@ fun EncodeScreen(
 
 @Composable
 fun TagEntry(
+    globalUiControl: Boolean,
     tag: String,
     onTagRemove: () -> Unit,
     modifier: Modifier = Modifier,
@@ -131,7 +140,7 @@ fun TagEntry(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = tag, style = MaterialTheme.typography.caption)
-        Button(onClick = onTagRemove) {
+        Button(enabled = globalUiControl, onClick = onTagRemove) {
             Text(
                 text = stringResource(R.string.delete),
             )
@@ -146,6 +155,7 @@ fun EncodeScreenPreviewDefault() {
     ButkusAppTheme {
         EncodeScreen(
             encodeUiState = encodeUiState,
+            uiEnabled = true,
             onMessageChanged = { },
             onTagToAddChanged = { },
             onAddTag = { },
@@ -164,6 +174,7 @@ fun EncodeScreenPreviewNoTagsEncodedMessage() {
     ButkusAppTheme {
         EncodeScreen(
             encodeUiState = encodeUiState,
+            uiEnabled = true,
             onMessageChanged = { },
             onTagToAddChanged = { },
             onAddTag = { },
@@ -182,6 +193,7 @@ fun EncodeScreenPreviewTags() {
     ButkusAppTheme {
         EncodeScreen(
             encodeUiState = encodeUiState,
+            uiEnabled = true,
             onMessageChanged = { },
             onTagToAddChanged = { },
             onAddTag = { },
