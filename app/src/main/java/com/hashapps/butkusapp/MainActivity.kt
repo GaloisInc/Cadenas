@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
 
         val viewModel: ButkusViewModel by viewModels()
 
-        // If the activity was started via SEND intent with plaintext, update
+/*        // If the activity was started via SEND intent with plaintext, update
         // the viewModel to hold the sent text on the Decode screen
         when (intent?.action) {
             Intent.ACTION_SEND -> {
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             else -> {}
-        }
+        }*/
 
         setContent {
             ButkusAppTheme {

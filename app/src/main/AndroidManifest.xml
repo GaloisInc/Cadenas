@@ -21,9 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <!-- Let activity respond to SEND intents with text/plain -->
-                <action android:name="android.intent.action.SEND" />
+<!--                <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
+                <data android:mimeType="text/plain" />-->
             </intent-filter>
 
             <meta-data
