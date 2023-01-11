@@ -16,6 +16,7 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 fun DecodeScreen(
     decodeUiState: DecodeUiState,
     onMessageChanged: (String) -> Unit,
+    canDecode: Boolean,
     onDecode: () -> Unit,
     onReset: () -> Unit,
     modifier: Modifier = Modifier,
@@ -45,7 +46,7 @@ fun DecodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
-                enabled = decodeUiState.message.isNotEmpty(),
+                enabled = canDecode,
                 onClick = onDecode,
             ) {
                 Text(
@@ -87,6 +88,7 @@ fun DecodeScreenPreviewDefault() {
         DecodeScreen(
             decodeUiState = encodeUiState,
             onMessageChanged = { },
+            canDecode = true,
             onDecode = { },
             onReset = { },
         )
@@ -101,6 +103,7 @@ fun DecodeScreenPreviewDecodedMessage() {
         DecodeScreen(
             decodeUiState = decodeUiState,
             onMessageChanged = { },
+            canDecode = true,
             onDecode = { },
             onReset = { },
         )

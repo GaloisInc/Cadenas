@@ -1,5 +1,8 @@
 package com.hashapps.butkusapp.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.hashapps.butkusapp.data.DecodeUiState
 import com.hashapps.butkusapp.data.EncodeUiState
@@ -13,6 +16,9 @@ class ButkusViewModel : ViewModel() {
     private val _encodeUiState = MutableStateFlow(EncodeUiState())
     private val _decodeUiState = MutableStateFlow(DecodeUiState())
     private val _settingsUiState = MutableStateFlow(SettingsUiState())
+
+    // Has Butkus been initialized yet?
+    var butkusInitialized by mutableStateOf(false)
 
     // Avoids state changes from other classes for UI elements on the screens.
     val encodeUiState: StateFlow<EncodeUiState> = _encodeUiState.asStateFlow()

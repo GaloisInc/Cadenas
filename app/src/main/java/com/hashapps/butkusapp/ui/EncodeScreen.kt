@@ -23,6 +23,7 @@ fun EncodeScreen(
     onTagToAddChanged: (String) -> Unit,
     onAddTag: () -> Unit,
     onDeleteTag: (String) -> () -> Unit,
+    canEncode: Boolean,
     onEncode: () -> Unit,
     onReset: () -> Unit,
     modifier: Modifier = Modifier,
@@ -77,7 +78,7 @@ fun EncodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
-                enabled = encodeUiState.message.isNotEmpty(),
+                enabled = canEncode,
                 onClick = onEncode,
             ) {
                 Text(
@@ -149,6 +150,7 @@ fun EncodeScreenPreviewDefault() {
             onTagToAddChanged = { },
             onAddTag = { },
             onDeleteTag = {_ -> { } },
+            canEncode = true,
             onEncode = { },
             onReset = { },
         )
@@ -166,6 +168,7 @@ fun EncodeScreenPreviewNoTagsEncodedMessage() {
             onTagToAddChanged = { },
             onAddTag = { },
             onDeleteTag = {_ -> { } },
+            canEncode = true,
             onEncode = { },
             onReset = { },
         )
@@ -183,6 +186,7 @@ fun EncodeScreenPreviewTags() {
             onTagToAddChanged = { },
             onAddTag = { },
             onDeleteTag = {_ -> { } },
+            canEncode = true,
             onEncode = { },
             onReset = { },
         )

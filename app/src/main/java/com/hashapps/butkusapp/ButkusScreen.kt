@@ -24,6 +24,7 @@ import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
 import com.hashapps.butkusapp.ui.SettingsScreen
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 enum class ButkusScreen(@StringRes val title: Int) {
@@ -119,6 +120,16 @@ fun ButkusApp(
         snackbarHostState = SnackbarHostState(),
     )
 
+    // Initialize Butkus
+    if (!viewModel.butkusInitialized) {
+        LaunchedEffect(viewModel.butkusInitialized) {
+            coroutineScope {
+                launch { Butkus.initialize(context) }
+            }
+            viewModel.butkusInitialized = true
+        }
+    }
+
     // Get the actual UI state to control the app view
     val encodeUiState by viewModel.encodeUiState.collectAsState()
     val decodeUiState by viewModel.decodeUiState.collectAsState()
@@ -180,6 +191,7 @@ fun ButkusApp(
                     onDeleteTag = {
                         { viewModel.removeTag(it) }
                     },
+                    canEncode = viewModel.butkusInitialized && encodeUiState.message.isNotEmpty(),
                     onEncode = {
                         viewModel.encodeMessage()
                     },
@@ -193,6 +205,7 @@ fun ButkusApp(
                     onMessageChanged = {
                         viewModel.updateEncodedMessage(it)
                     },
+                    canDecode = viewModel.butkusInitialized && decodeUiState.message.isNotEmpty(),
                     onDecode = { viewModel.decodeMessage() },
                     onReset = { viewModel.resetDecodeState() },
                 )
