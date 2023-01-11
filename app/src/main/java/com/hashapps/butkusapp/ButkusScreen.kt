@@ -122,10 +122,8 @@ fun ButkusApp(
 
     // Initialize Butkus
     if (!viewModel.butkusInitialized) {
-        LaunchedEffect(viewModel.butkusInitialized) {
-            coroutineScope {
-                launch { Butkus.initialize(context) }
-            }
+        LaunchedEffect(Unit) {
+            Butkus.initialize(context)
             viewModel.butkusInitialized = true
         }
     }
