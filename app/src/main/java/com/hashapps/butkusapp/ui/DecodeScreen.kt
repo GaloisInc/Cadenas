@@ -3,8 +3,10 @@ package com.hashapps.butkusapp.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,15 +31,19 @@ fun DecodeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        OutlinedTextField(
-            modifier = modifier.fillMaxWidth(),
-            enabled = uiEnabled,
-            value = decodeUiState.message,
-            onValueChange = onMessageChanged,
-            singleLine = false,
-            label = { Text(stringResource(R.string.encoded_message_label)) },
-            placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
-        )
+        CompositionLocalProvider(
+            LocalTextInputService provides null
+        ) {
+            OutlinedTextField(
+                modifier = modifier.fillMaxWidth(),
+                enabled = uiEnabled,
+                value = decodeUiState.message,
+                onValueChange = onMessageChanged,
+                singleLine = false,
+                label = { Text(stringResource(R.string.encoded_message_label)) },
+                placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
+            )
+        }
         
         Spacer(modifier = modifier.weight(1f))
 
