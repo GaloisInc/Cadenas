@@ -59,7 +59,7 @@ class EncodeViewModel : ButkusViewModel() {
     override suspend fun run() {
         val encodedMessage = Butkus.getInstance().encode(_encodeUiState.value.message)
         val tagsString =
-            _encodeUiState.value.addedTags.joinToString(separator = " ", prefix = " ") { "#$it" }
+            _encodeUiState.value.addedTags.joinToString(separator = "") { " #$it" }
 
         _encodeUiState.update { it.copy(encodedMessage = encodedMessage + tagsString) }
     }
