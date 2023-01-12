@@ -15,6 +15,10 @@ class EncodeViewModel : ButkusViewModel() {
     override val runInputNonempty: Boolean
         get() = _encodeUiState.value.message.isNotEmpty()
 
+    /** True iff the encoded output is non-null */
+    override val runOutputNonempty: Boolean
+        get() = _encodeUiState.value.encodedMessage != null
+
     /** EncodeViewModel-controlled state, safe from changes from other classes */
     val encodeUiState: StateFlow<EncodeUiState> = _encodeUiState.asStateFlow()
 

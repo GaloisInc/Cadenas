@@ -157,10 +157,7 @@ fun ButkusApp(
                         scaffoldState.drawerState.open()
                     }
                 },
-                canShare = when (currentScreen) {
-                    ButkusScreen.Encode -> encodeUiState.encodedMessage != null
-                    else -> false
-                },
+                canShare = currentScreen == ButkusScreen.Encode && encodeViewModel.runOutputNonempty,
                 onShare = { shareMessage(context, encodeUiState.encodedMessage) }
             )
         },
