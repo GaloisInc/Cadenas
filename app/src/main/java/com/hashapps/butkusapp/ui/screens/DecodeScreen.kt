@@ -12,11 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.data.DecodeUiState
+import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 @Composable
 fun DecodeScreen(
-    uiEnabled: Boolean,
     decodeUiState: DecodeUiState,
     onMessageChanged: (String) -> Unit,
     canDecode: Boolean,
@@ -36,7 +36,7 @@ fun DecodeScreen(
         ) {
             OutlinedTextField(
                 modifier = modifier.fillMaxWidth(),
-                enabled = uiEnabled,
+                enabled = ButkusViewModel.SharedViewState.uiEnabled,
                 value = decodeUiState.message,
                 onValueChange = onMessageChanged,
                 singleLine = false,
@@ -54,7 +54,7 @@ fun DecodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
-                enabled = uiEnabled && canDecode,
+                enabled = ButkusViewModel.SharedViewState.uiEnabled && canDecode,
                 onClick = onDecode,
             ) {
                 Text(
@@ -65,7 +65,7 @@ fun DecodeScreen(
 
             Button(
                 modifier = modifier.weight(0.5f),
-                enabled = uiEnabled,
+                enabled = ButkusViewModel.SharedViewState.uiEnabled,
                 onClick = onReset,
             ) {
                 Text(
@@ -95,7 +95,6 @@ fun DecodeScreenPreviewDefault() {
     val encodeUiState = DecodeUiState()
     ButkusAppTheme {
         DecodeScreen(
-            uiEnabled = true,
             decodeUiState = encodeUiState,
             onMessageChanged = { },
             canDecode = true,
@@ -111,7 +110,6 @@ fun DecodeScreenPreviewDecodedMessage() {
     val decodeUiState = DecodeUiState(decodedMessage = "Secret message")
     ButkusAppTheme {
         DecodeScreen(
-            uiEnabled = true,
             decodeUiState = decodeUiState,
             onMessageChanged = { },
             canDecode = true,

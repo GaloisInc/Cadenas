@@ -8,11 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.hashapps.butkusapp.data.SettingsUiState
 
 @Composable
 fun SettingsScreen(
-    settingsUiState: SettingsUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(

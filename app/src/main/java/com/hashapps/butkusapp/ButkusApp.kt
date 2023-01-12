@@ -19,10 +19,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hashapps.butkusapp.ui.ButkusViewModel
+import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.DecodeScreen
 import com.hashapps.butkusapp.ui.EncodeScreen
 import com.hashapps.butkusapp.ui.SettingsScreen
+import com.hashapps.butkusapp.ui.models.DecodeViewModel
+import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
 
@@ -33,7 +35,7 @@ enum class ButkusScreen(@StringRes val title: Int) {
 }
 
 @Composable
-fun Drawer(
+private fun Drawer(
     modifier: Modifier = Modifier,
     onDestinationClicked: (String) -> Unit,
 ) {
@@ -59,7 +61,6 @@ fun Drawer(
 
 @Composable
 fun ButkusAppBar(
-    uiEnabled: Boolean,
     currentScreen: ButkusScreen,
     onOpenDrawer: () -> Unit,
     canShare: Boolean,
@@ -73,7 +74,7 @@ fun ButkusAppBar(
         navigationIcon = {
             IconButton(
                 onClick = onOpenDrawer,
-                enabled = uiEnabled,
+                enabled = ButkusViewModel.SharedViewState.uiEnabled,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -84,7 +85,7 @@ fun ButkusAppBar(
         actions = {
             IconButton(
                 onClick = onShare,
-                enabled = uiEnabled && canShare,
+                enabled = ButkusViewModel.SharedViewState.uiEnabled && canShare,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Share,
@@ -98,7 +99,8 @@ fun ButkusAppBar(
 @Composable
 fun ButkusApp(
     modifier: Modifier = Modifier,
-    viewModel: ButkusViewModel = ButkusViewModel(),
+    encodeViewModel: EncodeViewModel = EncodeViewModel(),
+    decodeViewModel: DecodeViewModel = DecodeViewModel(),
 ) {
     // Get the app context
     val context = LocalContext.current
@@ -120,35 +122,49 @@ fun ButkusApp(
     )
 
     // Initialize Butkus
-    if (!viewModel.butkusInitialized) {
+    if (!ButkusViewModel.SharedViewState.butkusInitialized) {
         LaunchedEffect(Unit) {
             Butkus.initialize(context)
-            viewModel.butkusInitialized = true
+            ButkusViewModel.SharedViewState.butkusInitialized = true
+        }
+    }
+
+    // Listening for action button hits, encode or decode as appropriate
+    if (ButkusViewModel.SharedViewState.isRunning) {
+        val processingAlert = stringResource(R.string.processing_alert)
+        LaunchedEffect(Unit) {
+            scaffoldState.snackbarHostState.showSnackbar(message = processingAlert)
+            when (currentScreen) {
+                ButkusScreen.Encode -> encodeViewModel.run()
+                ButkusScreen.Decode -> decodeViewModel.run()
+                else -> { }
+            }
+            ButkusViewModel.SharedViewState.isRunning = false
         }
     }
 
     // Get the actual UI state to control the app view
-    val encodeUiState by viewModel.encodeUiState.collectAsState()
-    val decodeUiState by viewModel.decodeUiState.collectAsState()
-    val settingsUiState by viewModel.settingsUiState.collectAsState()
+    val encodeUiState by encodeViewModel.encodeUiState.collectAsState()
+    val decodeUiState by decodeViewModel.decodeUiState.collectAsState()
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             ButkusAppBar(
-                uiEnabled = viewModel.uiEnabled(),
                 currentScreen = currentScreen,
                 onOpenDrawer = {
                     scope.launch {
                         scaffoldState.drawerState.open()
                     }
                 },
-                canShare = (currentScreen == ButkusScreen.Encode) &&
-                        (encodeUiState.encodedMessage != null),
+                canShare = when (currentScreen) {
+                    ButkusScreen.Encode -> encodeUiState.encodedMessage != null
+                    else -> false
+                },
                 onShare = { shareMessage(context, encodeUiState.encodedMessage) }
             )
         },
-        drawerGesturesEnabled = viewModel.uiEnabled(),
+        drawerGesturesEnabled = ButkusViewModel.SharedViewState.uiEnabled,
         drawerContent = {
             Drawer(
                 onDestinationClicked = { route ->
@@ -167,65 +183,43 @@ fun ButkusApp(
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
-                if (viewModel.isEncoding) {
-                    val processingAlert = stringResource(R.string.processing_alert)
-                    LaunchedEffect(Unit) {
-                        scaffoldState.snackbarHostState.showSnackbar(message = processingAlert)
-                        viewModel.encodeMessage()
-                        viewModel.isEncoding = false
-                    }
-                }
-
                 EncodeScreen(
-                    uiEnabled = viewModel.uiEnabled(),
                     encodeUiState = encodeUiState,
                     onMessageChanged = {
-                        viewModel.updatePlaintextMessage(it)
+                        encodeViewModel.updatePlaintextMessage(it)
                     },
                     onTagToAddChanged = {
-                        viewModel.updateTagToAdd(it)
+                        encodeViewModel.updateTagToAdd(it)
                     },
                     onAddTag = {
                         if (encodeUiState.tagToAdd != "") {
-                            viewModel.addTag(encodeUiState.tagToAdd)
-                            viewModel.updateTagToAdd("")
+                            encodeViewModel.addTag(encodeUiState.tagToAdd)
+                            encodeViewModel.updateTagToAdd("")
                         }
                     },
                     onDeleteTag = {
-                        { viewModel.removeTag(it) }
+                        { encodeViewModel.removeTag(it) }
                     },
-                    canEncode = viewModel.canEncode(),
-                    onEncode = { viewModel.isEncoding = true },
-                    onReset = { viewModel.resetEncodeState() },
+                    canEncode = encodeViewModel.canRun,
+                    onEncode = { ButkusViewModel.SharedViewState.isRunning = true },
+                    onReset = { encodeViewModel.reset() },
                 )
             }
 
             composable(route = ButkusScreen.Decode.name) {
-                if (viewModel.isDecoding) {
-                    val processingAlert = stringResource(R.string.processing_alert)
-                    LaunchedEffect(Unit) {
-                        scaffoldState.snackbarHostState.showSnackbar(message = processingAlert)
-                        viewModel.decodeMessage()
-                        viewModel.isDecoding = false
-                    }
-                }
-
                 DecodeScreen(
-                    uiEnabled = viewModel.uiEnabled(),
                     decodeUiState = decodeUiState,
                     onMessageChanged = {
-                        viewModel.updateEncodedMessage(it)
+                        decodeViewModel.updateEncodedMessage(it)
                     },
-                    canDecode = viewModel.canDecode(),
-                    onDecode = { viewModel.isDecoding = true },
-                    onReset = { viewModel.resetDecodeState() },
+                    canDecode = decodeViewModel.canRun,
+                    onDecode = { ButkusViewModel.SharedViewState.isRunning = true },
+                    onReset = { decodeViewModel.reset() },
                 )
             }
 
             composable(route = ButkusScreen.Settings.name) {
-                SettingsScreen(
-                    settingsUiState = settingsUiState,
-                )
+                SettingsScreen()
             }
         }
     }

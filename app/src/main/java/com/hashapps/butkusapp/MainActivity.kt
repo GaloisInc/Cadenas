@@ -1,18 +1,19 @@
 package com.hashapps.butkusapp
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.hashapps.butkusapp.ui.ButkusViewModel
+import com.hashapps.butkusapp.ui.models.DecodeViewModel
+import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel: ButkusViewModel by viewModels()
+        val encodeViewModel: EncodeViewModel by viewModels()
+        val decodeViewModel: DecodeViewModel by viewModels()
 
 /*        // If the activity was started via SEND intent with plaintext, update
         // the viewModel to hold the sent text on the Decode screen
@@ -30,7 +31,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ButkusAppTheme {
-                ButkusApp(viewModel = viewModel)
+                ButkusApp(
+                    encodeViewModel = encodeViewModel,
+                    decodeViewModel = decodeViewModel,
+                )
             }
         }
     }
