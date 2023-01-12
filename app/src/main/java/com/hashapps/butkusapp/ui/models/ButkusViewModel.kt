@@ -15,6 +15,9 @@ abstract class ButkusViewModel : ViewModel() {
          * background process has been started (but not completed) */
         var isRunning by mutableStateOf(false)
 
+        /** State of whether there is shareable text in the UI */
+        var hasShareable by mutableStateOf(false)
+
         /** Computed property used to disable all UI when an action starts */
         val uiEnabled
             get() = !isRunning

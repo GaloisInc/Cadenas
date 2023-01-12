@@ -143,9 +143,6 @@ fun ButkusApp(
         }
     }
 
-    // Get the actual UI state to control the app view
-    val decodeUiState by decodeViewModel.decodeUiState.collectAsState()
-
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -156,7 +153,7 @@ fun ButkusApp(
                         scaffoldState.drawerState.open()
                     }
                 },
-                canShare = currentScreen == ButkusScreen.Encode && encodeViewModel.runOutputNonempty,
+                canShare = ButkusViewModel.SharedViewState.hasShareable,
                 onShare = { shareMessage(context, encodeViewModel.encodedMessage) }
             )
         },
@@ -183,15 +180,7 @@ fun ButkusApp(
             }
 
             composable(route = ButkusScreen.Decode.name) {
-                DecodeScreen(
-                    decodeUiState = decodeUiState,
-                    onMessageChanged = {
-                        decodeViewModel.updateEncodedMessage(it)
-                    },
-                    canDecode = decodeViewModel.canRun,
-                    onDecode = { ButkusViewModel.SharedViewState.isRunning = true },
-                    onReset = { decodeViewModel.reset() },
-                )
+                DecodeScreen(decodeViewModel = decodeViewModel)
             }
 
             composable(route = ButkusScreen.Settings.name) {

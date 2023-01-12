@@ -111,6 +111,8 @@ fun EncodeScreen(
         }
 
         if (encodeUiState.encodedMessage != null) {
+            ButkusViewModel.SharedViewState.hasShareable = true
+
             Divider(thickness = 2.dp, modifier = modifier)
 
             TextField(
@@ -127,6 +129,8 @@ fun EncodeScreen(
                     encodeUiState.encodedMessage!!.length,
                 )
             )
+        } else {
+            ButkusViewModel.SharedViewState.hasShareable = false
         }
     }
 }

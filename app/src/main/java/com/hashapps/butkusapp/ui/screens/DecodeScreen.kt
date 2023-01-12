@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
@@ -11,19 +13,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.data.DecodeUiState
 import com.hashapps.butkusapp.ui.models.ButkusViewModel
+import com.hashapps.butkusapp.ui.models.DecodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 @Composable
 fun DecodeScreen(
-    decodeUiState: DecodeUiState,
-    onMessageChanged: (String) -> Unit,
-    canDecode: Boolean,
-    onDecode: () -> Unit,
-    onReset: () -> Unit,
     modifier: Modifier = Modifier,
+    decodeViewModel: DecodeViewModel = DecodeViewModel(),
 ) {
+    val decodeUiState by decodeViewModel.decodeUiState.collectAsState()
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -38,7 +38,7 @@ fun DecodeScreen(
                 modifier = modifier.fillMaxWidth(),
                 enabled = ButkusViewModel.SharedViewState.uiEnabled,
                 value = decodeUiState.message,
-                onValueChange = onMessageChanged,
+                onValueChange = { decodeViewModel.updateEncodedMessage(it) },
                 singleLine = false,
                 label = { Text(stringResource(R.string.encoded_message_label)) },
                 placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
@@ -54,8 +54,8 @@ fun DecodeScreen(
         ) {
             Button(
                 modifier = modifier.weight(0.5f),
-                enabled = ButkusViewModel.SharedViewState.uiEnabled && canDecode,
-                onClick = onDecode,
+                enabled = ButkusViewModel.SharedViewState.uiEnabled && decodeViewModel.canRun,
+                onClick = { ButkusViewModel.SharedViewState.isRunning = true },
             ) {
                 Text(
                     text = stringResource(R.string.decode),
@@ -66,7 +66,7 @@ fun DecodeScreen(
             Button(
                 modifier = modifier.weight(0.5f),
                 enabled = ButkusViewModel.SharedViewState.uiEnabled,
-                onClick = onReset,
+                onClick = { decodeViewModel.reset() },
             ) {
                 Text(
                     text = stringResource(R.string.reset),
@@ -80,7 +80,7 @@ fun DecodeScreen(
 
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = decodeUiState.decodedMessage,
+                value = decodeUiState.decodedMessage!!,
                 onValueChange = { },
                 readOnly = true,
                 label = { Text(stringResource(R.string.decode_output_label)) }
@@ -92,29 +92,7 @@ fun DecodeScreen(
 @Preview(showBackground = true)
 @Composable
 fun DecodeScreenPreviewDefault() {
-    val encodeUiState = DecodeUiState()
     ButkusAppTheme {
-        DecodeScreen(
-            decodeUiState = encodeUiState,
-            onMessageChanged = { },
-            canDecode = true,
-            onDecode = { },
-            onReset = { },
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DecodeScreenPreviewDecodedMessage() {
-    val decodeUiState = DecodeUiState(decodedMessage = "Secret message")
-    ButkusAppTheme {
-        DecodeScreen(
-            decodeUiState = decodeUiState,
-            onMessageChanged = { },
-            canDecode = true,
-            onDecode = { },
-            onReset = { },
-        )
+        DecodeScreen()
     }
 }
