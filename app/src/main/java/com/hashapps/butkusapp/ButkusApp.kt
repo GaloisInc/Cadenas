@@ -28,7 +28,7 @@ import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
 
-enum class ButkusScreen(@StringRes val title: Int) {
+private enum class ButkusScreen(@StringRes val title: Int) {
     Encode(title = R.string.encode),
     Decode(title = R.string.decode),
     Settings(title = R.string.settings),
@@ -60,7 +60,7 @@ private fun Drawer(
 }
 
 @Composable
-fun ButkusAppBar(
+private fun ButkusAppBar(
     currentScreen: ButkusScreen,
     onOpenDrawer: () -> Unit,
     canShare: Boolean,
@@ -190,7 +190,7 @@ fun ButkusApp(
     }
 }
 
-fun shareMessage(context: Context, message: String?) {
+private fun shareMessage(context: Context, message: String?) {
     if (message != null) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
