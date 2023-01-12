@@ -39,30 +39,26 @@ class EncodeViewModel : ButkusViewModel() {
     /** Add `tag` from the state backing the tag list view and update the
      * encoded text if it is not null */
     fun addTag(tag: String) {
-        if (tag !in _encodeUiState.value.addedTags) {
-            _encodeUiState.update { currentState ->
-                currentState.copy(
-                    addedTags = currentState.addedTags + tag,
-                    encodedMessage = currentState.encodedMessage?.let { "$it #$tag" }
-                )
-            }
+        _encodeUiState.update { currentState ->
+            currentState.copy(
+                addedTags = currentState.addedTags + tag,
+                encodedMessage = currentState.encodedMessage?.let { "$it #$tag" }
+            )
         }
     }
 
     /** Remove `tag` from the state backing the tag list view and update the
      * encoded text if it is not null */
     fun removeTag(tag: String) {
-        if (tag in _encodeUiState.value.addedTags) {
-            _encodeUiState.update { currentState ->
-                currentState.copy(
-                    addedTags = currentState.addedTags - tag,
-                    encodedMessage = currentState.encodedMessage?.let {
-                        it.substringBefore(" #$tag") + it.substringAfter(
-                            " #$tag"
-                        )
-                    }
-                )
-            }
+        _encodeUiState.update { currentState ->
+            currentState.copy(
+                addedTags = currentState.addedTags - tag,
+                encodedMessage = currentState.encodedMessage?.let {
+                    it.substringBefore(" #$tag") + it.substringAfter(
+                        " #$tag"
+                    )
+                }
+            )
         }
     }
 

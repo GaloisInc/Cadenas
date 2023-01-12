@@ -60,9 +60,9 @@ fun EncodeScreen(
             OutlinedButton(
                 enabled = ButkusViewModel.SharedViewState.uiEnabled,
                 onClick = {
-                    if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() }) {
-                      encodeViewModel.addTag(encodeUiState.tagToAdd)
-                      encodeViewModel.updateTagToAdd("")
+                    if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() } && encodeUiState.tagToAdd !in encodeUiState.addedTags) {
+                        encodeViewModel.addTag(encodeUiState.tagToAdd)
+                        encodeViewModel.updateTagToAdd("")
                     }
                 },
             ) {
@@ -77,7 +77,11 @@ fun EncodeScreen(
             items(encodeUiState.addedTags.toList()) { tag ->
                 TagEntry(
                     tag = tag,
-                    onTagRemove = { encodeViewModel.removeTag(tag) }
+                    onTagRemove = {
+                        if (tag in encodeUiState.addedTags) {
+                            encodeViewModel.removeTag(tag)
+                        }
+                    }
                 )
             }
         }
