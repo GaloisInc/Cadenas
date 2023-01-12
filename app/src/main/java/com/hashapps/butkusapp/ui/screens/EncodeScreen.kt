@@ -155,6 +155,6 @@ fun TagEntry(
 @Composable
 fun EncodeScreenPreviewDefault() {
     ButkusAppTheme {
-        EncodeScreen(encodeViewModel = EncodeViewModel())
+        EncodeScreen()
     }
 }
