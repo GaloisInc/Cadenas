@@ -17,11 +17,27 @@ package com.hashapps.butkusapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Pink400 = Color(0xFFEC407A)
-val Pink600 = Color(0xFFD81B60)
-val Pink950 = Color(0xFFB31650)
-val Purple400 = Color(0xFFAB47BC)
-val Purple700 = Color(0xFF7B1FA2)
-val Black = Color(0xFF000000)
-val White = Color(0xFFFFFFFF)
+val md_theme_light_primary = Color(0xFF1260A4)
+val md_theme_light_onPrimary = Color(0xFFFFFFFF)
+val md_theme_light_secondary = Color(0xFF00658E)
+val md_theme_light_onSecondary = Color(0xFFFFFFFF)
+val md_theme_light_error = Color(0xFFBA1A1A)
+val md_theme_light_onError = Color(0xFFFFFFFF)
+val md_theme_light_background = Color(0xFFF8FDFF)
+val md_theme_light_onBackground = Color(0xFF001F25)
+val md_theme_light_surface = Color(0xFFF8FDFF)
+val md_theme_light_onSurface = Color(0xFF001F25)
+
+val md_theme_dark_primary = Color(0xFFA2C9FF)
+val md_theme_dark_onPrimary = Color(0xFF00315B)
+val md_theme_dark_secondary = Color(0xFF84CFFF)
+val md_theme_dark_onSecondary = Color(0xFF00344C)
+val md_theme_dark_error = Color(0xFFFFB4AB)
+val md_theme_dark_onError = Color(0xFF690005)
+val md_theme_dark_background = Color(0xFF001F25)
+val md_theme_dark_onBackground = Color(0xFFA6EEFF)
+val md_theme_dark_surface = Color(0xFF001F25)
+val md_theme_dark_onSurface = Color(0xFFA6EEFF)
+
+val seed = Color(0xFF3677BC)
 
