@@ -50,6 +50,10 @@ class EncodeViewModel : ButkusViewModel() {
         }
     }
 
+    /** Get the (possibly null) encoded output */
+    val encodedMessage
+        get() = encodeUiState.value.encodedMessage
+
     /** Encode the message in the plaintext input box, format and append tags,
      * and update the state backing the (usually hidden) encoded-message text box */
     override suspend fun run() {

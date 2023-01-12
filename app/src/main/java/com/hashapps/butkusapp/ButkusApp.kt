@@ -144,7 +144,6 @@ fun ButkusApp(
     }
 
     // Get the actual UI state to control the app view
-    val encodeUiState by encodeViewModel.encodeUiState.collectAsState()
     val decodeUiState by decodeViewModel.decodeUiState.collectAsState()
 
     Scaffold(
@@ -158,7 +157,7 @@ fun ButkusApp(
                     }
                 },
                 canShare = currentScreen == ButkusScreen.Encode && encodeViewModel.runOutputNonempty,
-                onShare = { shareMessage(context, encodeUiState.encodedMessage) }
+                onShare = { shareMessage(context, encodeViewModel.encodedMessage) }
             )
         },
         drawerGesturesEnabled = ButkusViewModel.SharedViewState.uiEnabled,
@@ -180,27 +179,7 @@ fun ButkusApp(
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
-                EncodeScreen(
-                    encodeUiState = encodeUiState,
-                    onMessageChanged = {
-                        encodeViewModel.updatePlaintextMessage(it)
-                    },
-                    onTagToAddChanged = {
-                        encodeViewModel.updateTagToAdd(it)
-                    },
-                    onAddTag = {
-                        if (encodeUiState.tagToAdd != "") {
-                            encodeViewModel.addTag(encodeUiState.tagToAdd)
-                            encodeViewModel.updateTagToAdd("")
-                        }
-                    },
-                    onDeleteTag = {
-                        { encodeViewModel.removeTag(it) }
-                    },
-                    canEncode = encodeViewModel.canRun,
-                    onEncode = { ButkusViewModel.SharedViewState.isRunning = true },
-                    onReset = { encodeViewModel.reset() },
-                )
+                EncodeScreen(encodeViewModel = encodeViewModel)
             }
 
             composable(route = ButkusScreen.Decode.name) {
