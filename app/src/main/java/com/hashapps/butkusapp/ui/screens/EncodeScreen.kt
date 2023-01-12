@@ -60,7 +60,7 @@ fun EncodeScreen(
             OutlinedButton(
                 enabled = ButkusViewModel.SharedViewState.uiEnabled,
                 onClick = {
-                    if (encodeUiState.tagToAdd != "") {
+                    if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() }) {
                       encodeViewModel.addTag(encodeUiState.tagToAdd)
                       encodeViewModel.updateTagToAdd("")
                     }
