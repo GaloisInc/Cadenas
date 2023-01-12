@@ -20,9 +20,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.ui.models.ButkusViewModel
-import com.hashapps.butkusapp.ui.DecodeScreen
-import com.hashapps.butkusapp.ui.EncodeScreen
-import com.hashapps.butkusapp.ui.SettingsScreen
+import com.hashapps.butkusapp.ui.screens.DecodeScreen
+import com.hashapps.butkusapp.ui.screens.EncodeScreen
+import com.hashapps.butkusapp.ui.screens.SettingsScreen
 import com.hashapps.butkusapp.ui.models.DecodeViewModel
 import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme

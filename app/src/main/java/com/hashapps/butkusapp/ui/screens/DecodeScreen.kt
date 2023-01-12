@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui
+package com.hashapps.butkusapp.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
