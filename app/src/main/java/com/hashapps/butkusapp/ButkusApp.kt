@@ -153,7 +153,7 @@ fun ButkusApp(
                         scaffoldState.drawerState.open()
                     }
                 },
-                canShare = ButkusViewModel.SharedViewState.hasShareable,
+                canShare = currentScreen == ButkusScreen.Encode && ButkusViewModel.SharedViewState.hasShareable,
                 onShare = { shareMessage(context, encodeViewModel.encodedMessage) }
             )
         },
