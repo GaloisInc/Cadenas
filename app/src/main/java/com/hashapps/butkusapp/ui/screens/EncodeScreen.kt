@@ -82,33 +82,17 @@ fun EncodeScreen(
             }
         }
 
-        Row(
+        Button(
             modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            enabled = ButkusViewModel.SharedViewState.uiEnabled && encodeViewModel.canRun,
+            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
         ) {
-            Button(
-                modifier = modifier.weight(0.5f),
-                enabled = ButkusViewModel.SharedViewState.uiEnabled && encodeViewModel.canRun,
-                onClick = { ButkusViewModel.SharedViewState.isRunning = true },
-            ) {
-                Text(
-                    text = stringResource(R.string.encode),
-                    style = MaterialTheme.typography.h6,
-                )
-            }
-
-            Button(
-                modifier = modifier.weight(0.5f),
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
-                onClick = { encodeViewModel.reset() },
-            ) {
-                Text(
-                    text = stringResource(R.string.reset),
-                    style = MaterialTheme.typography.h6,
-                )
-            }
+            Text(
+                text = stringResource(R.string.encode),
+                style = MaterialTheme.typography.h6,
+            )
         }
+
 
         if (encodeUiState.encodedMessage != null) {
             ButkusViewModel.SharedViewState.hasShareable = true

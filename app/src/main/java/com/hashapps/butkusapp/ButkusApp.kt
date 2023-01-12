@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -63,6 +64,7 @@ private fun Drawer(
 private fun ButkusAppBar(
     currentScreen: ButkusScreen,
     onOpenDrawer: () -> Unit,
+    onReset: () -> Unit,
     canShare: Boolean,
     onShare: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,6 +85,16 @@ private fun ButkusAppBar(
             }
         },
         actions = {
+            IconButton(
+                onClick = onReset,
+                enabled = ButkusViewModel.SharedViewState.uiEnabled,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = stringResource(R.string.reset)
+                )
+            }
+
             IconButton(
                 onClick = onShare,
                 enabled = ButkusViewModel.SharedViewState.uiEnabled && canShare,
@@ -151,6 +163,13 @@ fun ButkusApp(
                 onOpenDrawer = {
                     scope.launch {
                         scaffoldState.drawerState.open()
+                    }
+                },
+                onReset = {
+                    when (currentScreen) {
+                        ButkusScreen.Encode -> encodeViewModel.reset()
+                        ButkusScreen.Decode -> decodeViewModel.reset()
+                        ButkusScreen.Settings -> { }
                     }
                 },
                 canShare = currentScreen == ButkusScreen.Encode && ButkusViewModel.SharedViewState.hasShareable,

@@ -47,32 +47,15 @@ fun DecodeScreen(
         
         Spacer(modifier = modifier.weight(1f))
 
-        Row(
+        Button(
             modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            enabled = ButkusViewModel.SharedViewState.uiEnabled && decodeViewModel.canRun,
+            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
         ) {
-            Button(
-                modifier = modifier.weight(0.5f),
-                enabled = ButkusViewModel.SharedViewState.uiEnabled && decodeViewModel.canRun,
-                onClick = { ButkusViewModel.SharedViewState.isRunning = true },
-            ) {
-                Text(
-                    text = stringResource(R.string.decode),
-                    style = MaterialTheme.typography.h6,
-                )
-            }
-
-            Button(
-                modifier = modifier.weight(0.5f),
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
-                onClick = { decodeViewModel.reset() },
-            ) {
-                Text(
-                    text = stringResource(R.string.reset),
-                    style = MaterialTheme.typography.h6,
-                )
-            }
+            Text(
+                text = stringResource(R.string.decode),
+                style = MaterialTheme.typography.h6,
+            )
         }
 
         if (decodeUiState.decodedMessage != null) {
