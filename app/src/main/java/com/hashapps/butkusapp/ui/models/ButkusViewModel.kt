@@ -4,12 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.hashapps.butkusapp.data.ButkusScreen
 
 abstract class ButkusViewModel : ViewModel() {
     /** Singleton for state shared by all ButkusViewModel instances */
     object SharedViewState {
         /** State of whether ButkusCore has been initialized */
         var butkusInitialized by mutableStateOf(false)
+
+        /** The currently-displayed screen */
+        var currentScreen by mutableStateOf(ButkusScreen.Encode)
 
         /** State of whether the action button has been pressed and a
          * background process has been started (but not completed) */

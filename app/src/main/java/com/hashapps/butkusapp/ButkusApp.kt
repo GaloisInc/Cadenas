@@ -70,7 +70,6 @@ private fun DrawerItem(
 @Composable
 private fun Drawer(
     modifier: Modifier = Modifier,
-    currentScreen: ButkusScreen,
     onDestinationClicked: (String) -> Unit,
 ) {
     Column(
@@ -82,7 +81,7 @@ private fun Drawer(
         ButkusScreen.values().forEach {
             DrawerItem(
                 screen = it,
-                selected = currentScreen == it,
+                selected = ButkusViewModel.SharedViewState.currentScreen == it,
                 onDestinationClicked = onDestinationClicked
             )
         }
@@ -91,15 +90,13 @@ private fun Drawer(
 
 @Composable
 private fun ButkusAppBar(
-    currentScreen: ButkusScreen,
     onOpenDrawer: () -> Unit,
     onReset: () -> Unit,
-    canShare: Boolean,
     onShare: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text(stringResource(currentScreen.title)) },
+        title = { Text(stringResource(ButkusViewModel.SharedViewState.currentScreen.title)) },
         backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier,
         navigationIcon = {
@@ -124,14 +121,16 @@ private fun ButkusAppBar(
                 )
             }
 
-            IconButton(
-                onClick = onShare,
-                enabled = ButkusViewModel.SharedViewState.uiEnabled && canShare,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Share,
-                    contentDescription = stringResource(R.string.share_button),
-                )
+            if (ButkusViewModel.SharedViewState.currentScreen == ButkusScreen.Encode) {
+                IconButton(
+                    onClick = onShare,
+                    enabled = ButkusViewModel.SharedViewState.uiEnabled && ButkusViewModel.SharedViewState.hasShareable,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = stringResource(R.string.share_button),
+                    )
+                }
             }
         }
     )
@@ -152,7 +151,7 @@ fun ButkusApp(
     // Navigation setup
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = ButkusScreen.valueOf(
+    ButkusViewModel.SharedViewState.currentScreen = ButkusScreen.valueOf(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
 
@@ -175,7 +174,7 @@ fun ButkusApp(
         val processingAlert = stringResource(R.string.processing_alert)
         LaunchedEffect(Unit) {
             scaffoldState.snackbarHostState.showSnackbar(message = processingAlert)
-            when (currentScreen) {
+            when (ButkusViewModel.SharedViewState.currentScreen) {
                 ButkusScreen.Encode -> encodeViewModel.run()
                 ButkusScreen.Decode -> decodeViewModel.run()
                 else -> {}
@@ -188,27 +187,24 @@ fun ButkusApp(
         scaffoldState = scaffoldState,
         topBar = {
             ButkusAppBar(
-                currentScreen = currentScreen,
                 onOpenDrawer = {
                     scope.launch {
                         scaffoldState.drawerState.open()
                     }
                 },
                 onReset = {
-                    when (currentScreen) {
+                    when (ButkusViewModel.SharedViewState.currentScreen) {
                         ButkusScreen.Encode -> encodeViewModel.reset()
                         ButkusScreen.Decode -> decodeViewModel.reset()
                         ButkusScreen.Settings -> {}
                     }
                 },
-                canShare = currentScreen == ButkusScreen.Encode && ButkusViewModel.SharedViewState.hasShareable,
                 onShare = { shareMessage(context, encodeViewModel.encodedMessage) }
             )
         },
         drawerGesturesEnabled = ButkusViewModel.SharedViewState.uiEnabled,
         drawerContent = {
             Drawer(
-                currentScreen = currentScreen,
                 onDestinationClicked = { route ->
                     scope.launch {
                         scaffoldState.drawerState.close()
