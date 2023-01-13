@@ -206,11 +206,10 @@ fun ButkusApp(
         drawerContent = {
             Drawer(
                 onDestinationClicked = { route ->
+                    navController.navigate(route)
                     scope.launch {
                         scaffoldState.drawerState.close()
                     }
-
-                    navController.navigate(route)
                 }
             )
         }
