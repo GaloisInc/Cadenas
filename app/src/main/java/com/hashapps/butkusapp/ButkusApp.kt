@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,11 +25,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.data.ButkusScreen
 import com.hashapps.butkusapp.ui.models.ButkusViewModel
+import com.hashapps.butkusapp.ui.models.DecodeViewModel
+import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
 import com.hashapps.butkusapp.ui.screens.SettingsScreen
-import com.hashapps.butkusapp.ui.models.DecodeViewModel
-import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
 
@@ -175,7 +178,7 @@ fun ButkusApp(
             when (currentScreen) {
                 ButkusScreen.Encode -> encodeViewModel.run()
                 ButkusScreen.Decode -> decodeViewModel.run()
-                else -> { }
+                else -> {}
             }
             ButkusViewModel.SharedViewState.isRunning = false
         }
@@ -195,7 +198,7 @@ fun ButkusApp(
                     when (currentScreen) {
                         ButkusScreen.Encode -> encodeViewModel.reset()
                         ButkusScreen.Decode -> decodeViewModel.reset()
-                        ButkusScreen.Settings -> { }
+                        ButkusScreen.Settings -> {}
                     }
                 },
                 canShare = currentScreen == ButkusScreen.Encode && ButkusViewModel.SharedViewState.hasShareable,
