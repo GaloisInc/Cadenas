@@ -47,17 +47,6 @@ fun DecodeScreen(
         
         Spacer(modifier = modifier.weight(1f))
 
-        Button(
-            modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.SharedViewState.uiEnabled && decodeViewModel.canRun,
-            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
-        ) {
-            Text(
-                text = stringResource(R.string.decode),
-                style = MaterialTheme.typography.h6,
-            )
-        }
-
         if (decodeUiState.decodedMessage != null) {
             Divider(thickness = 2.dp, modifier = modifier)
 
@@ -67,6 +56,17 @@ fun DecodeScreen(
                 onValueChange = { },
                 readOnly = true,
                 label = { Text(stringResource(R.string.decode_output_label)) }
+            )
+        }
+
+        Button(
+            modifier = modifier.fillMaxWidth(),
+            enabled = ButkusViewModel.SharedViewState.uiEnabled && decodeViewModel.canRun,
+            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
+        ) {
+            Text(
+                text = stringResource(R.string.decode),
+                style = MaterialTheme.typography.h6,
             )
         }
     }

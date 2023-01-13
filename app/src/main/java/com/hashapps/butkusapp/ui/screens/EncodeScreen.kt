@@ -86,18 +86,6 @@ fun EncodeScreen(
             }
         }
 
-        Button(
-            modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.SharedViewState.uiEnabled && encodeViewModel.canRun,
-            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
-        ) {
-            Text(
-                text = stringResource(R.string.encode),
-                style = MaterialTheme.typography.h6,
-            )
-        }
-
-
         if (encodeUiState.encodedMessage != null) {
             ButkusViewModel.SharedViewState.hasShareable = true
 
@@ -119,6 +107,17 @@ fun EncodeScreen(
             )
         } else {
             ButkusViewModel.SharedViewState.hasShareable = false
+        }
+
+        Button(
+            modifier = modifier.fillMaxWidth(),
+            enabled = ButkusViewModel.SharedViewState.uiEnabled && encodeViewModel.canRun,
+            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
+        ) {
+            Text(
+                text = stringResource(R.string.encode),
+                style = MaterialTheme.typography.h6,
+            )
         }
     }
 }
