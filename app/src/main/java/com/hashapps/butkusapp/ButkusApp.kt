@@ -40,7 +40,7 @@ private fun DrawerItem(
     selected: Boolean,
     onDestinationClicked: (String) -> Unit,
 ) {
-    val backgroundColor = if (selected) MaterialTheme.colors.secondary else Color.Transparent
+    val backgroundColor = if (selected) MaterialTheme.colors.primary else Color.Transparent
     val screenName = stringResource(screen.title)
     val icon = when (screen) {
         ButkusScreen.Encode -> Icons.Filled.Lock
@@ -61,6 +61,7 @@ private fun DrawerItem(
         Spacer(Modifier.width(8.dp))
         Text(
             text = screenName,
+            color = if (selected) MaterialTheme.colors.onPrimary else LocalContentColor.current,
             style = MaterialTheme.typography.h6,
         )
     }
@@ -118,7 +119,7 @@ private fun ButkusAppBar(
                 enabled = ButkusViewModel.SharedViewState.uiEnabled,
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Refresh,
+                    imageVector = Icons.Filled.RestartAlt,
                     contentDescription = stringResource(R.string.reset)
                 )
             }
