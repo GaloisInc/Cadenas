@@ -2,15 +2,16 @@ package com.hashapps.butkusapp
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,26 +31,57 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
 
 @Composable
+private fun DrawerItem(
+    modifier: Modifier = Modifier,
+    screen: ButkusScreen,
+    selected: Boolean,
+    onDestinationClicked: (String) -> Unit,
+) {
+    val backgroundColor = if (selected) MaterialTheme.colors.secondary else Color.Transparent
+    val screenName = stringResource(screen.title)
+    val icon = when (screen) {
+        ButkusScreen.Encode -> Icons.Filled.EnhancedEncryption
+        ButkusScreen.Decode -> Icons.Filled.NoEncryption
+        ButkusScreen.Settings -> Icons.Filled.Settings
+    }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onDestinationClicked(screenName) }
+            .background(color = backgroundColor)
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(imageVector = icon, contentDescription = screenName)
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = screenName,
+            style = MaterialTheme.typography.h6,
+        )
+    }
+}
+
+@Composable
 private fun Drawer(
     modifier: Modifier = Modifier,
+    currentScreen: ButkusScreen,
     onDestinationClicked: (String) -> Unit,
 ) {
     Column(
-        modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(start = 24.dp, top = 24.dp)
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ButkusScreen.values().forEach {
-            val screen = stringResource(it.title)
-            Text(
-                text = screen,
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.clickable {
-                    onDestinationClicked(screen)
-                }
+            DrawerItem(
+                screen = it,
+                selected = currentScreen == it,
+                onDestinationClicked = onDestinationClicked
             )
-
-            Spacer(Modifier.height(24.dp))
         }
     }
 }
@@ -173,6 +205,7 @@ fun ButkusApp(
         drawerGesturesEnabled = ButkusViewModel.SharedViewState.uiEnabled,
         drawerContent = {
             Drawer(
+                currentScreen = currentScreen,
                 onDestinationClicked = { route ->
                     scope.launch {
                         scaffoldState.drawerState.close()
