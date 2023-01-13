@@ -28,7 +28,6 @@ abstract class ButkusViewModel : ViewModel() {
     }
 
     abstract val runInputNonempty: Boolean
-    abstract val runOutputNonempty: Boolean
 
     /** Return true iff the main action button associated with run() should be enabled */
     val canRun

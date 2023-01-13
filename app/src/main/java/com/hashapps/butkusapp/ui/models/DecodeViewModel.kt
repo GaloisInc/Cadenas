@@ -15,10 +15,6 @@ class DecodeViewModel : ButkusViewModel() {
     override val runInputNonempty: Boolean
         get() = _decodeUiState.value.message.isNotEmpty()
 
-    /** True iff the decoded plaintext is non-null */
-    override val runOutputNonempty: Boolean
-        get() = _decodeUiState.value.decodedMessage != null
-
     /** DecodeViewModel-controlled state, safe from changes from other classes */
     val decodeUiState: StateFlow<DecodeUiState> = _decodeUiState.asStateFlow()
 
