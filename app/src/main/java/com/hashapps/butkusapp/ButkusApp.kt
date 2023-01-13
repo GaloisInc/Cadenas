@@ -2,7 +2,6 @@ package com.hashapps.butkusapp
 
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -20,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hashapps.butkusapp.data.ButkusScreen
 import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
@@ -28,12 +28,6 @@ import com.hashapps.butkusapp.ui.models.DecodeViewModel
 import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
-
-private enum class ButkusScreen(@StringRes val title: Int) {
-    Encode(title = R.string.encode),
-    Decode(title = R.string.decode),
-    Settings(title = R.string.settings),
-}
 
 @Composable
 private fun Drawer(
