@@ -43,8 +43,8 @@ private fun DrawerItem(
     val backgroundColor = if (selected) MaterialTheme.colors.secondary else Color.Transparent
     val screenName = stringResource(screen.title)
     val icon = when (screen) {
-        ButkusScreen.Encode -> Icons.Filled.EnhancedEncryption
-        ButkusScreen.Decode -> Icons.Filled.NoEncryption
+        ButkusScreen.Encode -> Icons.Filled.Lock
+        ButkusScreen.Decode -> Icons.Filled.LockOpen
         ButkusScreen.Settings -> Icons.Filled.Settings
     }
 
