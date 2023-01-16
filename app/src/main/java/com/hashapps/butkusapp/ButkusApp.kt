@@ -37,7 +37,6 @@ import kotlinx.coroutines.launch
 private fun DrawerItem(
     modifier: Modifier = Modifier,
     screen: ButkusScreen,
-    selected: Boolean,
     onDestinationClicked: (String) -> Unit,
 ) {
     val screenName = stringResource(screen.title)
@@ -46,7 +45,7 @@ private fun DrawerItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onDestinationClicked(screenName) }
-            .background(color = if (selected) MaterialTheme.colors.primary else Color.Transparent)
+            .background(color = if (ButkusViewModel.SharedViewState.currentScreen == screen) MaterialTheme.colors.primary else Color.Transparent)
             .padding(8.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -62,7 +61,7 @@ private fun DrawerItem(
         Spacer(Modifier.width(8.dp))
         Text(
             text = screenName,
-            color = if (selected) MaterialTheme.colors.onPrimary else LocalContentColor.current,
+            color = if (ButkusViewModel.SharedViewState.currentScreen == screen) MaterialTheme.colors.onPrimary else LocalContentColor.current,
             style = MaterialTheme.typography.h6,
         )
     }
@@ -82,7 +81,6 @@ private fun Drawer(
         ButkusScreen.values().forEach {
             DrawerItem(
                 screen = it,
-                selected = ButkusViewModel.SharedViewState.currentScreen == it,
                 onDestinationClicked = onDestinationClicked
             )
         }
