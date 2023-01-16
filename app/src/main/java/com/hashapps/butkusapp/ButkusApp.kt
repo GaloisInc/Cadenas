@@ -40,24 +40,25 @@ private fun DrawerItem(
     selected: Boolean,
     onDestinationClicked: (String) -> Unit,
 ) {
-    val backgroundColor = if (selected) MaterialTheme.colors.primary else Color.Transparent
     val screenName = stringResource(screen.title)
-    val icon = when (screen) {
-        ButkusScreen.Encode -> Icons.Filled.Lock
-        ButkusScreen.Decode -> Icons.Filled.LockOpen
-        ButkusScreen.Settings -> Icons.Filled.Settings
-    }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onDestinationClicked(screenName) }
-            .background(color = backgroundColor)
+            .background(color = if (selected) MaterialTheme.colors.primary else Color.Transparent)
             .padding(8.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(imageVector = icon, contentDescription = screenName)
+        Icon(
+            imageVector = when (screen) {
+                ButkusScreen.Encode -> Icons.Filled.Lock
+                ButkusScreen.Decode -> Icons.Filled.LockOpen
+                ButkusScreen.Settings -> Icons.Filled.Settings
+            },
+            contentDescription = screenName,
+        )
         Spacer(Modifier.width(8.dp))
         Text(
             text = screenName,
