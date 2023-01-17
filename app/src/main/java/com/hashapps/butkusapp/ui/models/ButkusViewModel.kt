@@ -6,6 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.hashapps.butkusapp.data.ButkusScreen
 
+/** Abstract ViewModel class for Butkus screens. Contains a singleton for state
+ * shared by all screens (e.g. what screen is being displayed, whether a main
+ * action is running, whether the UI should be enabled.) */
 abstract class ButkusViewModel : ViewModel() {
     /** Singleton for state shared by all ButkusViewModel instances */
     object SharedViewState {
@@ -27,9 +30,10 @@ abstract class ButkusViewModel : ViewModel() {
             get() = !isRunning
     }
 
+    /** True iff the input needed to perform the main action is non-empty */
     abstract val runInputNonempty: Boolean
 
-    /** Return true iff the main action button associated with run() should be enabled */
+    /** True iff the main action button associated with run() should be enabled */
     val canRun
         get() = SharedViewState.butkusInitialized && !SharedViewState.isRunning && runInputNonempty
 

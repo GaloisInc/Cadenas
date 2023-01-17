@@ -15,10 +15,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
+import com.hashapps.butkusapp.ui.components.TagEntry
 import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
+/** The message encoding screen. Consists of:
+ * - Text field for the message to encode
+ * - Text field and button to add alphabetic tags to encoded messages
+ * - (If tag set nonempty) Scrollable list of TagEntry
+ * - (If message encoded) The encoded message, with tags appended to the end
+ *   (e.g. adding the tag 'funny' appends '#funny' to the encoded message)
+ * - Action button (Encode) */
 @Composable
 fun EncodeScreen(
     modifier: Modifier = Modifier,
@@ -117,26 +125,6 @@ fun EncodeScreen(
             Text(
                 text = stringResource(R.string.encode),
                 style = MaterialTheme.typography.h6,
-            )
-        }
-    }
-}
-
-@Composable
-fun TagEntry(
-    tag: String,
-    onTagRemove: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(text = tag, style = MaterialTheme.typography.caption)
-        Button(enabled = ButkusViewModel.SharedViewState.uiEnabled, onClick = onTagRemove) {
-            Text(
-                text = stringResource(R.string.delete),
             )
         }
     }

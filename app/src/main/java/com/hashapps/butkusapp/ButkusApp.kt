@@ -2,28 +2,23 @@ package com.hashapps.butkusapp
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.data.ButkusScreen
+import com.hashapps.butkusapp.ui.components.ButkusAppBar
+import com.hashapps.butkusapp.ui.components.Drawer
 import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.models.DecodeViewModel
 import com.hashapps.butkusapp.ui.models.EncodeViewModel
@@ -33,108 +28,14 @@ import com.hashapps.butkusapp.ui.screens.SettingsScreen
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
 
-@Composable
-private fun DrawerItem(
-    modifier: Modifier = Modifier,
-    screen: ButkusScreen,
-    onDestinationClicked: (String) -> Unit,
-) {
-    val screenName = stringResource(screen.title)
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onDestinationClicked(screenName) }
-            .background(color = if (ButkusViewModel.SharedViewState.currentScreen == screen) MaterialTheme.colors.primary else Color.Transparent)
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = when (screen) {
-                ButkusScreen.Encode -> Icons.Filled.Lock
-                ButkusScreen.Decode -> Icons.Filled.LockOpen
-                ButkusScreen.Settings -> Icons.Filled.Settings
-            },
-            contentDescription = screenName,
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = screenName,
-            color = if (ButkusViewModel.SharedViewState.currentScreen == screen) MaterialTheme.colors.onPrimary else LocalContentColor.current,
-            style = MaterialTheme.typography.h6,
-        )
-    }
-}
-
-@Composable
-private fun Drawer(
-    modifier: Modifier = Modifier,
-    onDestinationClicked: (String) -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        ButkusScreen.values().forEach {
-            DrawerItem(
-                screen = it,
-                onDestinationClicked = onDestinationClicked
-            )
-        }
-    }
-}
-
-@Composable
-private fun ButkusAppBar(
-    onOpenDrawer: () -> Unit,
-    onReset: () -> Unit,
-    onShare: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    TopAppBar(
-        title = { Text(stringResource(ButkusViewModel.SharedViewState.currentScreen.title)) },
-        backgroundColor = MaterialTheme.colors.primary,
-        modifier = modifier,
-        navigationIcon = {
-            IconButton(
-                onClick = onOpenDrawer,
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = stringResource(R.string.switch_button),
-                )
-            }
-        },
-        actions = {
-            IconButton(
-                onClick = onReset,
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.RestartAlt,
-                    contentDescription = stringResource(R.string.reset)
-                )
-            }
-
-            if (ButkusViewModel.SharedViewState.currentScreen == ButkusScreen.Encode) {
-                IconButton(
-                    onClick = onShare,
-                    enabled = ButkusViewModel.SharedViewState.uiEnabled && ButkusViewModel.SharedViewState.hasShareable,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Share,
-                        contentDescription = stringResource(R.string.share_button),
-                    )
-                }
-            }
-        }
-    )
-}
-
+/** The Butkus application.
+ *
+ * Built on a Material design scaffold, the Butkus application consists of
+ * three distinct screens:
+ *
+ * - Message encoding
+ * - Message decoding
+ * - TODO: Persistent settings */
 @Composable
 fun ButkusApp(
     modifier: Modifier = Modifier,

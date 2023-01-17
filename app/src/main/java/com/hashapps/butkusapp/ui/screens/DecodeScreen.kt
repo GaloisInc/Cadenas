@@ -17,6 +17,12 @@ import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.models.DecodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
+/** The message decoding screen. Consists of:
+ * - Text field for the message to decode. Note that before decoding, trailing
+ *   tags of the form '#<tag here>' and a single space preceding them will be
+ *   stripped off
+ * - (If message decoded) The decoded message
+ * - Action button (Decode) */
 @Composable
 fun DecodeScreen(
     modifier: Modifier = Modifier,

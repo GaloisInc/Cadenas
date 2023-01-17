@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 
+/** Composable forcing screen orientation (that restores the original
+ * orientation when the effect is disposed.) */
 @Composable
 fun LockScreenOrientation(orientation: Int) {
     val context = LocalContext.current
@@ -20,7 +22,7 @@ fun LockScreenOrientation(orientation: Int) {
     }
 }
 
-fun Context.findActivity(): Activity? = when (this) {
+private fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
