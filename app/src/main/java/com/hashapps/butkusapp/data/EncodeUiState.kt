@@ -11,7 +11,7 @@ data class EncodeUiState (
     val tagToAdd: String = "",
 
     /** The tags to append to the encoded message. */
-    val addedTags: Set<String> = setOf(),
+    val addedTags: Set<String> = setOf("modnargathsah"),
 
     /** The encoded message. */
     val encodedMessage: String? = null,
