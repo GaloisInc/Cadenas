@@ -4,14 +4,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,7 +21,6 @@ import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
 import com.hashapps.butkusapp.ui.screens.SettingsScreen
-import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 import kotlinx.coroutines.launch
 
 /** The Butkus application.
@@ -35,12 +30,12 @@ import kotlinx.coroutines.launch
  *
  * - Message encoding
  * - Message decoding
- * - TODO: Persistent settings */
+ * - Settings */
 @Composable
 fun ButkusApp(
     modifier: Modifier = Modifier,
-    encodeViewModel: EncodeViewModel = EncodeViewModel(),
-    decodeViewModel: DecodeViewModel = DecodeViewModel(),
+    encodeViewModel: EncodeViewModel,
+    decodeViewModel: DecodeViewModel,
 ) {
     // Get the app context
     val context = LocalContext.current
@@ -120,11 +115,33 @@ fun ButkusApp(
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
-                EncodeScreen(encodeViewModel = encodeViewModel)
+                val encodeUiState by encodeViewModel.encodeUiState.collectAsState()
+                EncodeScreen(
+                    encodeUiState = encodeUiState,
+                    onPlaintextChange = { encodeViewModel.updatePlaintextMessage(it) },
+                    onTagChange = { encodeViewModel.updateTagToAdd(it) },
+                    onAddTag = {
+                        if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() } && encodeUiState.tagToAdd !in encodeUiState.addedTags) {
+                            encodeViewModel.addTag(encodeUiState.tagToAdd)
+                            encodeViewModel.updateTagToAdd("")
+                        }
+                    },
+                    onTagRemove = {
+                        if (it in encodeUiState.addedTags) {
+                            encodeViewModel.removeTag(it)
+                        }
+                    },
+                    canRun = encodeViewModel.canRun,
+                )
             }
 
             composable(route = ButkusScreen.Decode.name) {
-                DecodeScreen(decodeViewModel = decodeViewModel)
+                val decodeUiState by decodeViewModel.decodeUiState.collectAsState()
+                DecodeScreen(
+                    decodeUiState = decodeUiState,
+                    onCoverTextChange = { decodeViewModel.updateEncodedMessage(it) },
+                    canRun = decodeViewModel.canRun,
+                )
             }
 
             composable(route = ButkusScreen.Settings.name) {
@@ -146,21 +163,5 @@ private fun shareMessage(context: Context, message: String?) {
                 context.getString(R.string.butkus_message)
             )
         )
-    }
-}
-
-@Preview
-@Composable
-fun ButkusAppPreview() {
-    ButkusAppTheme {
-        ButkusApp()
-    }
-}
-
-@Preview
-@Composable
-fun ButkusAppDarkPreview() {
-    ButkusAppTheme(darkTheme = true) {
-        ButkusApp()
     }
 }

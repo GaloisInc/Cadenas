@@ -1,5 +1,6 @@
 package com.hashapps.butkusapp.ui.models
 
+import android.app.Application
 import com.hashapps.butkusapp.Butkus
 import com.hashapps.butkusapp.data.EncodeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /** ButkusViewModel for the encoding screen */
-class EncodeViewModel : ButkusViewModel() {
+class EncodeViewModel(app: Application) : ButkusViewModel(app) {
     private val _encodeUiState = MutableStateFlow(EncodeUiState())
 
     /** True iff the plaintext input box is non-empty */

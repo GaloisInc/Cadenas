@@ -5,8 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -15,9 +13,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
+import com.hashapps.butkusapp.data.EncodeUiState
 import com.hashapps.butkusapp.ui.components.TagEntry
 import com.hashapps.butkusapp.ui.models.ButkusViewModel
-import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 /** The message encoding screen. Consists of:
@@ -30,10 +28,13 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 @Composable
 fun EncodeScreen(
     modifier: Modifier = Modifier,
-    encodeViewModel: EncodeViewModel = EncodeViewModel(),
+    encodeUiState: EncodeUiState,
+    onPlaintextChange: (String) -> Unit,
+    onTagChange: (String) -> Unit,
+    onAddTag: () -> Unit,
+    onTagRemove: (String) -> Unit,
+    canRun: Boolean,
 ) {
-    val encodeUiState by encodeViewModel.encodeUiState.collectAsState()
-
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -45,7 +46,7 @@ fun EncodeScreen(
             modifier = modifier.fillMaxWidth(),
             enabled = ButkusViewModel.SharedViewState.uiEnabled,
             value = encodeUiState.message,
-            onValueChange = { encodeViewModel.updatePlaintextMessage(it) },
+            onValueChange = onPlaintextChange,
             singleLine = false,
             label = { Text(stringResource(R.string.plaintext_message_label)) },
             placeholder = { Text(stringResource(R.string.plaintext_message_placeholder)) },
@@ -60,19 +61,14 @@ fun EncodeScreen(
                 modifier = Modifier.padding(end = 8.dp),
                 enabled = ButkusViewModel.SharedViewState.uiEnabled,
                 value = encodeUiState.tagToAdd,
-                onValueChange = { encodeViewModel.updateTagToAdd(it) },
+                onValueChange = onTagChange,
                 singleLine = true,
                 placeholder = { Text(stringResource(R.string.tag_placeholder)) },
             )
 
             OutlinedButton(
                 enabled = ButkusViewModel.SharedViewState.uiEnabled,
-                onClick = {
-                    if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() } && encodeUiState.tagToAdd !in encodeUiState.addedTags) {
-                        encodeViewModel.addTag(encodeUiState.tagToAdd)
-                        encodeViewModel.updateTagToAdd("")
-                    }
-                },
+                onClick = onAddTag,
             ) {
                 Text(
                     text = stringResource(R.string.add_tag),
@@ -85,11 +81,7 @@ fun EncodeScreen(
             items(encodeUiState.addedTags.toList()) { tag ->
                 TagEntry(
                     tag = tag,
-                    onTagRemove = {
-                        if (tag in encodeUiState.addedTags) {
-                            encodeViewModel.removeTag(tag)
-                        }
-                    }
+                    onTagRemove = { onTagRemove(tag) },
                 )
             }
         }
@@ -101,7 +93,7 @@ fun EncodeScreen(
 
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = encodeUiState.encodedMessage!!,
+                value = encodeUiState.encodedMessage,
                 onValueChange = { },
                 readOnly = true,
                 label = { Text(stringResource(R.string.encode_output_label)) }
@@ -110,7 +102,7 @@ fun EncodeScreen(
             Text(
                 text = LocalContext.current.getString(
                     R.string.encoded_message_length,
-                    encodeUiState.encodedMessage!!.length,
+                    encodeUiState.encodedMessage.length,
                 )
             )
         } else {
@@ -119,7 +111,7 @@ fun EncodeScreen(
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.SharedViewState.uiEnabled && encodeViewModel.canRun,
+            enabled = ButkusViewModel.SharedViewState.uiEnabled && canRun,
             onClick = { ButkusViewModel.SharedViewState.isRunning = true },
         ) {
             Text(
@@ -134,6 +126,13 @@ fun EncodeScreen(
 @Composable
 fun EncodeScreenPreviewDefault() {
     ButkusAppTheme {
-        EncodeScreen()
+        EncodeScreen(
+            encodeUiState = EncodeUiState(),
+            onPlaintextChange = { },
+            onTagChange = { },
+            onAddTag = { },
+            onTagRemove = { },
+            canRun = true,
+        )
     }
 }
