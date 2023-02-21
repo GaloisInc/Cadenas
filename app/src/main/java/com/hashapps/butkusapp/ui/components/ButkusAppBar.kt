@@ -22,13 +22,13 @@ fun ButkusAppBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text(stringResource(ButkusViewModel.SharedViewState.currentScreen.title)) },
+        title = { Text(stringResource(ButkusViewModel.currentScreen.title)) },
         backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier,
         navigationIcon = {
             IconButton(
                 onClick = onOpenDrawer,
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
+                enabled = ButkusViewModel.uiEnabled,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -39,7 +39,7 @@ fun ButkusAppBar(
         actions = {
             IconButton(
                 onClick = onReset,
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
+                enabled = ButkusViewModel.uiEnabled,
             ) {
                 Icon(
                     imageVector = Icons.Filled.RestartAlt,
@@ -47,10 +47,10 @@ fun ButkusAppBar(
                 )
             }
 
-            if (ButkusViewModel.SharedViewState.currentScreen == ButkusScreen.Encode) {
+            if (ButkusViewModel.currentScreen == ButkusScreen.Encode) {
                 IconButton(
                     onClick = onShare,
-                    enabled = ButkusViewModel.SharedViewState.uiEnabled && ButkusViewModel.SharedViewState.hasShareable,
+                    enabled = ButkusViewModel.uiEnabled && ButkusViewModel.hasShareable,
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Share,

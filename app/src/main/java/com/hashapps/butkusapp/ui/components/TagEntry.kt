@@ -27,7 +27,7 @@ fun TagEntry(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = tag, style = MaterialTheme.typography.caption)
-        Button(enabled = ButkusViewModel.SharedViewState.uiEnabled, onClick = onTagRemove) {
+        Button(enabled = ButkusViewModel.uiEnabled, onClick = onTagRemove) {
             Text(
                 text = stringResource(R.string.delete),
             )

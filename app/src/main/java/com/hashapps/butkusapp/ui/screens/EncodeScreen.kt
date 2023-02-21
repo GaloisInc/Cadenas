@@ -44,7 +44,7 @@ fun EncodeScreen(
     ) {
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.SharedViewState.uiEnabled,
+            enabled = ButkusViewModel.uiEnabled,
             value = encodeUiState.message,
             onValueChange = onPlaintextChange,
             singleLine = false,
@@ -59,7 +59,7 @@ fun EncodeScreen(
         ) {
             OutlinedTextField(
                 modifier = Modifier.padding(end = 8.dp),
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
+                enabled = ButkusViewModel.uiEnabled,
                 value = encodeUiState.tagToAdd,
                 onValueChange = onTagChange,
                 singleLine = true,
@@ -67,7 +67,7 @@ fun EncodeScreen(
             )
 
             OutlinedButton(
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
+                enabled = ButkusViewModel.uiEnabled,
                 onClick = onAddTag,
             ) {
                 Text(
@@ -87,7 +87,7 @@ fun EncodeScreen(
         }
 
         if (encodeUiState.encodedMessage != null) {
-            ButkusViewModel.SharedViewState.hasShareable = true
+            ButkusViewModel.hasShareable = true
 
             Divider(thickness = 2.dp, modifier = modifier)
 
@@ -106,13 +106,13 @@ fun EncodeScreen(
                 )
             )
         } else {
-            ButkusViewModel.SharedViewState.hasShareable = false
+            ButkusViewModel.hasShareable = false
         }
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.SharedViewState.uiEnabled && canRun,
-            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
+            enabled = ButkusViewModel.uiEnabled && canRun,
+            onClick = { ButkusViewModel.isRunning = true },
         ) {
             Text(
                 text = stringResource(R.string.encode),

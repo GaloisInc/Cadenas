@@ -40,7 +40,7 @@ fun DecodeScreen(
         ) {
             OutlinedTextField(
                 modifier = modifier.fillMaxWidth(),
-                enabled = ButkusViewModel.SharedViewState.uiEnabled,
+                enabled = ButkusViewModel.uiEnabled,
                 value = decodeUiState.message,
                 onValueChange = onCoverTextChange,
                 singleLine = false,
@@ -65,8 +65,8 @@ fun DecodeScreen(
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.SharedViewState.uiEnabled && canRun,
-            onClick = { ButkusViewModel.SharedViewState.isRunning = true },
+            enabled = ButkusViewModel.uiEnabled && canRun,
+            onClick = { ButkusViewModel.isRunning = true },
         ) {
             Text(
                 text = stringResource(R.string.decode),

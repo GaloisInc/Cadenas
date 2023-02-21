@@ -7,10 +7,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.LockOpen
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +34,7 @@ fun DrawerItem(
             .fillMaxWidth()
             .clickable { onDestinationClicked(screenName) }
             .background(
-                color = if (ButkusViewModel.SharedViewState.currentScreen == screen) {
+                color = if (ButkusViewModel.currentScreen == screen) {
                     MaterialTheme.colors.primary
                 } else {
                     Color.Transparent
@@ -55,7 +51,7 @@ fun DrawerItem(
         Spacer(Modifier.width(8.dp))
         Text(
             text = screenName,
-            color = if (ButkusViewModel.SharedViewState.currentScreen == screen) {
+            color = if (ButkusViewModel.currentScreen == screen) {
                 MaterialTheme.colors.onPrimary
             } else {
                 LocalContentColor.current

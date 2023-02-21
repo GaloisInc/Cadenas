@@ -11,7 +11,7 @@ import com.hashapps.butkusapp.data.ButkusScreen
  * action is running, whether the UI should be enabled.) */
 abstract class ButkusViewModel : ViewModel() {
     /** Singleton for state shared by all ButkusViewModel instances */
-    object SharedViewState {
+    companion object SharedViewState {
         /** State of whether ButkusCore has been initialized */
         var butkusInitialized by mutableStateOf(false)
 
