@@ -1,16 +1,15 @@
 package com.hashapps.butkusapp.ui.models
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.hashapps.butkusapp.data.ButkusScreen
 
 /** Abstract ViewModel class for Butkus screens. Contains a singleton for state
  * shared by all screens (e.g. what screen is being displayed, whether a main
  * action is running, whether the UI should be enabled.) */
-abstract class ButkusViewModel(app: Application) : AndroidViewModel(app) {
+abstract class ButkusViewModel : ViewModel() {
     /** Singleton for state shared by all ButkusViewModel instances */
     object SharedViewState {
         /** State of whether ButkusCore has been initialized */

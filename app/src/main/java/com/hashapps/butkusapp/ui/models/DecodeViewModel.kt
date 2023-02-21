@@ -1,6 +1,5 @@
 package com.hashapps.butkusapp.ui.models
 
-import android.app.Application
 import com.hashapps.butkusapp.Butkus
 import com.hashapps.butkusapp.data.DecodeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /** ButkusViewModel for the decoding screen */
-class DecodeViewModel(app: Application) : ButkusViewModel(app) {
+class DecodeViewModel : ButkusViewModel() {
     private val _decodeUiState = MutableStateFlow(DecodeUiState())
 
     /** True iff the encoded text input box is non-empty */
