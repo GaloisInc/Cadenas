@@ -11,7 +11,7 @@ import com.hashapps.butkusapp.data.ButkusScreen
  * action is running, whether the UI should be enabled.) */
 abstract class ButkusViewModel : ViewModel() {
     /** Singleton for state shared by all ButkusViewModel instances */
-    companion object SharedViewState {
+    companion object {
         /** State of whether ButkusCore has been initialized */
         var butkusInitialized by mutableStateOf(false)
 
@@ -35,7 +35,7 @@ abstract class ButkusViewModel : ViewModel() {
 
     /** True iff the main action button associated with run() should be enabled */
     val canRun
-        get() = !SharedViewState.isRunning && runInputNonempty
+        get() = !isRunning && runInputNonempty
 
     /** Background process to run when main action button is pressed */
     abstract suspend fun run()
