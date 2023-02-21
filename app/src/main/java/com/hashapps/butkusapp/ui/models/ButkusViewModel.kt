@@ -36,7 +36,7 @@ abstract class ButkusViewModel(app: Application) : AndroidViewModel(app) {
 
     /** True iff the main action button associated with run() should be enabled */
     val canRun
-        get() = SharedViewState.butkusInitialized && !SharedViewState.isRunning && runInputNonempty
+        get() = !SharedViewState.isRunning && runInputNonempty
 
     /** Background process to run when main action button is pressed */
     abstract suspend fun run()

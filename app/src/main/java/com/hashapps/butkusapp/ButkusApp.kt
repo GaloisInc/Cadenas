@@ -131,7 +131,7 @@ fun ButkusApp(
                             encodeViewModel.removeTag(it)
                         }
                     },
-                    canRun = encodeViewModel.canRun,
+                    canRun = ButkusViewModel.SharedViewState.butkusInitialized && encodeViewModel.canRun,
                 )
             }
 
@@ -140,7 +140,7 @@ fun ButkusApp(
                 DecodeScreen(
                     decodeUiState = decodeUiState,
                     onCoverTextChange = { decodeViewModel.updateEncodedMessage(it) },
-                    canRun = decodeViewModel.canRun,
+                    canRun = ButkusViewModel.SharedViewState.butkusInitialized && decodeViewModel.canRun,
                 )
             }
 
