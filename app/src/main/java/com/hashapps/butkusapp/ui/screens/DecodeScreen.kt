@@ -1,7 +1,7 @@
 package com.hashapps.butkusapp.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -20,6 +20,7 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
  *   stripped off
  * - (If message decoded) The decoded message
  * - Action button (Decode) */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DecodeScreen(
     modifier: Modifier = Modifier,
@@ -33,7 +34,7 @@ fun DecodeScreen(
             .padding(16.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         CompositionLocalProvider(
             LocalTextInputService provides null
@@ -61,19 +62,19 @@ fun DecodeScreen(
             )
         }
 
+        if (decodeUiState.inProgress) {
+            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+        }
+
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = !decodeUiState.inProgress && canDecode,
+            enabled = canDecode,
             onClick = onDecode,
         ) {
             Text(
                 text = stringResource(R.string.decode),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleLarge,
             )
-        }
-
-        if (decodeUiState.inProgress) {
-            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
         }
     }
 }

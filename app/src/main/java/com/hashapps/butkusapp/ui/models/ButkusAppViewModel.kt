@@ -83,7 +83,7 @@ class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
      */
     suspend fun encodeMessage() {
         withContext(Dispatchers.Default) {
-            _encodeUiState.update { it.copy(inProgress = true) }
+            _encodeUiState.update { it.copy(inProgress = true, encodedMessage = null) }
 
             val encodedMessage = Butkus.getInstance().encode(_encodeUiState.value.message)
             val tagsString =
@@ -111,7 +111,7 @@ class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
      */
     suspend fun decodeMessage() {
         withContext(Dispatchers.Default) {
-            _decodeUiState.update { it.copy(inProgress = true) }
+            _decodeUiState.update { it.copy(inProgress = true, decodedMessage = null) }
 
             val untaggedMessage = _decodeUiState.value.message.substringBefore(delimiter = " #")
             val decodedMessage = Butkus.getInstance().decode(untaggedMessage)

@@ -3,18 +3,22 @@ package com.hashapps.butkusapp
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.RestartAlt
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.butkusapp.ui.models.ButkusAppViewModel
 import com.hashapps.butkusapp.ui.ButkusScreen
-import com.hashapps.butkusapp.ui.components.ButkusAppBar
-import com.hashapps.butkusapp.ui.components.Drawer
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
 import com.hashapps.butkusapp.ui.screens.SettingsScreen
@@ -28,6 +32,7 @@ import kotlinx.coroutines.launch
  * - Message encoding
  * - Message decoding
  * - Settings */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ButkusApp(
     modifier: Modifier = Modifier,
@@ -47,95 +52,135 @@ fun ButkusApp(
     )
 
     // Manual scaffold state so we control the drawer
-    val scaffoldState = ScaffoldState(
-        drawerState = rememberDrawerState(DrawerValue.Closed),
-        snackbarHostState = SnackbarHostState(),
-    )
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
 
     val butkusInitialized by viewModel.butkusInitialized.collectAsState()
     val encodeUiState by viewModel.encodeUiState.collectAsState()
     val decodeUiState by viewModel.decodeUiState.collectAsState()
 
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = {
-            ButkusAppBar(
-                uiEnabled = when (currentScreen) {
-                    ButkusScreen.Encode -> !encodeUiState.inProgress
-                    ButkusScreen.Decode -> !decodeUiState.inProgress
-                    ButkusScreen.Settings -> true
-                },
-                currentScreen = currentScreen,
-                onOpenDrawer = {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
-                },
-                onReset = {
-                    when (currentScreen) {
-                        ButkusScreen.Encode -> viewModel.resetEncodeScreen()
-                        ButkusScreen.Decode -> viewModel.resetDecodeScreen()
-                        ButkusScreen.Settings -> {}
-                    }
-                },
-                canShare = encodeUiState.encodedMessage != null,
-                onShare = { shareMessage(context, encodeUiState.encodedMessage) }
-            )
-        },
-        drawerGesturesEnabled = when (currentScreen) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = when (currentScreen) {
             ButkusScreen.Encode -> !encodeUiState.inProgress
             ButkusScreen.Decode -> !decodeUiState.inProgress
             ButkusScreen.Settings -> true
         },
         drawerContent = {
-            Drawer(
-                currentScreen = currentScreen,
-                onDestinationClicked = { route ->
-                    navController.navigate(route)
-                    scope.launch {
-                        scaffoldState.drawerState.close()
-                    }
+            ModalDrawerSheet {
+                Spacer(Modifier.height(12.dp))
+                ButkusScreen.values().forEach {
+                    val screenName = stringResource(it.title)
+                    NavigationDrawerItem(
+                        label = { Text(screenName) },
+                        selected = it == currentScreen,
+                        onClick = {
+                            navController.navigate(screenName)
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        },
+                        icon = {
+                            Icon(imageVector = it.icon, contentDescription = screenName)
+                        }
+                    )
                 }
-            )
+            }
         }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = ButkusScreen.Encode.name,
-            modifier = modifier.padding(innerPadding),
-        ) {
-            composable(route = ButkusScreen.Encode.name) {
-                EncodeScreen(
-                    encodeUiState = encodeUiState,
-                    onPlaintextChange = { viewModel.updatePlaintextMessage(it) },
-                    onTagChange = { viewModel.updateTagToAdd(it) },
-                    onAddTag = {
-                        if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() } && encodeUiState.tagToAdd !in encodeUiState.addedTags) {
-                            viewModel.addTag(encodeUiState.tagToAdd)
-                            viewModel.updateTagToAdd("")
+    ) {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text(stringResource(currentScreen.title)) },
+                    modifier = modifier,
+                    navigationIcon = {
+                        IconButton(
+                            enabled = when (currentScreen) {
+                                ButkusScreen.Encode -> !encodeUiState.inProgress
+                                ButkusScreen.Decode -> !decodeUiState.inProgress
+                                ButkusScreen.Settings -> true
+                            },
+                            onClick = { scope.launch { drawerState.open() } }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = stringResource(R.string.switch_button),
+                            )
                         }
                     },
-                    onTagRemove = {
-                        if (it in encodeUiState.addedTags) {
-                            viewModel.removeTag(it)
+                    actions = {
+                        IconButton(
+                            enabled = when (currentScreen) {
+                                ButkusScreen.Encode -> !encodeUiState.inProgress
+                                ButkusScreen.Decode -> !decodeUiState.inProgress
+                                ButkusScreen.Settings -> true
+                            },
+                            onClick = {
+                                when (currentScreen) {
+                                    ButkusScreen.Encode -> viewModel.resetEncodeScreen()
+                                    ButkusScreen.Decode -> viewModel.resetDecodeScreen()
+                                    ButkusScreen.Settings -> {}
+                                }
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.RestartAlt,
+                                contentDescription = stringResource(R.string.reset)
+                            )
                         }
-                    },
-                    canEncode = butkusInitialized && encodeUiState.message.isNotEmpty(),
-                    onEncode = { scope.launch { viewModel.encodeMessage() } },
-                )
-            }
 
-            composable(route = ButkusScreen.Decode.name) {
-                DecodeScreen(
-                    decodeUiState = decodeUiState,
-                    onCoverTextChange = { viewModel.updateEncodedMessage(it) },
-                    canDecode = butkusInitialized && decodeUiState.message.isNotEmpty(),
-                    onDecode = { scope.launch { viewModel.decodeMessage() } },
+                        if (currentScreen == ButkusScreen.Encode) {
+                            IconButton(
+                                onClick = { shareMessage(context, encodeUiState.encodedMessage) },
+                                enabled = !encodeUiState.inProgress && encodeUiState.encodedMessage != null,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Share,
+                                    contentDescription = stringResource(R.string.share_button),
+                                )
+                            }
+                        }
+                    }
                 )
-            }
+            },
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = ButkusScreen.Encode.name,
+                modifier = modifier.padding(innerPadding),
+            ) {
+                composable(route = ButkusScreen.Encode.name) {
+                    EncodeScreen(
+                        encodeUiState = encodeUiState,
+                        onPlaintextChange = { viewModel.updatePlaintextMessage(it) },
+                        onTagChange = { viewModel.updateTagToAdd(it) },
+                        onAddTag = {
+                            if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() } && encodeUiState.tagToAdd !in encodeUiState.addedTags) {
+                                viewModel.addTag(encodeUiState.tagToAdd)
+                                viewModel.updateTagToAdd("")
+                            }
+                        },
+                        onTagRemove = {
+                            if (it in encodeUiState.addedTags) {
+                                viewModel.removeTag(it)
+                            }
+                        },
+                        butkusInitialized = butkusInitialized,
+                        onEncode = { scope.launch { viewModel.encodeMessage() } },
+                    )
+                }
 
-            composable(route = ButkusScreen.Settings.name) {
-                SettingsScreen()
+                composable(route = ButkusScreen.Decode.name) {
+                    DecodeScreen(
+                        decodeUiState = decodeUiState,
+                        onCoverTextChange = { viewModel.updateEncodedMessage(it) },
+                        canDecode = butkusInitialized && !decodeUiState.inProgress && decodeUiState.message.isNotEmpty(),
+                        onDecode = { scope.launch { viewModel.decodeMessage() } },
+                    )
+                }
+
+                composable(route = ButkusScreen.Settings.name) {
+                    SettingsScreen()
+                }
             }
         }
     }

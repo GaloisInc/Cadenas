@@ -3,7 +3,10 @@ package com.hashapps.butkusapp.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.EncodeUiState
-import com.hashapps.butkusapp.ui.components.TagEntry
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 /** The message encoding screen. Consists of:
@@ -24,6 +26,7 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
  * - (If message encoded) The encoded message, with tags appended to the end
  *   (e.g. adding the tag 'funny' appends '#funny' to the encoded message)
  * - Action button (Encode) */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EncodeScreen(
     modifier: Modifier = Modifier,
@@ -32,7 +35,7 @@ fun EncodeScreen(
     onTagChange: (String) -> Unit,
     onAddTag: () -> Unit,
     onTagRemove: (String) -> Unit,
-    canEncode: Boolean,
+    butkusInitialized: Boolean,
     onEncode: () -> Unit,
 ) {
     Column(
@@ -40,7 +43,7 @@ fun EncodeScreen(
             .padding(16.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
@@ -54,11 +57,11 @@ fun EncodeScreen(
 
         Row(
             modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedTextField(
-                modifier = Modifier.padding(end = 8.dp),
+                modifier = modifier.padding(end=2.dp).weight(1f),
                 enabled = !encodeUiState.inProgress,
                 value = encodeUiState.tagToAdd,
                 onValueChange = onTagChange,
@@ -66,13 +69,13 @@ fun EncodeScreen(
                 placeholder = { Text(stringResource(R.string.tag_placeholder)) },
             )
 
-            OutlinedButton(
+            OutlinedIconButton(
                 enabled = !encodeUiState.inProgress,
                 onClick = onAddTag,
             ) {
-                Text(
-                    text = stringResource(R.string.add_tag),
-                    textAlign = TextAlign.Center,
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.add_tag),
                 )
             }
         }
@@ -88,6 +91,14 @@ fun EncodeScreen(
         }
 
         if (encodeUiState.encodedMessage != null) {
+            Text(
+                modifier = modifier.align(Alignment.Start),
+                text = LocalContext.current.getString(
+                    R.string.encoded_message_length,
+                    encodeUiState.encodedMessage.length,
+                )
+            )
+
             TextField(
                 modifier = modifier.fillMaxWidth(),
                 value = encodeUiState.encodedMessage,
@@ -95,28 +106,47 @@ fun EncodeScreen(
                 readOnly = true,
                 label = { Text(stringResource(R.string.encode_output_label)) }
             )
-
-            Text(
-                text = LocalContext.current.getString(
-                    R.string.encoded_message_length,
-                    encodeUiState.encodedMessage.length,
-                )
-            )
-        }
-
-        Button(
-            modifier = modifier.fillMaxWidth(),
-            enabled = !encodeUiState.inProgress && canEncode,
-            onClick = onEncode,
-        ) {
-            Text(
-                text = stringResource(R.string.encode),
-                style = MaterialTheme.typography.h6,
-            )
         }
 
         if (encodeUiState.inProgress) {
             LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+        }
+
+        Button(
+            modifier = modifier.fillMaxWidth(),
+            enabled = butkusInitialized && !encodeUiState.inProgress && encodeUiState.message.isNotEmpty(),
+            onClick = onEncode,
+        ) {
+            Text(
+                text = stringResource(R.string.encode),
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+    }
+}
+
+@Composable
+fun TagEntry(
+    uiEnabled: Boolean,
+    tag: String,
+    onTagRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = tag,
+            style = MaterialTheme.typography.bodySmall
+        )
+
+        IconButton(
+            enabled = uiEnabled,
+            onClick = onTagRemove,
+        ) {
+            Icon(imageVector = Icons.Filled.Delete, contentDescription = stringResource(R.string.delete))
         }
     }
 }
@@ -131,7 +161,7 @@ fun EncodeScreenPreviewDefault() {
             onTagChange = { },
             onAddTag = { },
             onTagRemove = { },
-            canEncode = true,
+            butkusInitialized = true,
             onEncode = { },
         )
     }
