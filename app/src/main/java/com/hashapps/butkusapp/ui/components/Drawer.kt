@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.hashapps.butkusapp.data.ButkusScreen
+import com.hashapps.butkusapp.ui.ButkusScreen
 
 /** A drawer menu for navigation between the app screens. */
 @Composable
 fun Drawer(
     modifier: Modifier = Modifier,
+    currentScreen: ButkusScreen,
     onDestinationClicked: (String) -> Unit,
 ) {
     Column(
@@ -23,6 +24,7 @@ fun Drawer(
         ButkusScreen.values().forEach {
             DrawerItem(
                 screen = it,
+                selected = it == currentScreen,
                 onDestinationClicked = onDestinationClicked
             )
         }

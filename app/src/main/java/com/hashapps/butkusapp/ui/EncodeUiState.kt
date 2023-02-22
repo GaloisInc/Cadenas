@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.data
+package com.hashapps.butkusapp.ui
 
 /**
  * Data class for the encode screen's UI state.
@@ -15,4 +15,7 @@ data class EncodeUiState (
 
     /** The encoded message. */
     val encodedMessage: String? = null,
+
+    /** Flag indicating encoding is in-progress.  */
+    val inProgress: Boolean = false,
 )

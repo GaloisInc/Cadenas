@@ -7,17 +7,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hashapps.butkusapp.data.ButkusScreen
+import com.hashapps.butkusapp.ui.models.ButkusAppViewModel
+import com.hashapps.butkusapp.ui.ButkusScreen
 import com.hashapps.butkusapp.ui.components.ButkusAppBar
 import com.hashapps.butkusapp.ui.components.Drawer
-import com.hashapps.butkusapp.ui.models.ButkusViewModel
-import com.hashapps.butkusapp.ui.models.DecodeViewModel
-import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
 import com.hashapps.butkusapp.ui.screens.SettingsScreen
@@ -34,8 +31,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ButkusApp(
     modifier: Modifier = Modifier,
-    encodeViewModel: EncodeViewModel,
-    decodeViewModel: DecodeViewModel,
+    viewModel: ButkusAppViewModel,
 ) {
     // Get the app context
     val context = LocalContext.current
@@ -46,7 +42,7 @@ fun ButkusApp(
     // Navigation setup
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    ButkusViewModel.currentScreen = ButkusScreen.valueOf(
+    val currentScreen = ButkusScreen.valueOf(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
 
@@ -56,50 +52,44 @@ fun ButkusApp(
         snackbarHostState = SnackbarHostState(),
     )
 
-    // Initialize Butkus
-    if (!ButkusViewModel.butkusInitialized) {
-        LaunchedEffect(Unit) {
-            Butkus.initialize(context)
-            ButkusViewModel.butkusInitialized = true
-        }
-    }
-
-    // Listening for action button hits, encode or decode as appropriate
-    if (ButkusViewModel.isRunning) {
-        val processingAlert = stringResource(R.string.processing_alert)
-        LaunchedEffect(Unit) {
-            scaffoldState.snackbarHostState.showSnackbar(message = processingAlert)
-            when (ButkusViewModel.currentScreen) {
-                ButkusScreen.Encode -> encodeViewModel.run()
-                ButkusScreen.Decode -> decodeViewModel.run()
-                else -> {}
-            }
-            ButkusViewModel.isRunning = false
-        }
-    }
+    val butkusInitialized by viewModel.butkusInitialized.collectAsState()
+    val encodeUiState by viewModel.encodeUiState.collectAsState()
+    val decodeUiState by viewModel.decodeUiState.collectAsState()
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             ButkusAppBar(
+                uiEnabled = when (currentScreen) {
+                    ButkusScreen.Encode -> !encodeUiState.inProgress
+                    ButkusScreen.Decode -> !decodeUiState.inProgress
+                    ButkusScreen.Settings -> true
+                },
+                currentScreen = currentScreen,
                 onOpenDrawer = {
                     scope.launch {
                         scaffoldState.drawerState.open()
                     }
                 },
                 onReset = {
-                    when (ButkusViewModel.currentScreen) {
-                        ButkusScreen.Encode -> encodeViewModel.reset()
-                        ButkusScreen.Decode -> decodeViewModel.reset()
+                    when (currentScreen) {
+                        ButkusScreen.Encode -> viewModel.resetEncodeScreen()
+                        ButkusScreen.Decode -> viewModel.resetDecodeScreen()
                         ButkusScreen.Settings -> {}
                     }
                 },
-                onShare = { shareMessage(context, encodeViewModel.encodedMessage) }
+                canShare = encodeUiState.encodedMessage != null,
+                onShare = { shareMessage(context, encodeUiState.encodedMessage) }
             )
         },
-        drawerGesturesEnabled = ButkusViewModel.uiEnabled,
+        drawerGesturesEnabled = when (currentScreen) {
+            ButkusScreen.Encode -> !encodeUiState.inProgress
+            ButkusScreen.Decode -> !decodeUiState.inProgress
+            ButkusScreen.Settings -> true
+        },
         drawerContent = {
             Drawer(
+                currentScreen = currentScreen,
                 onDestinationClicked = { route ->
                     navController.navigate(route)
                     scope.launch {
@@ -115,32 +105,32 @@ fun ButkusApp(
             modifier = modifier.padding(innerPadding),
         ) {
             composable(route = ButkusScreen.Encode.name) {
-                val encodeUiState by encodeViewModel.encodeUiState.collectAsState()
                 EncodeScreen(
                     encodeUiState = encodeUiState,
-                    onPlaintextChange = { encodeViewModel.updatePlaintextMessage(it) },
-                    onTagChange = { encodeViewModel.updateTagToAdd(it) },
+                    onPlaintextChange = { viewModel.updatePlaintextMessage(it) },
+                    onTagChange = { viewModel.updateTagToAdd(it) },
                     onAddTag = {
                         if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() } && encodeUiState.tagToAdd !in encodeUiState.addedTags) {
-                            encodeViewModel.addTag(encodeUiState.tagToAdd)
-                            encodeViewModel.updateTagToAdd("")
+                            viewModel.addTag(encodeUiState.tagToAdd)
+                            viewModel.updateTagToAdd("")
                         }
                     },
                     onTagRemove = {
                         if (it in encodeUiState.addedTags) {
-                            encodeViewModel.removeTag(it)
+                            viewModel.removeTag(it)
                         }
                     },
-                    canRun = ButkusViewModel.butkusInitialized && encodeViewModel.canRun,
+                    canEncode = butkusInitialized && encodeUiState.message.isNotEmpty(),
+                    onEncode = { scope.launch { viewModel.encodeMessage() } },
                 )
             }
 
             composable(route = ButkusScreen.Decode.name) {
-                val decodeUiState by decodeViewModel.decodeUiState.collectAsState()
                 DecodeScreen(
                     decodeUiState = decodeUiState,
-                    onCoverTextChange = { decodeViewModel.updateEncodedMessage(it) },
-                    canRun = ButkusViewModel.butkusInitialized && decodeViewModel.canRun,
+                    onCoverTextChange = { viewModel.updateEncodedMessage(it) },
+                    canDecode = butkusInitialized && decodeUiState.message.isNotEmpty(),
+                    onDecode = { scope.launch { viewModel.decodeMessage() } },
                 )
             }
 

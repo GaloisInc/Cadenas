@@ -11,8 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.data.DecodeUiState
-import com.hashapps.butkusapp.ui.models.ButkusViewModel
+import com.hashapps.butkusapp.ui.DecodeUiState
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 /** The message decoding screen. Consists of:
@@ -26,7 +25,8 @@ fun DecodeScreen(
     modifier: Modifier = Modifier,
     decodeUiState: DecodeUiState,
     onCoverTextChange: (String) -> Unit,
-    canRun: Boolean,
+    canDecode: Boolean,
+    onDecode: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -40,7 +40,7 @@ fun DecodeScreen(
         ) {
             OutlinedTextField(
                 modifier = modifier.fillMaxWidth(),
-                enabled = ButkusViewModel.uiEnabled,
+                enabled = !decodeUiState.inProgress,
                 value = decodeUiState.message,
                 onValueChange = onCoverTextChange,
                 singleLine = false,
@@ -52,8 +52,6 @@ fun DecodeScreen(
         Spacer(modifier = modifier.weight(1f))
 
         if (decodeUiState.decodedMessage != null) {
-            Divider(thickness = 2.dp, modifier = modifier)
-
             TextField(
                 modifier = modifier.fillMaxWidth(),
                 value = decodeUiState.decodedMessage,
@@ -65,13 +63,17 @@ fun DecodeScreen(
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.uiEnabled && canRun,
-            onClick = { ButkusViewModel.isRunning = true },
+            enabled = !decodeUiState.inProgress && canDecode,
+            onClick = onDecode,
         ) {
             Text(
                 text = stringResource(R.string.decode),
                 style = MaterialTheme.typography.h6,
             )
+        }
+
+        if (decodeUiState.inProgress) {
+            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
         }
     }
 }
@@ -83,7 +85,8 @@ fun DecodeScreenPreviewDefault() {
         DecodeScreen(
             decodeUiState = DecodeUiState(),
             onCoverTextChange = {},
-            canRun = true,
+            canDecode = true,
+            onDecode = { },
         )
     }
 }

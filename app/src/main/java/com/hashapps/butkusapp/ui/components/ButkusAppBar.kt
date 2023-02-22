@@ -9,26 +9,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.data.ButkusScreen
-import com.hashapps.butkusapp.ui.models.ButkusViewModel
+import com.hashapps.butkusapp.ui.ButkusScreen
 
 /** A top bar defined by a navigation action, a reset button, and a share
  * button that is only displayed if the current visible screen is Encode. */
 @Composable
 fun ButkusAppBar(
+    uiEnabled: Boolean,
+    currentScreen: ButkusScreen,
     onOpenDrawer: () -> Unit,
     onReset: () -> Unit,
+    canShare: Boolean,
     onShare: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text(stringResource(ButkusViewModel.currentScreen.title)) },
+        title = { Text(stringResource(currentScreen.title)) },
         backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier,
         navigationIcon = {
             IconButton(
                 onClick = onOpenDrawer,
-                enabled = ButkusViewModel.uiEnabled,
+                enabled = uiEnabled,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -39,7 +41,7 @@ fun ButkusAppBar(
         actions = {
             IconButton(
                 onClick = onReset,
-                enabled = ButkusViewModel.uiEnabled,
+                enabled = uiEnabled,
             ) {
                 Icon(
                     imageVector = Icons.Filled.RestartAlt,
@@ -47,10 +49,10 @@ fun ButkusAppBar(
                 )
             }
 
-            if (ButkusViewModel.currentScreen == ButkusScreen.Encode) {
+            if (currentScreen == ButkusScreen.Encode) {
                 IconButton(
                     onClick = onShare,
-                    enabled = ButkusViewModel.uiEnabled && ButkusViewModel.hasShareable,
+                    enabled = uiEnabled && canShare,
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Share,

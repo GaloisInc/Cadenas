@@ -13,9 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.data.EncodeUiState
+import com.hashapps.butkusapp.ui.EncodeUiState
 import com.hashapps.butkusapp.ui.components.TagEntry
-import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 /** The message encoding screen. Consists of:
@@ -33,7 +32,8 @@ fun EncodeScreen(
     onTagChange: (String) -> Unit,
     onAddTag: () -> Unit,
     onTagRemove: (String) -> Unit,
-    canRun: Boolean,
+    canEncode: Boolean,
+    onEncode: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -44,7 +44,7 @@ fun EncodeScreen(
     ) {
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.uiEnabled,
+            enabled = !encodeUiState.inProgress,
             value = encodeUiState.message,
             onValueChange = onPlaintextChange,
             singleLine = false,
@@ -59,7 +59,7 @@ fun EncodeScreen(
         ) {
             OutlinedTextField(
                 modifier = Modifier.padding(end = 8.dp),
-                enabled = ButkusViewModel.uiEnabled,
+                enabled = !encodeUiState.inProgress,
                 value = encodeUiState.tagToAdd,
                 onValueChange = onTagChange,
                 singleLine = true,
@@ -67,7 +67,7 @@ fun EncodeScreen(
             )
 
             OutlinedButton(
-                enabled = ButkusViewModel.uiEnabled,
+                enabled = !encodeUiState.inProgress,
                 onClick = onAddTag,
             ) {
                 Text(
@@ -80,6 +80,7 @@ fun EncodeScreen(
         LazyColumn(modifier = modifier.weight(1f)) {
             items(encodeUiState.addedTags.toList()) { tag ->
                 TagEntry(
+                    uiEnabled = !encodeUiState.inProgress,
                     tag = tag,
                     onTagRemove = { onTagRemove(tag) },
                 )
@@ -87,10 +88,6 @@ fun EncodeScreen(
         }
 
         if (encodeUiState.encodedMessage != null) {
-            ButkusViewModel.hasShareable = true
-
-            Divider(thickness = 2.dp, modifier = modifier)
-
             TextField(
                 modifier = modifier.fillMaxWidth(),
                 value = encodeUiState.encodedMessage,
@@ -105,19 +102,21 @@ fun EncodeScreen(
                     encodeUiState.encodedMessage.length,
                 )
             )
-        } else {
-            ButkusViewModel.hasShareable = false
         }
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = ButkusViewModel.uiEnabled && canRun,
-            onClick = { ButkusViewModel.isRunning = true },
+            enabled = !encodeUiState.inProgress && canEncode,
+            onClick = onEncode,
         ) {
             Text(
                 text = stringResource(R.string.encode),
                 style = MaterialTheme.typography.h6,
             )
+        }
+
+        if (encodeUiState.inProgress) {
+            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
         }
     }
 }
@@ -132,7 +131,8 @@ fun EncodeScreenPreviewDefault() {
             onTagChange = { },
             onAddTag = { },
             onTagRemove = { },
-            canRun = true,
+            canEncode = true,
+            onEncode = { },
         )
     }
 }

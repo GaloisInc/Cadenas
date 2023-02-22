@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.data
+package com.hashapps.butkusapp.ui
 
 import java.util.Base64
 import javax.crypto.KeyGenerator

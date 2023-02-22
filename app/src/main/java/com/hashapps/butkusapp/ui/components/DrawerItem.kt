@@ -13,8 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.hashapps.butkusapp.data.ButkusScreen
-import com.hashapps.butkusapp.ui.models.ButkusViewModel
+import com.hashapps.butkusapp.ui.ButkusScreen
 
 /** An individual drawer item, whose composition is determined by the current
  * screen and an action to be taken when the item is clicked.
@@ -25,6 +24,7 @@ import com.hashapps.butkusapp.ui.models.ButkusViewModel
 fun DrawerItem(
     modifier: Modifier = Modifier,
     screen: ButkusScreen,
+    selected: Boolean,
     onDestinationClicked: (String) -> Unit,
 ) {
     val screenName = stringResource(screen.title)
@@ -34,7 +34,7 @@ fun DrawerItem(
             .fillMaxWidth()
             .clickable { onDestinationClicked(screenName) }
             .background(
-                color = if (ButkusViewModel.currentScreen == screen) {
+                color = if (selected) {
                     MaterialTheme.colors.primary
                 } else {
                     Color.Transparent
@@ -51,7 +51,7 @@ fun DrawerItem(
         Spacer(Modifier.width(8.dp))
         Text(
             text = screenName,
-            color = if (ButkusViewModel.currentScreen == screen) {
+            color = if (selected) {
                 MaterialTheme.colors.onPrimary
             } else {
                 LocalContentColor.current

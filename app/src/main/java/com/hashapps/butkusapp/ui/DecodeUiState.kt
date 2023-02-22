@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.data
+package com.hashapps.butkusapp.ui
 
 /**
  * Data class for the decode screen's UI state.
@@ -9,4 +9,7 @@ data class DecodeUiState (
 
     /** The decoded message. */
     val decodedMessage: String? = null,
+
+    /** Flag indicating decoding is in-progress. */
+    val inProgress: Boolean = false,
 )

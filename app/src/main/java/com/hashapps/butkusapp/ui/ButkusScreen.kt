@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.data
+package com.hashapps.butkusapp.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

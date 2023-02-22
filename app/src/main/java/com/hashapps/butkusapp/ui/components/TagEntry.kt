@@ -11,12 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.models.ButkusViewModel
 
 /** UI element for a tag that has been added to the encoded message. Displays
  * the tag itself, and a button intended for tag removal. */
 @Composable
 fun TagEntry(
+    uiEnabled: Boolean,
     tag: String,
     onTagRemove: () -> Unit,
     modifier: Modifier = Modifier,
@@ -27,7 +27,7 @@ fun TagEntry(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = tag, style = MaterialTheme.typography.caption)
-        Button(enabled = ButkusViewModel.uiEnabled, onClick = onTagRemove) {
+        Button(enabled = uiEnabled, onClick = onTagRemove) {
             Text(
                 text = stringResource(R.string.delete),
             )
