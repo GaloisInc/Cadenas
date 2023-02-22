@@ -60,7 +60,7 @@ fun EncodeScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedTextField(
-                modifier = modifier.padding(end=2.dp).weight(1f),
+                modifier = modifier.weight(1f),
                 enabled = !encodeUiState.inProgress,
                 value = encodeUiState.tagToAdd,
                 onValueChange = onTagChange,
