@@ -95,7 +95,7 @@ fun ButkusApp(
                     title = { Text(stringResource(currentScreen.title)) },
                     modifier = modifier,
                     navigationIcon = {
-                        IconButton(
+                        FilledIconButton(
                             enabled = when (currentScreen) {
                                 ButkusScreen.Encode -> !encodeUiState.inProgress
                                 ButkusScreen.Decode -> !decodeUiState.inProgress
@@ -110,7 +110,7 @@ fun ButkusApp(
                         }
                     },
                     actions = {
-                        IconButton(
+                        FilledIconButton(
                             enabled = when (currentScreen) {
                                 ButkusScreen.Encode -> !encodeUiState.inProgress
                                 ButkusScreen.Decode -> !decodeUiState.inProgress
@@ -131,7 +131,7 @@ fun ButkusApp(
                         }
 
                         if (currentScreen == ButkusScreen.Encode) {
-                            IconButton(
+                            FilledIconButton(
                                 onClick = { shareMessage(context, encodeUiState.encodedMessage) },
                                 enabled = !encodeUiState.inProgress && encodeUiState.encodedMessage != null,
                             ) {
@@ -181,7 +181,9 @@ fun ButkusApp(
                 }
 
                 composable(route = ButkusScreen.Settings.name) {
-                    SettingsScreen()
+                    SettingsScreen(
+                        onKeyChange = { },
+                    )
                 }
             }
         }

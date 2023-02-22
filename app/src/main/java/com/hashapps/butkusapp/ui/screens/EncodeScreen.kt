@@ -68,7 +68,7 @@ fun EncodeScreen(
                 placeholder = { Text(stringResource(R.string.tag_placeholder)) },
             )
 
-            OutlinedIconButton(
+            FilledIconButton(
                 enabled = !encodeUiState.inProgress,
                 onClick = onAddTag,
             ) {
@@ -141,7 +141,7 @@ fun TagEntry(
             style = MaterialTheme.typography.bodySmall
         )
 
-        OutlinedIconButton(
+        FilledIconButton(
             enabled = uiEnabled,
             onClick = onTagRemove,
         ) {
