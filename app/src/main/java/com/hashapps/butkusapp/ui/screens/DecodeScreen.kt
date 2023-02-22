@@ -31,7 +31,7 @@ fun DecodeScreen(
 ) {
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(8.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)

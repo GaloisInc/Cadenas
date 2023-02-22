@@ -39,7 +39,7 @@ fun EncodeScreen(
 ) {
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(8.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -60,7 +60,7 @@ fun EncodeScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedTextField(
-                modifier = modifier.weight(1f),
+                modifier = modifier.padding(end=8.dp).weight(1f),
                 enabled = !encodeUiState.inProgress,
                 value = encodeUiState.tagToAdd,
                 onValueChange = onTagChange,
@@ -136,10 +136,7 @@ fun TagEntry(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = tag,
-            style = MaterialTheme.typography.bodySmall
-        )
+        Text(text = tag)
 
         FilledIconButton(
             enabled = uiEnabled,
