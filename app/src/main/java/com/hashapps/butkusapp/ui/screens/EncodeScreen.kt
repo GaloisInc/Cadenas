@@ -50,7 +50,6 @@ fun EncodeScreen(
             value = encodeUiState.message,
             onValueChange = onPlaintextChange,
             singleLine = false,
-            label = { Text(stringResource(R.string.plaintext_message_label)) },
             placeholder = { Text(stringResource(R.string.plaintext_message_placeholder)) },
         )
 

@@ -45,7 +45,6 @@ fun DecodeScreen(
                 value = decodeUiState.message,
                 onValueChange = onCoverTextChange,
                 singleLine = false,
-                label = { Text(stringResource(R.string.encoded_message_label)) },
                 placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
             )
         }
