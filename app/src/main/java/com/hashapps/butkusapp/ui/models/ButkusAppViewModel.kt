@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
  * ViewModel for ButkusApp
  */
 class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
+    /** Flag indicating whether or not Butkus has been initialized */
     private val _butkusInitialized = MutableStateFlow(false)
     val butkusInitialized: StateFlow<Boolean> = _butkusInitialized.asStateFlow()
 
@@ -29,7 +30,7 @@ class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
     private val _decodeUiState = MutableStateFlow(DecodeUiState())
     val decodeUiState: StateFlow<DecodeUiState> = _decodeUiState.asStateFlow()
 
-    // Since we use an AndroidViewModel, we can access application context
+    // Since we are an AndroidViewModel, we can access application context
     init {
         viewModelScope.launch {
             Butkus.initialize(app.applicationContext)
