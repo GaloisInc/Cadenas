@@ -31,7 +31,8 @@ import kotlinx.coroutines.launch
  *
  * - Message encoding
  * - Message decoding
- * - Settings */
+ * - Settings
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ButkusApp(
@@ -67,10 +68,11 @@ fun ButkusApp(
         },
         drawerContent = {
             ModalDrawerSheet {
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(8.dp))
                 ButkusScreen.values().forEach {
                     val screenName = stringResource(it.title)
                     NavigationDrawerItem(
+                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                         label = { Text(screenName) },
                         selected = it == currentScreen,
                         onClick = {
