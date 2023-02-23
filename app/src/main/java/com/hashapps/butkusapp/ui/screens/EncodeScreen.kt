@@ -27,7 +27,7 @@ import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.EncodeUiState
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
-private val TAG_REGEX = Regex("""\w*[a-zA-Z]\w*""")
+private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
 
 /** The message encoding screen. Consists of:
  * - Text field for the message to encode
@@ -82,7 +82,7 @@ fun EncodeScreen(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
-            val tagValid = TAG_REGEX.matches(encodeUiState.tagToAdd)
+            val tagValid = tagRegex.matches(encodeUiState.tagToAdd)
             val isError = encodeUiState.tagToAdd != "" && !tagValid
             val canAdd =
                 !encodeUiState.inProgress && tagValid && encodeUiState.tagToAdd !in encodeUiState.addedTags
