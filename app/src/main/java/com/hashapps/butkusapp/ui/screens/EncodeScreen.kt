@@ -173,11 +173,9 @@ fun EncodeScreen(
 
                 Divider(thickness = 1.dp)
 
-                SelectionContainer() {
+                SelectionContainer {
                     Text(
-                        modifier = modifier
-                            .padding(8.dp)
-                            .align(Alignment.Start),
+                        modifier = modifier.padding(8.dp),
                         text = encodeUiState.encodedMessage,
                     )
                 }

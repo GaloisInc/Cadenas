@@ -44,8 +44,6 @@ fun DecodeScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val focusManager = LocalFocusManager.current
-
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
@@ -62,12 +60,6 @@ fun DecodeScreen(
                     singleLine = false,
                     label = { Text(stringResource(R.string.encoded_message_label)) },
                     placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { focusManager.clearFocus() }
-                    ),
                 )
             }
         }
