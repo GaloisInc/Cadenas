@@ -137,6 +137,6 @@ class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Update seed text on settings screen */
     fun updateSeedText(seed: String) {
-        _settingsUiState.update { it.copy(seed_text = seed) }
+        _settingsUiState.update { it.copy(seedText = seed) }
     }
 }

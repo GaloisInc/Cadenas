@@ -1,10 +1,15 @@
 package com.hashapps.butkusapp.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,59 +22,83 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     settingsUiState: SettingsUiState,
-    onKeyChange: (String) -> Unit,
     onGenKey: () -> Unit,
+    maxSeedLen: Int,
     onSeedChange: (String) -> Unit,
-    onRestoreDefaults: () -> Unit,
+    maxUrlLen: Int,
+    onUrlChange: (String) -> Unit,
 ) {
     Column(
         modifier = modifier
             .padding(8.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Row(
+        ElevatedCard(
             modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
         ) {
-            OutlinedTextField(
+            Row(
                 modifier = modifier
-                    .padding(end = 8.dp)
-                    .weight(1f),
-                enabled = false,
-                value = settingsUiState.secret_key,
-                onValueChange = onKeyChange,
-                singleLine = true,
-                placeholder = { Text(stringResource(R.string.key_placeholder)) },
-            )
-
-            Button(
-                onClick = onGenKey
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = stringResource(R.string.generate_key))
+                OutlinedTextField(
+                    modifier = modifier.weight(1f),
+                    enabled = true,
+                    readOnly = true,
+                    value = settingsUiState.secretKey,
+                    onValueChange = { },
+                    singleLine = true,
+                    label = { Text(stringResource(R.string.key_label)) },
+                    placeholder = { Text(stringResource(R.string.key_placeholder)) },
+                )
+
+                FilledTonalIconButton(
+                    onClick = onGenKey,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Key,
+                        contentDescription = stringResource(R.string.generate_key)
+                    )
+                }
             }
         }
 
-        OutlinedTextField(
+        ElevatedCard(
             modifier = modifier.fillMaxWidth(),
-            value = settingsUiState.seed_text,
-            onValueChange = onSeedChange,
-            singleLine = true,
-            placeholder = { Text(stringResource(R.string.seed_placeholder)) },
-        )
-
-        Spacer(modifier = modifier.weight(1f))
-
-        FilledTonalButton(
-            modifier = modifier.fillMaxWidth(),
-            onClick = onRestoreDefaults,
         ) {
-            Text(
-                text = stringResource(R.string.restore_defaults),
-                style = MaterialTheme.typography.titleLarge,
+            OutlinedTextField(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                value = settingsUiState.seedText,
+                onValueChange = {
+                    if (it.length <= maxSeedLen) {
+                        onSeedChange(it)
+                    }
+                },
+                singleLine = true,
+                label = { Text(stringResource(R.string.seed_label)) },
+                supportingText = {
+                    Text(
+                        LocalContext.current.getString(
+                            R.string.char_counter,
+                            settingsUiState.seedText.length,
+                            maxSeedLen,
+                        )
+                    )
+                },
             )
+        }
+
+        ElevatedCard(
+            modifier = modifier.fillMaxWidth(),
+        ) {
+
         }
     }
 }
@@ -80,10 +109,11 @@ fun SettingsScreenPreviewDefault() {
     ButkusAppTheme {
         SettingsScreen(
             settingsUiState = SettingsUiState(),
-            onKeyChange = { },
             onGenKey = { },
+            maxSeedLen = 128,
             onSeedChange = { },
-            onRestoreDefaults = { },
+            maxUrlLen = 128,
+            onUrlChange = { },
         )
     }
 }

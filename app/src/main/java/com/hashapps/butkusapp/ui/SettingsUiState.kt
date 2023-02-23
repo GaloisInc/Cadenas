@@ -7,15 +7,18 @@ import javax.crypto.KeyGenerator
  * Data class for the setting screen's UI state.
  */
 data class SettingsUiState (
-    /** The secret key for encoding/decoding */
-    val secret_key: String = "",
+    /** The secret key for encoding/decoding. */
+    val secretKey: String = "",
 
-    /** Butkus seed text */
-    val seed_text: String = "",
+    /** Butkus seed text. */
+    val seedText: String = "",
 
-    /** Currently loaded model URI */
-    val model_uri: String = "",
+    /** Model URL to add. */
+    val modelUrlToAdd: String = "",
 
-    /** Known model URIs to display in menu */
-    val model_uris: Set<String> = setOf(),
+    /** Known model URIs to display in selection menu. */
+    val modelUrls: Set<String> = setOf(),
+
+    /** Selected model to fetch. */
+    val selectedModel: String = "",
 )

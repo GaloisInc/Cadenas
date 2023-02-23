@@ -17,9 +17,10 @@
     <string name="encoded_message_label">Encoded Message</string>
     <string name="encoded_message_placeholder">Paste an encoded message.</string>
     <string name="key_label">Secret Key</string>
-    <string name="key_placeholder">Generate or import a key</string>
+    <string name="key_placeholder">Generate or import a key.</string>
     <string name="generate_key">Generate Key</string>
-    <string name="seed_placeholder">Enter some seed text</string>
+    <string name="seed_label">Seed Text</string>
+    <string name="char_counter">%1d / %2d</string>
     <string name="import_label">Import</string>
     <string name="export_label">Export</string>
     <string name="restore_defaults">Restore Defaults</string>

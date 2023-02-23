@@ -180,10 +180,11 @@ fun ButkusApp(
             composable(route = ButkusScreen.Settings.name) {
                 SettingsScreen(
                     settingsUiState = settingsUiState,
-                    onKeyChange = { },
                     onGenKey = { },
+                    maxSeedLen = 128,
                     onSeedChange = { viewModel.updateSeedText(it) },
-                    onRestoreDefaults = { },
+                    maxUrlLen = 128,
+                    onUrlChange = {  },
                 )
             }
         }
