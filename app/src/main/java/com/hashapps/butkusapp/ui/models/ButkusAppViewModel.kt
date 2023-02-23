@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.Butkus
 import com.hashapps.butkusapp.ui.DecodeUiState
 import com.hashapps.butkusapp.ui.EncodeUiState
+import com.hashapps.butkusapp.ui.SettingsUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +30,10 @@ class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
     /** Decode screen backing property / read-only interface */
     private val _decodeUiState = MutableStateFlow(DecodeUiState())
     val decodeUiState: StateFlow<DecodeUiState> = _decodeUiState.asStateFlow()
+
+    /** Settings screen backing property / read-only interface */
+    private val _settingsUiState = MutableStateFlow(SettingsUiState())
+    val settingsUiState: StateFlow<SettingsUiState> = _settingsUiState.asStateFlow()
 
     // Since we are an AndroidViewModel, we can access application context
     init {
@@ -58,6 +63,7 @@ class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
     fun addTag(tag: String) {
         _encodeUiState.update { cs ->
             cs.copy(
+                tagToAdd = "",
                 addedTags = cs.addedTags + tag,
                 encodedMessage = cs.encodedMessage?.let { "$it #$tag" }
             )
@@ -125,5 +131,12 @@ class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
     /** Reset the decode UI state to defaults */
     fun resetDecodeScreen() {
         _decodeUiState.value = DecodeUiState()
+    }
+
+    /** ********** Settings screen methods ********** */
+
+    /** Update seed text on settings screen */
+    fun updateSeedText(seed: String) {
+        _settingsUiState.update { it.copy(seed_text = seed) }
     }
 }

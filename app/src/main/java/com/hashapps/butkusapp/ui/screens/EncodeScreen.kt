@@ -1,17 +1,26 @@
 package com.hashapps.butkusapp.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.AddCircleOutline
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
@@ -40,74 +49,101 @@ fun EncodeScreen(
     Column(
         modifier = modifier
             .padding(8.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        OutlinedTextField(
-            modifier = modifier.fillMaxWidth(),
-            enabled = !encodeUiState.inProgress,
-            value = encodeUiState.message,
-            onValueChange = onPlaintextChange,
-            singleLine = false,
-            placeholder = { Text(stringResource(R.string.plaintext_message_placeholder)) },
-        )
+        val focusManager = LocalFocusManager.current
 
-        Row(
+        ElevatedCard(
             modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedTextField(
-                modifier = modifier.padding(end=8.dp).weight(1f),
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                enabled = !encodeUiState.inProgress,
+                value = encodeUiState.message,
+                onValueChange = onPlaintextChange,
+                singleLine = false,
+                label = { Text(stringResource(R.string.plaintext_message_label)) },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                ),
+            )
+        }
+
+        ElevatedCard(
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            val tagValid = Regex("""\w*[a-zA-Z]\w*""").matches(encodeUiState.tagToAdd)
+            val isError = encodeUiState.tagToAdd != "" && !tagValid
+            val canAdd =
+                !encodeUiState.inProgress && tagValid && encodeUiState.tagToAdd !in encodeUiState.addedTags
+
+            OutlinedTextField(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
                 enabled = !encodeUiState.inProgress,
                 value = encodeUiState.tagToAdd,
                 onValueChange = onTagChange,
                 singleLine = true,
-                placeholder = { Text(stringResource(R.string.tag_placeholder)) },
+                label = { Text(stringResource(R.string.tag_label)) },
+                trailingIcon = {
+                    IconButton(
+                        enabled = canAdd,
+                        onClick = onAddTag,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AddCircleOutline,
+                            contentDescription = stringResource(R.string.add_tag),
+                        )
+                    }
+                },
+                supportingText = {
+                    if (isError) {
+                        Text(stringResource(R.string.tag_error))
+                    } else {
+                        Text(stringResource(R.string.tag_support))
+                    }
+                },
+                isError = isError,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
             )
 
-            FilledIconButton(
-                enabled = !encodeUiState.inProgress,
-                onClick = onAddTag,
+            LazyRow(
+                modifier = modifier.padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.add_tag),
-                )
+                items(encodeUiState.addedTags.toList()) { tag ->
+                    InputChip(
+                        selected = true,
+                        onClick = { },
+                        label = { Text(text = tag) },
+                        trailingIcon = {
+                            Icon(
+                                modifier = modifier.clickable(
+                                    enabled = !encodeUiState.inProgress
+                                ) { onTagRemove(tag) },
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(R.string.delete),
+                            )
+                        },
+                    )
+                }
             }
-        }
-
-        LazyColumn(modifier = modifier.weight(1f)) {
-            items(encodeUiState.addedTags.toList()) { tag ->
-                TagEntry(
-                    uiEnabled = !encodeUiState.inProgress,
-                    tag = tag,
-                    onTagRemove = { onTagRemove(tag) },
-                )
-            }
-        }
-
-        if (encodeUiState.encodedMessage != null) {
-            Text(
-                modifier = modifier.align(Alignment.Start),
-                text = LocalContext.current.getString(
-                    R.string.encoded_message_length,
-                    encodeUiState.encodedMessage.length,
-                )
-            )
-
-            TextField(
-                modifier = modifier.fillMaxWidth(),
-                value = encodeUiState.encodedMessage,
-                onValueChange = { },
-                readOnly = true,
-                label = { Text(stringResource(R.string.encode_output_label)) }
-            )
-        }
-
-        if (encodeUiState.inProgress) {
-            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
         }
 
         Button(
@@ -120,28 +156,32 @@ fun EncodeScreen(
                 style = MaterialTheme.typography.titleLarge,
             )
         }
-    }
-}
 
-@Composable
-fun TagEntry(
-    uiEnabled: Boolean,
-    tag: String,
-    onTagRemove: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(text = tag)
+        if (encodeUiState.inProgress) {
+            LinearProgressIndicator(modifier = modifier.align(Alignment.CenterHorizontally))
+        }
 
-        FilledIconButton(
-            enabled = uiEnabled,
-            onClick = onTagRemove,
-        ) {
-            Icon(imageVector = Icons.Filled.Delete, contentDescription = stringResource(R.string.delete))
+        if (encodeUiState.encodedMessage != null) {
+            ElevatedCard(modifier = modifier.fillMaxWidth()) {
+                Text(
+                    modifier = modifier.padding(8.dp),
+                    text = LocalContext.current.getString(
+                        R.string.encoded_message_length,
+                        encodeUiState.encodedMessage.length,
+                    )
+                )
+
+                Divider(thickness = 1.dp)
+
+                SelectionContainer() {
+                    Text(
+                        modifier = modifier
+                            .padding(8.dp)
+                            .align(Alignment.Start),
+                        text = encodeUiState.encodedMessage,
+                    )
+                }
+            }
         }
     }
 }

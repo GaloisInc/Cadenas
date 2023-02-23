@@ -4,12 +4,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.RestartAlt
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,25 +38,22 @@ fun ButkusApp(
     modifier: Modifier = Modifier,
     viewModel: ButkusAppViewModel,
 ) {
-    // Get the app context
     val context = LocalContext.current
 
-    // Get the whole-app coroutine scope
     val scope = rememberCoroutineScope()
 
-    // Navigation setup
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = ButkusScreen.valueOf(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
 
-    // Manual scaffold state so we control the drawer
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
     val butkusInitialized by viewModel.butkusInitialized.collectAsState()
     val encodeUiState by viewModel.encodeUiState.collectAsState()
     val decodeUiState by viewModel.decodeUiState.collectAsState()
+    val settingsUiState by viewModel.settingsUiState.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -68,11 +64,11 @@ fun ButkusApp(
         },
         drawerContent = {
             ModalDrawerSheet {
-                Spacer(Modifier.height(8.dp))
+                Spacer(modifier.height(8.dp))
                 ButkusScreen.values().forEach {
                     val screenName = stringResource(it.title)
                     NavigationDrawerItem(
-                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                        modifier = modifier.padding(start = 8.dp, end = 8.dp),
                         label = { Text(screenName) },
                         selected = it == currentScreen,
                         onClick = {
@@ -95,7 +91,7 @@ fun ButkusApp(
                     title = { Text(stringResource(currentScreen.title)) },
                     modifier = modifier,
                     navigationIcon = {
-                        FilledIconButton(
+                        IconButton(
                             enabled = when (currentScreen) {
                                 ButkusScreen.Encode -> !encodeUiState.inProgress
                                 ButkusScreen.Decode -> !decodeUiState.inProgress
@@ -110,38 +106,65 @@ fun ButkusApp(
                         }
                     },
                     actions = {
-                        FilledIconButton(
-                            enabled = when (currentScreen) {
-                                ButkusScreen.Encode -> !encodeUiState.inProgress
-                                ButkusScreen.Decode -> !decodeUiState.inProgress
-                                ButkusScreen.Settings -> true
-                            },
-                            onClick = {
-                                when (currentScreen) {
-                                    ButkusScreen.Encode -> viewModel.resetEncodeScreen()
-                                    ButkusScreen.Decode -> viewModel.resetDecodeScreen()
-                                    ButkusScreen.Settings -> {}
+                        when (currentScreen) {
+                            ButkusScreen.Encode -> {
+                                IconButton(
+                                    enabled = !encodeUiState.inProgress,
+                                    onClick = { viewModel.resetEncodeScreen() },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.RestartAlt,
+                                        contentDescription = stringResource(R.string.reset),
+                                    )
                                 }
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.RestartAlt,
-                                contentDescription = stringResource(R.string.reset)
-                            )
-                        }
 
-                        if (currentScreen == ButkusScreen.Encode) {
-                            FilledIconButton(
-                                onClick = { shareMessage(context, encodeUiState.encodedMessage) },
-                                enabled = !encodeUiState.inProgress && encodeUiState.encodedMessage != null,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Share,
-                                    contentDescription = stringResource(R.string.share_button),
-                                )
+                                IconButton(
+                                    enabled = !encodeUiState.inProgress && encodeUiState.encodedMessage != null,
+                                    onClick = {
+                                        shareMessage(
+                                            context,
+                                            encodeUiState.encodedMessage
+                                        )
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Send,
+                                        contentDescription = stringResource(R.string.share_button),
+                                    )
+                                }
+                            }
+                            ButkusScreen.Decode -> {
+                                IconButton(
+                                    enabled = !decodeUiState.inProgress,
+                                    onClick = { viewModel.resetDecodeScreen() },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.RestartAlt,
+                                        contentDescription = stringResource(R.string.reset),
+                                    )
+                                }
+                            }
+                            ButkusScreen.Settings -> {
+                                IconButton(
+                                    onClick = { },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Download,
+                                        contentDescription = stringResource(R.string.import_label),
+                                    )
+                                }
+
+                                IconButton(
+                                    onClick = { },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Upload,
+                                        contentDescription = stringResource(R.string.export_label),
+                                    )
+                                }
                             }
                         }
-                    }
+                    },
                 )
             },
         ) { innerPadding ->
@@ -155,17 +178,8 @@ fun ButkusApp(
                         encodeUiState = encodeUiState,
                         onPlaintextChange = { viewModel.updatePlaintextMessage(it) },
                         onTagChange = { viewModel.updateTagToAdd(it) },
-                        onAddTag = {
-                            if (encodeUiState.tagToAdd != "" && encodeUiState.tagToAdd.all { it.isLetter() } && encodeUiState.tagToAdd !in encodeUiState.addedTags) {
-                                viewModel.addTag(encodeUiState.tagToAdd)
-                                viewModel.updateTagToAdd("")
-                            }
-                        },
-                        onTagRemove = {
-                            if (it in encodeUiState.addedTags) {
-                                viewModel.removeTag(it)
-                            }
-                        },
+                        onAddTag = { viewModel.addTag(encodeUiState.tagToAdd) },
+                        onTagRemove = { viewModel.removeTag(it) },
                         butkusInitialized = butkusInitialized,
                         onEncode = { scope.launch { viewModel.encodeMessage() } },
                     )
@@ -175,14 +189,18 @@ fun ButkusApp(
                     DecodeScreen(
                         decodeUiState = decodeUiState,
                         onCoverTextChange = { viewModel.updateEncodedMessage(it) },
-                        canDecode = butkusInitialized && !decodeUiState.inProgress && decodeUiState.message.isNotEmpty(),
+                        butkusInitialized = butkusInitialized,
                         onDecode = { scope.launch { viewModel.decodeMessage() } },
                     )
                 }
 
                 composable(route = ButkusScreen.Settings.name) {
                     SettingsScreen(
+                        settingsUiState = settingsUiState,
                         onKeyChange = { },
+                        onGenKey = { },
+                        onSeedChange = { viewModel.updateSeedText(it) },
+                        onRestoreDefaults = { },
                     )
                 }
             }
