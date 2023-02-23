@@ -27,7 +27,7 @@ import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.EncodeUiState
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
-val TAG_REGEX = Regex("""\w*[a-zA-Z]\w*""")
+private val TAG_REGEX = Regex("""\w*[a-zA-Z]\w*""")
 
 /** The message encoding screen. Consists of:
  * - Text field for the message to encode
