@@ -27,6 +27,8 @@ import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.EncodeUiState
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
+val TAG_REGEX = Regex("""\w*[a-zA-Z]\w*""")
+
 /** The message encoding screen. Consists of:
  * - Text field for the message to encode
  * - Text field and button to add alphabetic tags to encoded messages
@@ -80,7 +82,7 @@ fun EncodeScreen(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
-            val tagValid = Regex("""\w*[a-zA-Z]\w*""").matches(encodeUiState.tagToAdd)
+            val tagValid = TAG_REGEX.matches(encodeUiState.tagToAdd)
             val isError = encodeUiState.tagToAdd != "" && !tagValid
             val canAdd =
                 !encodeUiState.inProgress && tagValid && encodeUiState.tagToAdd !in encodeUiState.addedTags
