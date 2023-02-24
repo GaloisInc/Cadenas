@@ -1,8 +1,5 @@
 package com.hashapps.butkusapp.ui
 
-import java.util.Base64
-import javax.crypto.KeyGenerator
-
 /**
  * Data class for the setting screen's UI state.
  */
@@ -18,6 +15,9 @@ data class SettingsUiState (
 
     /** Known model URIs to display in selection menu. */
     val modelUrls: Set<String> = setOf(),
+
+    /** Flag indicating the URL menu is expanded. */
+    val urlMenuExpanded: Boolean = false,
 
     /** Selected model to fetch. */
     val selectedModel: String = "",
