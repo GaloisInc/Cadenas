@@ -2,8 +2,6 @@ package com.hashapps.butkusapp.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -11,14 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.DecodeUiState
+import com.hashapps.butkusapp.ui.models.DecodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 /** The message decoding screen. Consists of:
@@ -31,10 +27,8 @@ import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 @Composable
 fun DecodeScreen(
     modifier: Modifier = Modifier,
-    decodeUiState: DecodeUiState,
-    onCoverTextChange: (String) -> Unit,
+    vm: DecodeViewModel = DecodeViewModel(),
     butkusInitialized: Boolean,
-    onDecode: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -54,9 +48,9 @@ fun DecodeScreen(
                     modifier = modifier
                         .padding(8.dp)
                         .fillMaxWidth(),
-                    enabled = !decodeUiState.inProgress,
-                    value = decodeUiState.message,
-                    onValueChange = onCoverTextChange,
+                    enabled = !vm.uiState.inProgress,
+                    value = vm.uiState.message,
+                    onValueChange = vm::updateEncodedMessage,
                     singleLine = false,
                     label = { Text(stringResource(R.string.encoded_message_label)) },
                     placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
@@ -66,8 +60,8 @@ fun DecodeScreen(
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = butkusInitialized && !decodeUiState.inProgress && decodeUiState.message.isNotEmpty(),
-            onClick = onDecode,
+            enabled = butkusInitialized && !vm.uiState.inProgress && vm.uiState.message.isNotEmpty(),
+            onClick = vm::decodeMessage,
         ) {
             Text(
                 text = stringResource(R.string.decode),
@@ -75,16 +69,16 @@ fun DecodeScreen(
             )
         }
 
-        if (decodeUiState.inProgress) {
+        if (vm.uiState.inProgress) {
             LinearProgressIndicator(modifier = modifier.align(Alignment.CenterHorizontally))
         }
 
-        if (decodeUiState.decodedMessage != null) {
+        if (vm.uiState.decodedMessage != null) {
             ElevatedCard(modifier = modifier.fillMaxWidth()) {
                 SelectionContainer {
                     Text(
                         modifier = modifier.padding(8.dp),
-                        text = decodeUiState.decodedMessage,
+                        text = vm.uiState.decodedMessage!!,
                     )
                 }
             }
@@ -96,11 +90,6 @@ fun DecodeScreen(
 @Composable
 fun DecodeScreenPreviewDefault() {
     ButkusAppTheme {
-        DecodeScreen(
-            decodeUiState = DecodeUiState(),
-            onCoverTextChange = {},
-            butkusInitialized = true,
-            onDecode = { },
-        )
+        DecodeScreen(butkusInitialized = true)
     }
 }

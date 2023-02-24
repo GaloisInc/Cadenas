@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hashapps.butkusapp.ui.models.ButkusAppViewModel
+import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.ButkusScreen
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
@@ -33,7 +33,7 @@ import com.hashapps.butkusapp.ui.screens.SettingsScreen
 @Composable
 fun ButkusApp(
     modifier: Modifier = Modifier,
-    viewModel: ButkusAppViewModel,
+    viewModel: ButkusViewModel,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -149,36 +149,20 @@ fun ButkusApp(
         ) {
             composable(route = ButkusScreen.Encode.name) {
                 EncodeScreen(
-                    encodeUiState = viewModel.encode.uiState,
-                    onPlaintextChange = { viewModel.encode.updatePlaintextMessage(it) },
-                    onTagChange = { viewModel.encode.updateTagToAdd(it) },
-                    onAddTag = { viewModel.encode.addTag(viewModel.encode.uiState.tagToAdd) },
-                    onTagRemove = { viewModel.encode.removeTag(it) },
+                    vm = viewModel.encode,
                     butkusInitialized = viewModel.butkusInitialized,
-                    onEncode = { viewModel.encode.encodeMessage() },
                 )
             }
 
             composable(route = ButkusScreen.Decode.name) {
                 DecodeScreen(
-                    decodeUiState = viewModel.decode.uiState,
-                    onCoverTextChange = { viewModel.decode.updateEncodedMessage(it) },
+                    vm = viewModel.decode,
                     butkusInitialized = viewModel.butkusInitialized,
-                    onDecode = { viewModel.decode.decodeMessage() },
                 )
             }
 
             composable(route = ButkusScreen.Settings.name) {
-                SettingsScreen(
-                    settingsUiState = viewModel.settings.uiState,
-                    onGenKey = { },
-                    onSeedChange = { viewModel.settings.updateSeedText(it) },
-                    onUrlChange = { viewModel.settings.updateModelToAdd(it) },
-                    onAddUrl = { viewModel.settings.addUrl(viewModel.settings.uiState.modelUrlToAdd) },
-                    onToggleMenu = { viewModel.settings.toggleUrlMenu() },
-                    onDismissMenu = { viewModel.settings.dismissUrlMenu() },
-                    onSelectModel = { viewModel.settings.selectModelUrl(it) },
-                )
+                SettingsScreen(vm = viewModel.settings)
             }
         }
     }

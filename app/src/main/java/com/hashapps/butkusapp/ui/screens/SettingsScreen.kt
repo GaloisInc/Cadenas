@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.SettingsUiState
+import com.hashapps.butkusapp.ui.models.SettingsViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 private const val maxLen = 128
@@ -32,14 +32,7 @@ private val urlRegex =
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    settingsUiState: SettingsUiState,
-    onGenKey: () -> Unit,
-    onSeedChange: (String) -> Unit,
-    onUrlChange: (String) -> Unit,
-    onAddUrl: () -> Unit,
-    onToggleMenu: () -> Unit,
-    onDismissMenu: () -> Unit,
-    onSelectModel: (String) -> Unit,
+    vm: SettingsViewModel = SettingsViewModel(),
 ) {
     Column(
         modifier = modifier
@@ -64,7 +57,7 @@ fun SettingsScreen(
                 OutlinedTextField(
                     modifier = modifier.weight(1f),
                     readOnly = true,
-                    value = settingsUiState.secretKey,
+                    value = vm.uiState.secretKey,
                     onValueChange = { },
                     singleLine = true,
                     label = { Text(stringResource(R.string.key_label)) },
@@ -72,7 +65,7 @@ fun SettingsScreen(
                 )
 
                 FilledTonalIconButton(
-                    onClick = onGenKey,
+                    onClick = { /* TODO: Generate AES-256 key */ },
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Key,
@@ -89,15 +82,15 @@ fun SettingsScreen(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                value = settingsUiState.seedText,
-                onValueChange = { onSeedChange(it.take(maxLen)) },
+                value = vm.uiState.seedText,
+                onValueChange = { vm.updateSeedText(it.take(maxLen)) },
                 singleLine = true,
                 label = { Text(stringResource(R.string.seed_label)) },
                 supportingText = {
                     Text(
                         LocalContext.current.getString(
                             R.string.seed_support,
-                            settingsUiState.seedText.length,
+                            vm.uiState.seedText.length,
                             maxLen,
                         )
                     )
@@ -111,21 +104,21 @@ fun SettingsScreen(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
-            val urlValid = urlRegex.matches(settingsUiState.modelUrlToAdd)
-            val isError = settingsUiState.modelUrlToAdd != "" && !urlValid
+            val urlValid = urlRegex.matches(vm.uiState.modelUrlToAdd)
+            val isError = vm.uiState.modelUrlToAdd != "" && !urlValid
 
             OutlinedTextField(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                value = settingsUiState.modelUrlToAdd,
-                onValueChange = { onUrlChange(it.take(maxLen)) },
+                value = vm.uiState.modelUrlToAdd,
+                onValueChange = { vm.updateModelToAdd(it.take(maxLen)) },
                 singleLine = true,
                 label = { Text(stringResource(R.string.url_label)) },
                 trailingIcon = {
                     IconButton(
-                        enabled = urlValid && settingsUiState.modelUrlToAdd !in settingsUiState.modelUrls,
-                        onClick = onAddUrl,
+                        enabled = urlValid && vm.uiState.modelUrlToAdd !in vm.uiState.modelUrls,
+                        onClick = { vm.addUrl(vm.uiState.modelUrlToAdd) },
                     ) {
                         Icon(
                             imageVector = Icons.Filled.AddCircleOutline,
@@ -140,7 +133,7 @@ fun SettingsScreen(
                         Text(
                             LocalContext.current.getString(
                                 R.string.url_support,
-                                settingsUiState.modelUrlToAdd.length,
+                                vm.uiState.modelUrlToAdd.length,
                                 maxLen,
                             )
                         )
@@ -159,33 +152,33 @@ fun SettingsScreen(
             )
 
             ExposedDropdownMenuBox(
-                expanded = settingsUiState.urlMenuExpanded,
-                onExpandedChange = { onToggleMenu() },
+                expanded = vm.uiState.urlMenuExpanded,
+                onExpandedChange = { vm.toggleUrlMenu() },
             ) {
                 OutlinedTextField(
                     modifier = modifier
                         .menuAnchor()
                         .padding(8.dp)
                         .fillMaxWidth(),
-                    value = settingsUiState.selectedModel,
+                    value = vm.uiState.selectedModel,
                     onValueChange = { },
                     readOnly = true,
                     label = { Text(stringResource(R.string.selected_url_label)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = settingsUiState.urlMenuExpanded) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = vm.uiState.urlMenuExpanded) },
                     singleLine = true,
                 )
 
                 ExposedDropdownMenu(
-                    expanded = settingsUiState.urlMenuExpanded,
-                    onDismissRequest = onDismissMenu,
+                    expanded = vm.uiState.urlMenuExpanded,
+                    onDismissRequest = vm::dismissUrlMenu,
                 ) {
-                    settingsUiState.modelUrls.forEach {
+                    vm.uiState.modelUrls.forEach {
                         // TODO: Make the text something more meaningful once we have download machinery
                         DropdownMenuItem(
                             text = { Text(it) },
                             onClick = {
-                                onSelectModel(it)
-                                onDismissMenu()
+                                vm.selectModelUrl(it)
+                                vm.dismissUrlMenu()
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                         )
@@ -200,15 +193,6 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenPreviewDefault() {
     ButkusAppTheme {
-        SettingsScreen(
-            settingsUiState = SettingsUiState(),
-            onGenKey = { },
-            onSeedChange = { },
-            onUrlChange = { },
-            onAddUrl = { },
-            onToggleMenu = { },
-            onDismissMenu = { },
-            onSelectModel = { },
-        )
+        SettingsScreen()
     }
 }

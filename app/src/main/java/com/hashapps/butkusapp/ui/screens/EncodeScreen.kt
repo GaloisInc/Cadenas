@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.EncodeUiState
+import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
@@ -35,18 +35,14 @@ private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
  * - (If tag set nonempty) Scrollable list of TagEntry
  * - (If message encoded) The encoded message, with tags appended to the end
  *   (e.g. adding the tag 'funny' appends '#funny' to the encoded message)
- * - Action button (Encode) */
+ * - Action button (Encode)
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EncodeScreen(
     modifier: Modifier = Modifier,
-    encodeUiState: EncodeUiState,
-    onPlaintextChange: (String) -> Unit,
-    onTagChange: (String) -> Unit,
-    onAddTag: () -> Unit,
-    onTagRemove: (String) -> Unit,
+    vm: EncodeViewModel = EncodeViewModel(),
     butkusInitialized: Boolean,
-    onEncode: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -65,9 +61,9 @@ fun EncodeScreen(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                enabled = !encodeUiState.inProgress,
-                value = encodeUiState.message,
-                onValueChange = onPlaintextChange,
+                enabled = !vm.uiState.inProgress,
+                value = vm.uiState.message,
+                onValueChange = vm::updatePlaintextMessage,
                 singleLine = false,
                 label = { Text(stringResource(R.string.plaintext_message_label)) },
                 keyboardOptions = KeyboardOptions(
@@ -82,24 +78,24 @@ fun EncodeScreen(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
-            val tagValid = tagRegex.matches(encodeUiState.tagToAdd)
-            val isError = encodeUiState.tagToAdd != "" && !tagValid
+            val tagValid = tagRegex.matches(vm.uiState.tagToAdd)
+            val isError = vm.uiState.tagToAdd != "" && !tagValid
             val canAdd =
-                !encodeUiState.inProgress && tagValid && encodeUiState.tagToAdd !in encodeUiState.addedTags
+                !vm.uiState.inProgress && tagValid && vm.uiState.tagToAdd !in vm.uiState.addedTags
 
             OutlinedTextField(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                enabled = !encodeUiState.inProgress,
-                value = encodeUiState.tagToAdd,
-                onValueChange = onTagChange,
+                enabled = !vm.uiState.inProgress,
+                value = vm.uiState.tagToAdd,
+                onValueChange = vm::updateTagToAdd,
                 singleLine = true,
                 label = { Text(stringResource(R.string.tag_label)) },
                 trailingIcon = {
                     IconButton(
                         enabled = canAdd,
-                        onClick = onAddTag,
+                        onClick = { vm.addTag(vm.uiState.tagToAdd) },
                     ) {
                         Icon(
                             imageVector = Icons.Filled.AddCircleOutline,
@@ -129,16 +125,16 @@ fun EncodeScreen(
                 modifier = modifier.padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(encodeUiState.addedTags.toList()) { tag ->
+                items(vm.uiState.addedTags.toList()) {
                     InputChip(
                         selected = true,
                         onClick = { },
-                        label = { Text(text = tag) },
+                        label = { Text(it) },
                         trailingIcon = {
                             Icon(
                                 modifier = modifier.clickable(
-                                    enabled = !encodeUiState.inProgress
-                                ) { onTagRemove(tag) },
+                                    enabled = !vm.uiState.inProgress
+                                ) { vm.removeTag(it) },
                                 imageVector = Icons.Filled.Close,
                                 contentDescription = stringResource(R.string.delete),
                             )
@@ -150,8 +146,8 @@ fun EncodeScreen(
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = butkusInitialized && !encodeUiState.inProgress && encodeUiState.message.isNotEmpty(),
-            onClick = onEncode,
+            enabled = butkusInitialized && !vm.uiState.inProgress && vm.uiState.message.isNotEmpty(),
+            onClick = vm::encodeMessage,
         ) {
             Text(
                 text = stringResource(R.string.encode),
@@ -159,17 +155,17 @@ fun EncodeScreen(
             )
         }
 
-        if (encodeUiState.inProgress) {
+        if (vm.uiState.inProgress) {
             LinearProgressIndicator(modifier = modifier.align(Alignment.CenterHorizontally))
         }
 
-        if (encodeUiState.encodedMessage != null) {
+        if (vm.uiState.encodedMessage != null) {
             ElevatedCard(modifier = modifier.fillMaxWidth()) {
                 Text(
                     modifier = modifier.padding(8.dp),
                     text = LocalContext.current.getString(
                         R.string.encoded_message_length,
-                        encodeUiState.encodedMessage.length,
+                        vm.uiState.encodedMessage!!.length,
                     )
                 )
 
@@ -178,7 +174,7 @@ fun EncodeScreen(
                 SelectionContainer {
                     Text(
                         modifier = modifier.padding(8.dp),
-                        text = encodeUiState.encodedMessage,
+                        text = vm.uiState.encodedMessage!!,
                     )
                 }
             }
@@ -190,14 +186,6 @@ fun EncodeScreen(
 @Composable
 fun EncodeScreenPreviewDefault() {
     ButkusAppTheme {
-        EncodeScreen(
-            encodeUiState = EncodeUiState(),
-            onPlaintextChange = { },
-            onTagChange = { },
-            onAddTag = { },
-            onTagRemove = { },
-            butkusInitialized = true,
-            onEncode = { },
-        )
+        EncodeScreen(butkusInitialized = true)
     }
 }
