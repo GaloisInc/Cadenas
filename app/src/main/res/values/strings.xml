@@ -6,6 +6,8 @@
     <string name="switch_button">Open settings</string>
     <string name="reset">Reset</string>
     <string name="share_button">Copy or share encoded message</string>
+    <string name="import_label">Import</string>
+    <string name="export_label">Export</string>
     <string name="butkus_message">Butkus Encoded Message</string>
     <string name="plaintext_message_label">Private Message</string>
     <string name="tag_label">(Optional) Tag</string>
@@ -20,8 +22,10 @@
     <string name="key_placeholder">Generate or import a key.</string>
     <string name="generate_key">Generate Key</string>
     <string name="seed_label">Seed Text</string>
-    <string name="char_counter">%1d / %2d</string>
-    <string name="import_label">Import</string>
-    <string name="export_label">Export</string>
-    <string name="restore_defaults">Restore Defaults</string>
+    <string name="seed_support">Model seed text (%1d / %2d)</string>
+    <string name="url_label">Model URL</string>
+    <string name="add_url">Add model URL</string>
+    <string name="url_support">Add URLs to fetch models (%1d / %2d)</string>
+    <string name="url_error">Must be a valid URL</string>
+    <string name="selected_url_label">Selected Model URL</string>
 </resources>
