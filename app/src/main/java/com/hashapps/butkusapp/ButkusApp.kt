@@ -19,7 +19,6 @@ import com.hashapps.butkusapp.ui.ButkusScreen
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
 import com.hashapps.butkusapp.ui.screens.SettingsScreen
-import kotlinx.coroutines.launch
 
 /** The Butkus application.
  *
@@ -42,12 +41,6 @@ fun ButkusApp(
         backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
     )
 
-    val butkusInitialized by viewModel.butkusInitialized.collectAsState()
-
-    val encodeUiState by viewModel.encodeUiState.collectAsState()
-    val decodeUiState by viewModel.decodeUiState.collectAsState()
-    val settingsUiState by viewModel.settingsUiState.collectAsState()
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -57,7 +50,7 @@ fun ButkusApp(
                     val settings = stringResource(ButkusScreen.Settings.title)
 
                     IconButton(
-                        enabled = !(encodeUiState.inProgress || decodeUiState.inProgress),
+                        enabled = !(viewModel.encode.uiState.inProgress || viewModel.decode.uiState.inProgress),
                         onClick = { navController.navigate(settings) }
                     ) {
                         Icon(
@@ -72,8 +65,8 @@ fun ButkusApp(
                             val context = LocalContext.current
 
                             IconButton(
-                                enabled = !encodeUiState.inProgress,
-                                onClick = { viewModel.resetEncodeScreen() },
+                                enabled = !viewModel.encode.uiState.inProgress,
+                                onClick = { viewModel.encode.resetScreen() },
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.RestartAlt,
@@ -82,11 +75,11 @@ fun ButkusApp(
                             }
 
                             IconButton(
-                                enabled = encodeUiState.encodedMessage != null,
+                                enabled = viewModel.encode.uiState.encodedMessage != null,
                                 onClick = {
                                     shareMessage(
                                         context,
-                                        encodeUiState.encodedMessage!! // Safe by enabled condition
+                                        viewModel.encode.uiState.encodedMessage!! // Safe by enabled condition
                                     )
                                 }
                             ) {
@@ -98,8 +91,8 @@ fun ButkusApp(
                         }
                         ButkusScreen.Decode -> {
                             IconButton(
-                                enabled = !decodeUiState.inProgress,
-                                onClick = { viewModel.resetDecodeScreen() },
+                                enabled = !viewModel.decode.uiState.inProgress,
+                                onClick = { viewModel.decode.resetScreen() },
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.RestartAlt,
@@ -149,8 +142,6 @@ fun ButkusApp(
             }
         }
     ) { innerPadding ->
-        val scope = rememberCoroutineScope()
-
         NavHost(
             navController = navController,
             startDestination = ButkusScreen.Encode.name,
@@ -158,33 +149,35 @@ fun ButkusApp(
         ) {
             composable(route = ButkusScreen.Encode.name) {
                 EncodeScreen(
-                    encodeUiState = encodeUiState,
-                    onPlaintextChange = { viewModel.updatePlaintextMessage(it) },
-                    onTagChange = { viewModel.updateTagToAdd(it) },
-                    onAddTag = { viewModel.addTag(encodeUiState.tagToAdd) },
-                    onTagRemove = { viewModel.removeTag(it) },
-                    butkusInitialized = butkusInitialized,
-                    onEncode = { scope.launch { viewModel.encodeMessage() } },
+                    encodeUiState = viewModel.encode.uiState,
+                    onPlaintextChange = { viewModel.encode.updatePlaintextMessage(it) },
+                    onTagChange = { viewModel.encode.updateTagToAdd(it) },
+                    onAddTag = { viewModel.encode.addTag(viewModel.encode.uiState.tagToAdd) },
+                    onTagRemove = { viewModel.encode.removeTag(it) },
+                    butkusInitialized = viewModel.butkusInitialized,
+                    onEncode = { viewModel.encode.encodeMessage() },
                 )
             }
 
             composable(route = ButkusScreen.Decode.name) {
                 DecodeScreen(
-                    decodeUiState = decodeUiState,
-                    onCoverTextChange = { viewModel.updateEncodedMessage(it) },
-                    butkusInitialized = butkusInitialized,
-                    onDecode = { scope.launch { viewModel.decodeMessage() } },
+                    decodeUiState = viewModel.decode.uiState,
+                    onCoverTextChange = { viewModel.decode.updateEncodedMessage(it) },
+                    butkusInitialized = viewModel.butkusInitialized,
+                    onDecode = { viewModel.decode.decodeMessage() },
                 )
             }
 
             composable(route = ButkusScreen.Settings.name) {
                 SettingsScreen(
-                    settingsUiState = settingsUiState,
+                    settingsUiState = viewModel.settings.uiState,
                     onGenKey = { },
-                    maxSeedLen = 128,
-                    onSeedChange = { viewModel.updateSeedText(it) },
-                    maxUrlLen = 128,
-                    onUrlChange = {  },
+                    onSeedChange = { viewModel.settings.updateSeedText(it) },
+                    onUrlChange = { viewModel.settings.updateModelToAdd(it) },
+                    onAddUrl = { viewModel.settings.addUrl(viewModel.settings.uiState.modelUrlToAdd) },
+                    onToggleMenu = { viewModel.settings.toggleUrlMenu() },
+                    onDismissMenu = { viewModel.settings.dismissUrlMenu() },
+                    onSelectModel = { viewModel.settings.selectModelUrl(it) },
                 )
             }
         }

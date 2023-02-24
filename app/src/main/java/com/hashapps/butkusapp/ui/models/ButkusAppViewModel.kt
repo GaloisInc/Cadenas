@@ -1,142 +1,146 @@
 package com.hashapps.butkusapp.ui.models
 
 import android.app.Application
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.Butkus
 import com.hashapps.butkusapp.ui.DecodeUiState
 import com.hashapps.butkusapp.ui.EncodeUiState
 import com.hashapps.butkusapp.ui.SettingsUiState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**
- * ViewModel for ButkusApp
- */
-class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
-    /** Flag indicating whether or not Butkus has been initialized */
-    private val _butkusInitialized = MutableStateFlow(false)
-    val butkusInitialized: StateFlow<Boolean> = _butkusInitialized.asStateFlow()
+class EncodeViewModel : ViewModel() {
+    var uiState by mutableStateOf(EncodeUiState())
+        private set
 
-    /** Encode screen backing property / read-only interface  */
-    private val _encodeUiState = MutableStateFlow(EncodeUiState())
-    val encodeUiState: StateFlow<EncodeUiState> = _encodeUiState.asStateFlow()
-
-    /** Decode screen backing property / read-only interface */
-    private val _decodeUiState = MutableStateFlow(DecodeUiState())
-    val decodeUiState: StateFlow<DecodeUiState> = _decodeUiState.asStateFlow()
-
-    /** Settings screen backing property / read-only interface */
-    private val _settingsUiState = MutableStateFlow(SettingsUiState())
-    val settingsUiState: StateFlow<SettingsUiState> = _settingsUiState.asStateFlow()
-
-    // Since we are an AndroidViewModel, we can access application context
-    init {
-        viewModelScope.launch {
-            Butkus.initialize(app.applicationContext)
-            _butkusInitialized.value = true
-        }
-    }
-
-    /** ********** Encode screen methods ********** */
-
-    /** Update plaintext input box on encode screen */
     fun updatePlaintextMessage(plaintext: String) {
-        _encodeUiState.update {
-            it.copy(message = plaintext)
-        }
+        uiState = uiState.copy(message = plaintext)
     }
 
-    /** Update tag input box on encode screen */
     fun updateTagToAdd(tag: String) {
-        _encodeUiState.update {
-            it.copy(tagToAdd = tag)
-        }
+        uiState = uiState.copy(tagToAdd = tag)
     }
 
-    /** Add tag to set backing list view, update encoded text if not null */
     fun addTag(tag: String) {
-        _encodeUiState.update { cs ->
-            cs.copy(
-                tagToAdd = "",
-                addedTags = cs.addedTags + tag,
-                encodedMessage = cs.encodedMessage?.let { "$it #$tag" }
-            )
-        }
+        uiState = uiState.copy(
+            tagToAdd = "",
+            addedTags = uiState.addedTags + tag,
+            encodedMessage = uiState.encodedMessage?.let { "$it #$tag" }
+        )
     }
 
-    /** Remove tag from set backing list view, update encoded text if not null */
     fun removeTag(tag: String) {
-        _encodeUiState.update { cs ->
-            cs.copy(
-                addedTags = cs.addedTags - tag,
-                encodedMessage = cs.encodedMessage?.let {
-                    it.substringBefore(" #$tag") + it.substringAfter(
-                        " #$tag"
-                    )
-                }
-            )
-        }
+        uiState = uiState.copy(
+            addedTags = uiState.addedTags - tag,
+            encodedMessage = uiState.encodedMessage?.let {
+                it.substringBefore(" #$tag") + it.substringAfter(
+                    " #$tag"
+                )
+            }
+        )
     }
 
-    /**
-     * Encode the message in the plaintext input box, format and append tags,
-     * and update encoded text
-     */
-    suspend fun encodeMessage() {
-        withContext(Dispatchers.Default) {
-            _encodeUiState.update { it.copy(inProgress = true, encodedMessage = null) }
+    fun encodeMessage() {
+        viewModelScope.launch(Dispatchers.Default) {
+            uiState = uiState.copy(inProgress = true, encodedMessage = null)
 
-            val encodedMessage = Butkus.getInstance().encode(_encodeUiState.value.message)
+            val encodedMessage = Butkus.getInstance().encode(uiState.message)
             val tagsString =
-                _encodeUiState.value.addedTags.joinToString(separator = "") { " #$it" }
-            _encodeUiState.update { it.copy(encodedMessage = encodedMessage + tagsString) }
+                uiState.addedTags.joinToString(separator = "") { " #$it" }
+            uiState = uiState.copy(encodedMessage = encodedMessage + tagsString)
 
-            _encodeUiState.update { it.copy(inProgress = false) }
+            uiState = uiState.copy(inProgress = false)
         }
     }
 
-    /** Reset the encode UI state to defaults */
-    fun resetEncodeScreen() {
-        _encodeUiState.value = EncodeUiState()
+    fun resetScreen() {
+        uiState = EncodeUiState()
     }
+}
 
-    /** ********** Decode screen methods ********** */
+class DecodeScreenModel : ViewModel() {
+    var uiState by mutableStateOf(DecodeUiState())
+        private set
 
-    /** Updated encoded message input box on decode screen */
     fun updateEncodedMessage(encoded: String) {
-        _decodeUiState.update { it.copy(message = encoded) }
+        uiState = uiState.copy(message = encoded)
     }
 
-    /**
-     * Strip any tags from the encoded text, decode it, and update decoded text
-     */
-    suspend fun decodeMessage() {
-        withContext(Dispatchers.Default) {
-            _decodeUiState.update { it.copy(inProgress = true, decodedMessage = null) }
+    fun decodeMessage() {
+        viewModelScope.launch(Dispatchers.Default) {
+            Snapshot.withMutableSnapshot {
+                uiState = uiState.copy(inProgress = true, decodedMessage = null)
 
-            val untaggedMessage = _decodeUiState.value.message.substringBefore(delimiter = " #")
-            val decodedMessage = Butkus.getInstance().decode(untaggedMessage)
-            _decodeUiState.update { it.copy(decodedMessage = decodedMessage) }
+                val untaggedMessage = uiState.message.substringBefore(delimiter = " #")
+                val decodedMessage = Butkus.getInstance().decode(untaggedMessage)
+                uiState = uiState.copy(decodedMessage = decodedMessage)
 
-            _decodeUiState.update { it.copy(inProgress = false) }
+                uiState = uiState.copy(inProgress = false)
+            }
         }
     }
 
-    /** Reset the decode UI state to defaults */
-    fun resetDecodeScreen() {
-        _decodeUiState.value = DecodeUiState()
+    fun resetScreen() {
+        uiState = DecodeUiState()
+    }
+}
+
+class SettingsScreenModel : ViewModel() {
+    var uiState by mutableStateOf(SettingsUiState())
+        private set
+
+    fun updateSeedText(seed: String) {
+        uiState = uiState.copy(seedText = seed)
     }
 
-    /** ********** Settings screen methods ********** */
+    fun updateModelToAdd(url: String) {
+        uiState = uiState.copy(modelUrlToAdd = url)
+    }
 
-    /** Update seed text on settings screen */
-    fun updateSeedText(seed: String) {
-        _settingsUiState.update { it.copy(seedText = seed) }
+    fun addUrl(url: String) {
+        uiState = uiState.copy(
+            modelUrlToAdd = "",
+            modelUrls = uiState.modelUrls + url
+        )
+    }
+
+    fun toggleUrlMenu() {
+        if (uiState.modelUrls.isNotEmpty()) {
+            uiState = uiState.copy(urlMenuExpanded = !uiState.urlMenuExpanded)
+        }
+    }
+
+    fun dismissUrlMenu() {
+        uiState = uiState.copy(urlMenuExpanded = false)
+    }
+
+    fun selectModelUrl(url: String) {
+        uiState = uiState.copy(selectedModel = url)
+    }
+}
+
+class ButkusAppViewModel(app: Application) : AndroidViewModel(app) {
+    var butkusInitialized by mutableStateOf(false)
+        private set
+
+    val encode = EncodeViewModel()
+    val decode = DecodeScreenModel()
+    val settings = SettingsScreenModel()
+
+    // Since this is an AndroidViewModel, we can access application context
+    // It's probably worth figuring out if we can avoid this, since it goes
+    // against recommended practices
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            Butkus.initialize(app.applicationContext)
+            butkusInitialized = true
+        }
     }
 }
