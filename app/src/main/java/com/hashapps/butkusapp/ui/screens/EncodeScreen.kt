@@ -14,10 +14,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -26,13 +22,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
+import com.hashapps.butkusapp.ui.EncodeUiState
 import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
+private val EncodeUiState.tagValid get() = tagRegex.matches(tagToAdd)
+private val EncodeUiState.isErrorTag get() = tagToAdd != "" && !tagValid
+private val EncodeUiState.canAddTag get() = !inProgress && tagValid && tagToAdd !in addedTags
 
 /** The message encoding screen. Consists of:
  * - Text field for the message to encode
@@ -97,11 +96,6 @@ fun EncodeScreen(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
-            val tagValid = tagRegex.matches(vm.uiState.tagToAdd)
-            val isError = vm.uiState.tagToAdd != "" && !tagValid
-            val canAdd =
-                !vm.uiState.inProgress && tagValid && vm.uiState.tagToAdd !in vm.uiState.addedTags
-
             OutlinedTextField(
                 modifier = modifier
                     .padding(8.dp)
@@ -113,7 +107,7 @@ fun EncodeScreen(
                 label = { Text(stringResource(R.string.tag_label)) },
                 trailingIcon = {
                     IconButton(
-                        enabled = canAdd,
+                        enabled = vm.uiState.canAddTag,
                         onClick = { vm.addTag(vm.uiState.tagToAdd) },
                     ) {
                         Icon(
@@ -123,13 +117,13 @@ fun EncodeScreen(
                     }
                 },
                 supportingText = {
-                    if (isError) {
+                    if (vm.uiState.isErrorTag) {
                         Text(stringResource(R.string.tag_error))
                     } else {
                         Text(stringResource(R.string.tag_support))
                     }
                 },
-                isError = isError,
+                isError = vm.uiState.isErrorTag,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
                 ),
