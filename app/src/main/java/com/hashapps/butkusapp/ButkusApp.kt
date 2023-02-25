@@ -65,16 +65,6 @@ fun ButkusApp(
                             val context = LocalContext.current
 
                             IconButton(
-                                enabled = !viewModel.encode.uiState.inProgress,
-                                onClick = { viewModel.encode.resetScreen() },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.RestartAlt,
-                                    contentDescription = stringResource(R.string.reset),
-                                )
-                            }
-
-                            IconButton(
                                 enabled = viewModel.encode.uiState.encodedMessage != null,
                                 onClick = {
                                     shareMessage(
@@ -86,17 +76,6 @@ fun ButkusApp(
                                 Icon(
                                     imageVector = Icons.Filled.Send,
                                     contentDescription = stringResource(R.string.share_button),
-                                )
-                            }
-                        }
-                        ButkusScreen.Decode -> {
-                            IconButton(
-                                enabled = !viewModel.decode.uiState.inProgress,
-                                onClick = { viewModel.decode.resetScreen() },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.RestartAlt,
-                                    contentDescription = stringResource(R.string.reset),
                                 )
                             }
                         }
@@ -119,6 +98,7 @@ fun ButkusApp(
                                 )
                             }
                         }
+                        else -> {}
                     }
                 },
             )

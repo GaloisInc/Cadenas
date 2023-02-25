@@ -20,6 +20,10 @@ class EncodeViewModel : ViewModel() {
         uiState = uiState.copy(message = plaintext)
     }
 
+    fun clearPlaintextMessage() {
+        uiState = uiState.copy(message = "")
+    }
+
     fun updateTagToAdd(tag: String) {
         uiState = uiState.copy(tagToAdd = tag)
     }
@@ -61,7 +65,7 @@ class EncodeViewModel : ViewModel() {
         }
     }
 
-    fun resetScreen() {
-        uiState = EncodeUiState()
+    fun clearEncodedMessage() {
+        uiState = uiState.copy(encodedMessage = null)
     }
 }

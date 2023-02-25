@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,7 +56,20 @@ fun DecodeScreen(
                     onValueChange = vm::updateEncodedMessage,
                     singleLine = false,
                     label = { Text(stringResource(R.string.encoded_message_label)) },
-                    placeholder = { Text(stringResource(R.string.encoded_message_placeholder)) },
+                    trailingIcon = {
+                        IconButton(
+                            enabled = vm.uiState.message.isNotEmpty(),
+                            onClick = vm::clearEncodedMessage,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(R.string.clear_plaintext),
+                            )
+                        }
+                    },
+                    supportingText = {
+                        Text(stringResource(R.string.encoded_message_support))
+                    },
                 )
             }
         }
@@ -75,6 +91,29 @@ fun DecodeScreen(
 
         if (vm.uiState.decodedMessage != null) {
             ElevatedCard(modifier = modifier.fillMaxWidth()) {
+                Row(
+                    modifier = modifier.padding(8.dp).fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        LocalContext.current.getString(
+                        R.string.result_length,
+                        vm.uiState.decodedMessage!!.length,
+                    ))
+
+                    IconButton(
+                        onClick = vm::clearDecodedMessage,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(R.string.clear_decoded_message)
+                        )
+                    }
+                }
+
+                Divider(thickness = 1.dp)
+
                 SelectionContainer {
                     Text(
                         modifier = modifier.padding(8.dp),

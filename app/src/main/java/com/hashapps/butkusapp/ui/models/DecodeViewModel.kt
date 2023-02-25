@@ -20,6 +20,10 @@ class DecodeViewModel : ViewModel() {
         uiState = uiState.copy(message = encoded)
     }
 
+    fun clearEncodedMessage() {
+        uiState = uiState.copy(message = "")
+    }
+
     fun decodeMessage() {
         viewModelScope.launch {
             uiState = uiState.copy(inProgress = true, decodedMessage = null)
@@ -37,7 +41,7 @@ class DecodeViewModel : ViewModel() {
         }
     }
 
-    fun resetScreen() {
-        uiState = DecodeUiState()
+    fun clearDecodedMessage() {
+        uiState = uiState.copy(decodedMessage = null)
     }
 }

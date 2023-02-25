@@ -10,10 +10,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircleOutline
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -22,6 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.models.EncodeViewModel
@@ -66,6 +71,20 @@ fun EncodeScreen(
                 onValueChange = vm::updatePlaintextMessage,
                 singleLine = false,
                 label = { Text(stringResource(R.string.plaintext_message_label)) },
+                trailingIcon = {
+                    IconButton(
+                        enabled = vm.uiState.message.isNotEmpty(),
+                        onClick = vm::clearPlaintextMessage,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(R.string.clear_plaintext),
+                        )
+                    }
+                },
+                supportingText = {
+                    Text(stringResource(R.string.plaintext_message_support))
+                },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                 ),
@@ -98,7 +117,7 @@ fun EncodeScreen(
                         onClick = { vm.addTag(vm.uiState.tagToAdd) },
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.AddCircleOutline,
+                            imageVector = Icons.Filled.Add,
                             contentDescription = stringResource(R.string.add_tag),
                         )
                     }
@@ -161,13 +180,27 @@ fun EncodeScreen(
 
         if (vm.uiState.encodedMessage != null) {
             ElevatedCard(modifier = modifier.fillMaxWidth()) {
-                Text(
-                    modifier = modifier.padding(8.dp),
-                    text = LocalContext.current.getString(
-                        R.string.encoded_message_length,
-                        vm.uiState.encodedMessage!!.length,
-                    )
-                )
+                Row(
+                    modifier = modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(LocalContext.current.getString(
+                            R.string.result_length,
+                            vm.uiState.encodedMessage!!.length,
+                        ))
+
+                    IconButton(
+                        onClick = vm::clearEncodedMessage,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(R.string.clear_encoded_message)
+                        )
+                    }
+                }
 
                 Divider(thickness = 1.dp)
 
