@@ -21,12 +21,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
+import com.hashapps.butkusapp.ui.SettingsUiState
 import com.hashapps.butkusapp.ui.models.SettingsViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
-private const val maxLen = 128
+private const val MAX_LEN = 128
+
 private val urlRegex =
     Regex("""https?://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()!@:%_+.~#?&/=]*)""")
+private val SettingsUiState.urlValid get() = urlRegex.matches(modelUrlToAdd)
+private val SettingsUiState.isErrorUrl get() = modelUrlToAdd != "" && !urlValid
+private val SettingsUiState.canAddUrl get () = urlValid && modelUrlToAdd !in modelUrls
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,7 +88,7 @@ fun SettingsScreen(
                     .padding(8.dp)
                     .fillMaxWidth(),
                 value = vm.uiState.seedText,
-                onValueChange = { vm.updateSeedText(it.take(maxLen)) },
+                onValueChange = { vm.updateSeedText(it.take(MAX_LEN)) },
                 singleLine = true,
                 label = { Text(stringResource(R.string.seed_label)) },
                 supportingText = {
@@ -91,7 +96,7 @@ fun SettingsScreen(
                         LocalContext.current.getString(
                             R.string.seed_support,
                             vm.uiState.seedText.length,
-                            maxLen,
+                            MAX_LEN,
                         )
                     )
                 },
@@ -104,20 +109,17 @@ fun SettingsScreen(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
-            val urlValid = urlRegex.matches(vm.uiState.modelUrlToAdd)
-            val isError = vm.uiState.modelUrlToAdd != "" && !urlValid
-
             OutlinedTextField(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
                 value = vm.uiState.modelUrlToAdd,
-                onValueChange = { vm.updateModelToAdd(it.take(maxLen)) },
+                onValueChange = { vm.updateModelToAdd(it.take(MAX_LEN)) },
                 singleLine = true,
                 label = { Text(stringResource(R.string.url_label)) },
                 trailingIcon = {
                     IconButton(
-                        enabled = urlValid && vm.uiState.modelUrlToAdd !in vm.uiState.modelUrls,
+                        enabled = vm.uiState.canAddUrl,
                         onClick = { vm.addUrl(vm.uiState.modelUrlToAdd) },
                     ) {
                         Icon(
@@ -127,19 +129,19 @@ fun SettingsScreen(
                     }
                 },
                 supportingText = {
-                    if (isError) {
+                    if (vm.uiState.isErrorUrl) {
                         Text(stringResource(R.string.url_error))
                     } else {
                         Text(
                             LocalContext.current.getString(
                                 R.string.url_support,
                                 vm.uiState.modelUrlToAdd.length,
-                                maxLen,
+                                MAX_LEN,
                             )
                         )
                     }
                 },
-                isError = isError,
+                isError = vm.uiState.isErrorUrl,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri,
                     imeAction = ImeAction.Next,
