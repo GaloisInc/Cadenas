@@ -181,8 +181,9 @@ fun EncodeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(LocalContext.current.getString(
-                            R.string.result_length,
+                    Text(LocalContext.current.resources.getQuantityString(
+                            R.plurals.result_length,
+                            vm.uiState.encodedMessage!!.length,
                             vm.uiState.encodedMessage!!.length,
                         ))
 

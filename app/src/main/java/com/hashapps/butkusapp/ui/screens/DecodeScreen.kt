@@ -97,8 +97,9 @@ fun DecodeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        LocalContext.current.getString(
-                        R.string.result_length,
+                        LocalContext.current.resources.getQuantityString(
+                        R.plurals.result_length,
+                        vm.uiState.decodedMessage!!.length,
                         vm.uiState.decodedMessage!!.length,
                     ))
 
