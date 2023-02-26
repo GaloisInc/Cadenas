@@ -7,10 +7,26 @@ import androidx.compose.runtime.snapshots.Snapshot
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.Butkus
-import com.hashapps.butkusapp.ui.EncodeUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+data class EncodeUiState (
+    /** The message to encode. */
+    val message: String = "",
+
+    /** The to-be-added tag. */
+    val tagToAdd: String = "",
+
+    /** The tags to append to the encoded message. */
+    val addedTags: Set<String> = setOf("modnargathsah"),
+
+    /** The encoded message. */
+    val encodedMessage: String? = null,
+
+    /** Flag indicating encoding is in-progress.  */
+    val inProgress: Boolean = false,
+)
 
 class EncodeViewModel : ViewModel() {
     var uiState by mutableStateOf(EncodeUiState())

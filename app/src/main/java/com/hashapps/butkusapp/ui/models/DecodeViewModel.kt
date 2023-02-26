@@ -7,10 +7,20 @@ import androidx.compose.runtime.snapshots.Snapshot
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.Butkus
-import com.hashapps.butkusapp.ui.DecodeUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+data class DecodeUiState (
+    /** The message to decode. */
+    val message: String = "",
+
+    /** The decoded message. */
+    val decodedMessage: String? = null,
+
+    /** Flag indicating decoding is in-progress. */
+    val inProgress: Boolean = false,
+)
 
 class DecodeViewModel : ViewModel() {
     var uiState by mutableStateOf(DecodeUiState())
