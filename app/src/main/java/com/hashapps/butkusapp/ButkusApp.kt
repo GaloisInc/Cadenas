@@ -20,15 +20,10 @@ import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
 import com.hashapps.butkusapp.ui.screens.SettingsScreen
 
-/** The Butkus application.
- *
- * Built on a Material design scaffold, the Butkus application consists of
- * three distinct screens:
- *
- * - Message encoding
- * - Message decoding
- * - Settings
- */
+val ButkusViewModel.processRunning get() = encode.uiState.inProgress || decode.uiState.inProgress
+val ButkusViewModel.canShare get() = encode.uiState.encodedMessage != null
+val ButkusViewModel.messageToShare get() = encode.uiState.encodedMessage
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ButkusApp(
@@ -50,7 +45,7 @@ fun ButkusApp(
                     val settings = stringResource(ButkusScreen.Settings.title)
 
                     IconButton(
-                        enabled = !(viewModel.encode.uiState.inProgress || viewModel.decode.uiState.inProgress),
+                        enabled = !viewModel.processRunning,
                         onClick = { navController.navigate(settings) }
                     ) {
                         Icon(
@@ -65,16 +60,16 @@ fun ButkusApp(
                             val context = LocalContext.current
 
                             IconButton(
-                                enabled = viewModel.encode.uiState.encodedMessage != null,
+                                enabled = viewModel.canShare,
                                 onClick = {
                                     shareMessage(
                                         context,
-                                        viewModel.encode.uiState.encodedMessage!! // Safe by enabled condition
+                                        viewModel.messageToShare!! // Safe by enabled condition
                                     )
                                 }
                             ) {
                                 Icon(
-                                    imageVector = Icons.Filled.Send,
+                                    imageVector = Icons.Filled.Share,
                                     contentDescription = stringResource(R.string.share_button),
                                 )
                             }

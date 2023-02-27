@@ -33,14 +33,6 @@ private val EncodeUiState.tagValid get() = tagRegex.matches(tagToAdd)
 private val EncodeUiState.isErrorTag get() = tagToAdd != "" && !tagValid
 private val EncodeUiState.canAddTag get() = !inProgress && tagValid && tagToAdd !in addedTags
 
-/** The message encoding screen. Consists of:
- * - Text field for the message to encode
- * - Text field and button to add alphabetic tags to encoded messages
- * - (If tag set nonempty) Scrollable list of TagEntry
- * - (If message encoded) The encoded message, with tags appended to the end
- *   (e.g. adding the tag 'funny' appends '#funny' to the encoded message)
- * - Action button (Encode)
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EncodeScreen(
