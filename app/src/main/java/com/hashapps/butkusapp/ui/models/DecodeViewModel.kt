@@ -1,13 +1,12 @@
 package com.hashapps.butkusapp.ui.models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.Snapshot
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.Butkus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -23,35 +22,33 @@ data class DecodeUiState (
 )
 
 class DecodeViewModel : ViewModel() {
-    var uiState by mutableStateOf(DecodeUiState())
-        private set
+    private val _uiState = MutableStateFlow(DecodeUiState())
+    val uiState: StateFlow<DecodeUiState>
+        get() = _uiState
 
     fun updateEncodedMessage(encoded: String) {
-        uiState = uiState.copy(message = encoded)
+        _uiState.update { it.copy(message = encoded) }
     }
 
     fun clearEncodedMessage() {
-        uiState = uiState.copy(message = "")
+        _uiState.update { it.copy(message = "") }
     }
 
     fun decodeMessage() {
         viewModelScope.launch {
-            uiState = uiState.copy(inProgress = true, decodedMessage = null)
+            _uiState.update { it.copy(inProgress = true, decodedMessage = null) }
 
             withContext(Dispatchers.Default) {
-                val untaggedMessage = uiState.message.substringBefore(delimiter = " #")
+                val untaggedMessage = uiState.value.message.substringBefore(delimiter = " #")
                 val decodedMessage = Butkus.getInstance().decode(untaggedMessage)
-
-                Snapshot.withMutableSnapshot {
-                    uiState = uiState.copy(decodedMessage = decodedMessage)
-                }
+                _uiState.update { it.copy(decodedMessage = decodedMessage) }
             }
 
-            uiState = uiState.copy(inProgress = false)
+            _uiState.update { it.copy(inProgress = false) }
         }
     }
 
     fun clearDecodedMessage() {
-        uiState = uiState.copy(decodedMessage = null)
+        _uiState.update { it.copy(decodedMessage = null) }
     }
 }

@@ -1,17 +1,16 @@
 package com.hashapps.butkusapp.ui.models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.Snapshot
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.Butkus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-data class EncodeUiState (
+data class EncodeUiState(
     /** The message to encode. */
     val message: String = "",
 
@@ -29,59 +28,61 @@ data class EncodeUiState (
 )
 
 class EncodeViewModel : ViewModel() {
-    var uiState by mutableStateOf(EncodeUiState())
-        private set
+    private val _uiState = MutableStateFlow(EncodeUiState())
+    val uiState: StateFlow<EncodeUiState>
+        get() = _uiState
 
     fun updatePlaintextMessage(plaintext: String) {
-        uiState = uiState.copy(message = plaintext)
+        _uiState.update { it.copy(message = plaintext) }
     }
 
     fun clearPlaintextMessage() {
-        uiState = uiState.copy(message = "")
+        _uiState.update { it.copy(message = "") }
     }
 
     fun updateTagToAdd(tag: String) {
-        uiState = uiState.copy(tagToAdd = tag)
+        _uiState.update { it.copy(tagToAdd = tag) }
     }
 
     fun addTag(tag: String) {
-        uiState = uiState.copy(
-            tagToAdd = "",
-            addedTags = uiState.addedTags + tag,
-            encodedMessage = uiState.encodedMessage?.let { "$it #$tag" }
-        )
+        _uiState.update { cs ->
+            cs.copy(
+                tagToAdd = "",
+                addedTags = uiState.value.addedTags + tag,
+                encodedMessage = uiState.value.encodedMessage?.let { "$it #$tag" }
+            )
+        }
     }
 
     fun removeTag(tag: String) {
-        uiState = uiState.copy(
-            addedTags = uiState.addedTags - tag,
-            encodedMessage = uiState.encodedMessage?.let {
-                it.substringBefore(" #$tag") + it.substringAfter(
-                    " #$tag"
-                )
-            }
-        )
+        _uiState.update { cs ->
+            cs.copy(
+                addedTags = uiState.value.addedTags - tag,
+                encodedMessage = uiState.value.encodedMessage?.let {
+                    it.substringBefore(" #$tag") + it.substringAfter(
+                        " #$tag"
+                    )
+                }
+            )
+        }
     }
 
     fun encodeMessage() {
         viewModelScope.launch {
-            uiState = uiState.copy(inProgress = true, encodedMessage = null)
+            _uiState.update { it.copy(inProgress = true, encodedMessage = null) }
 
             withContext(Dispatchers.Default) {
-                val encodedMessage = Butkus.getInstance().encode(uiState.message)
+                val encodedMessage = Butkus.getInstance().encode(uiState.value.message)
                 val tagsString =
-                    uiState.addedTags.joinToString(separator = "") { " #$it" }
-
-                Snapshot.withMutableSnapshot {
-                    uiState = uiState.copy(encodedMessage = encodedMessage + tagsString)
-                }
+                    uiState.value.addedTags.joinToString(separator = "") { " #$it" }
+                _uiState.update { it.copy(encodedMessage = encodedMessage + tagsString) }
             }
 
-            uiState = uiState.copy(inProgress = false)
+            _uiState.update { it.copy(inProgress = false) }
         }
     }
 
     fun clearEncodedMessage() {
-        uiState = uiState.copy(encodedMessage = null)
+        _uiState.update { it.copy(encodedMessage = null) }
     }
 }

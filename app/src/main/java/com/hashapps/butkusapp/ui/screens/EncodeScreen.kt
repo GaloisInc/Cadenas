@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -23,6 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.models.EncodeUiState
 import com.hashapps.butkusapp.ui.models.EncodeViewModel
@@ -37,7 +40,7 @@ private val EncodeUiState.canAddTag get() = !inProgress && tagValid && tagToAdd 
 @Composable
 fun EncodeScreen(
     modifier: Modifier = Modifier,
-    vm: EncodeViewModel = EncodeViewModel(),
+    vm: EncodeViewModel = viewModel(),
     butkusInitialized: Boolean,
 ) {
     Column(
@@ -49,6 +52,7 @@ fun EncodeScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         val focusManager = LocalFocusManager.current
+        val uiState by vm.uiState.collectAsStateWithLifecycle()
 
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
@@ -57,14 +61,14 @@ fun EncodeScreen(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                enabled = !vm.uiState.inProgress,
-                value = vm.uiState.message,
+                enabled = !uiState.inProgress,
+                value = uiState.message,
                 onValueChange = vm::updatePlaintextMessage,
                 singleLine = false,
                 label = { Text(stringResource(R.string.plaintext_message_label)) },
                 trailingIcon = {
                     IconButton(
-                        enabled = vm.uiState.message.isNotEmpty(),
+                        enabled = uiState.message.isNotEmpty(),
                         onClick = vm::clearPlaintextMessage,
                     ) {
                         Icon(
@@ -92,15 +96,15 @@ fun EncodeScreen(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                enabled = !vm.uiState.inProgress,
-                value = vm.uiState.tagToAdd,
+                enabled = !uiState.inProgress,
+                value = uiState.tagToAdd,
                 onValueChange = vm::updateTagToAdd,
                 singleLine = true,
                 label = { Text(stringResource(R.string.tag_label)) },
                 trailingIcon = {
                     IconButton(
-                        enabled = vm.uiState.canAddTag,
-                        onClick = { vm.addTag(vm.uiState.tagToAdd) },
+                        enabled = uiState.canAddTag,
+                        onClick = { vm.addTag(uiState.tagToAdd) },
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Add,
@@ -109,13 +113,13 @@ fun EncodeScreen(
                     }
                 },
                 supportingText = {
-                    if (vm.uiState.isErrorTag) {
+                    if (uiState.isErrorTag) {
                         Text(stringResource(R.string.tag_error))
                     } else {
                         Text(stringResource(R.string.tag_support))
                     }
                 },
-                isError = vm.uiState.isErrorTag,
+                isError = uiState.isErrorTag,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
                 ),
@@ -130,7 +134,7 @@ fun EncodeScreen(
                 modifier = modifier.padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(vm.uiState.addedTags.toList()) {
+                items(uiState.addedTags.toList()) {
                     InputChip(
                         selected = true,
                         onClick = { },
@@ -138,8 +142,10 @@ fun EncodeScreen(
                         trailingIcon = {
                             Icon(
                                 modifier = modifier.clickable(
-                                    enabled = !vm.uiState.inProgress
-                                ) { vm.removeTag(it) },
+                                    enabled = !uiState.inProgress
+                                ) {
+                                    vm.removeTag(it)
+                                },
                                 imageVector = Icons.Filled.Close,
                                 contentDescription = stringResource(R.string.delete),
                             )
@@ -151,7 +157,7 @@ fun EncodeScreen(
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = butkusInitialized && !vm.uiState.inProgress && vm.uiState.message.isNotEmpty(),
+            enabled = butkusInitialized && !uiState.inProgress && uiState.message.isNotEmpty(),
             onClick = vm::encodeMessage,
         ) {
             Text(
@@ -160,11 +166,11 @@ fun EncodeScreen(
             )
         }
 
-        if (vm.uiState.inProgress) {
+        if (uiState.inProgress) {
             LinearProgressIndicator(modifier = modifier.align(Alignment.CenterHorizontally))
         }
 
-        if (vm.uiState.encodedMessage != null) {
+        if (uiState.encodedMessage != null) {
             ElevatedCard(modifier = modifier.fillMaxWidth()) {
                 Row(
                     modifier = modifier
@@ -175,8 +181,8 @@ fun EncodeScreen(
                 ) {
                     Text(LocalContext.current.resources.getQuantityString(
                             R.plurals.result_length,
-                            vm.uiState.encodedMessage!!.length,
-                            vm.uiState.encodedMessage!!.length,
+                            uiState.encodedMessage!!.length,
+                            uiState.encodedMessage!!.length,
                         ))
 
                     IconButton(
@@ -194,7 +200,7 @@ fun EncodeScreen(
                 SelectionContainer {
                     Text(
                         modifier = modifier.padding(8.dp),
-                        text = vm.uiState.encodedMessage!!,
+                        text = uiState.encodedMessage!!,
                     )
                 }
             }
