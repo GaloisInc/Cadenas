@@ -208,7 +208,11 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
+        }
 
+        ElevatedCard(
+            modifier = modifier.fillMaxWidth(),
+        ) {
             Row(
                 modifier = modifier
                     .padding(8.dp)
@@ -218,7 +222,6 @@ fun SettingsScreen(
             ) {
                 Button(
                     modifier = modifier.weight(0.5f),
-                    enabled = true, // TODO: Base this on saved settings
                     onClick = { },
                 ) {
                     Text(
@@ -229,7 +232,6 @@ fun SettingsScreen(
 
                 Button(
                     modifier = modifier.weight(0.5f),
-                    enabled = true, // TODO: Base this on saved settings
                     onClick = { },
                 ) {
                     Text(

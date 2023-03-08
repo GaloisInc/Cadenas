@@ -155,15 +155,21 @@ fun EncodeScreen(
             }
         }
 
-        Button(
+        ElevatedCard(
             modifier = modifier.fillMaxWidth(),
-            enabled = butkusInitialized && !uiState.inProgress && uiState.message.isNotEmpty(),
-            onClick = vm::encodeMessage,
         ) {
-            Text(
-                text = stringResource(R.string.encode),
-                style = MaterialTheme.typography.titleLarge,
-            )
+            Button(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                enabled = butkusInitialized && !uiState.inProgress && uiState.message.isNotEmpty(),
+                onClick = vm::encodeMessage,
+            ) {
+                Text(
+                    text = stringResource(R.string.encode),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
         }
 
         if (uiState.inProgress) {
@@ -179,11 +185,13 @@ fun EncodeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(LocalContext.current.resources.getQuantityString(
+                    Text(
+                        LocalContext.current.resources.getQuantityString(
                             R.plurals.result_length,
                             uiState.encodedMessage!!.length,
                             uiState.encodedMessage!!.length,
-                        ))
+                        )
+                    )
 
                     IconButton(
                         onClick = vm::clearEncodedMessage,

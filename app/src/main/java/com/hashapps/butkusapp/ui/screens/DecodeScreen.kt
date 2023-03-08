@@ -72,15 +72,21 @@ fun DecodeScreen(
             }
         }
 
-        Button(
+        ElevatedCard(
             modifier = modifier.fillMaxWidth(),
-            enabled = butkusInitialized && !uiState.inProgress && uiState.message.isNotEmpty(),
-            onClick = vm::decodeMessage,
         ) {
-            Text(
-                text = stringResource(R.string.decode),
-                style = MaterialTheme.typography.titleLarge,
-            )
+            Button(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                enabled = butkusInitialized && !uiState.inProgress && uiState.message.isNotEmpty(),
+                onClick = vm::decodeMessage,
+            ) {
+                Text(
+                    text = stringResource(R.string.decode),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
         }
 
         if (uiState.inProgress) {
