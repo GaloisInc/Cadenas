@@ -173,7 +173,11 @@ fun EncodeScreen(
         }
 
         if (uiState.inProgress) {
-            LinearProgressIndicator(modifier = modifier.align(Alignment.CenterHorizontally))
+            LinearProgressIndicator(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth()
+            )
         }
 
         if (uiState.encodedMessage != null) {

@@ -90,7 +90,11 @@ fun DecodeScreen(
         }
 
         if (uiState.inProgress) {
-            LinearProgressIndicator(modifier = modifier.align(Alignment.CenterHorizontally))
+            LinearProgressIndicator(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth()
+            )
         }
 
         if (uiState.decodedMessage != null) {
@@ -104,10 +108,11 @@ fun DecodeScreen(
                 ) {
                     Text(
                         LocalContext.current.resources.getQuantityString(
-                        R.plurals.result_length,
-                        uiState.decodedMessage!!.length,
-                        uiState.decodedMessage!!.length,
-                    ))
+                            R.plurals.result_length,
+                            uiState.decodedMessage!!.length,
+                            uiState.decodedMessage!!.length,
+                        )
+                    )
 
                     IconButton(
                         onClick = vm::clearDecodedMessage,
