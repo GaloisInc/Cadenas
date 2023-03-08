@@ -1,41 +1,96 @@
 package com.hashapps.butkusapp.ui.models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.hashapps.butkusapp.ui.SettingsUiState
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.hashapps.butkusapp.ButkusApplication
+import com.hashapps.butkusapp.data.SettingsRepository
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
-class SettingsViewModel : ViewModel() {
-    var uiState by mutableStateOf(SettingsUiState())
-        private set
+data class SavedSettings(
+    val secretKey: String = "",
+    val seedText: String = "",
+    val selectedModel: String = "",
+)
+data class SettingsUiState(
+    /** Model URL to add. */
+    val modelUrlToAdd: String = "",
+
+    /** Known model URIs to display in selection menu. */
+    val modelUrls: Set<String> = setOf(),
+
+    /** Flag indicating the URL menu is expanded. */
+    val urlMenuExpanded: Boolean = false,
+)
+
+class SettingsViewModel(
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
+    private val _savedSettings = MutableStateFlow(SavedSettings())
+    val savedSettings: StateFlow<SavedSettings>
+        get() = _savedSettings
+
+    init {
+        viewModelScope.launch {
+            _savedSettings.value = settingsRepository.settings.first()
+        }
+    }
+
+    private val _uiState = MutableStateFlow(SettingsUiState())
+    val uiState: StateFlow<SettingsUiState>
+        get() = _uiState
+
+    fun genKey() {
+        _savedSettings.update { it.copy(secretKey = settingsRepository.genKey()) }
+    }
 
     fun updateSeedText(seed: String) {
-        uiState = uiState.copy(seedText = seed)
+        _savedSettings.update { it.copy(seedText = seed) }
     }
 
     fun updateModelToAdd(url: String) {
-        uiState = uiState.copy(modelUrlToAdd = url)
+        _uiState.update { it.copy(modelUrlToAdd = url) }
     }
 
     fun addUrl(url: String) {
-        uiState = uiState.copy(
-            modelUrlToAdd = "",
-            modelUrls = uiState.modelUrls + url
-        )
+        _uiState.update {
+            it.copy(
+                modelUrlToAdd = "",
+                modelUrls = uiState.value.modelUrls + url
+            )
+        }
     }
 
     fun toggleUrlMenu() {
-        if (uiState.modelUrls.isNotEmpty()) {
-            uiState = uiState.copy(urlMenuExpanded = !uiState.urlMenuExpanded)
+        if (uiState.value.modelUrls.isNotEmpty()) {
+            _uiState.update { it.copy(urlMenuExpanded = !uiState.value.urlMenuExpanded) }
         }
     }
 
     fun dismissUrlMenu() {
-        uiState = uiState.copy(urlMenuExpanded = false)
+        _uiState.update { it.copy(urlMenuExpanded = false) }
     }
 
     fun selectModelUrl(url: String) {
-        uiState = uiState.copy(selectedModel = url)
+        _savedSettings.update { it.copy(selectedModel = url) }
+    }
+
+    fun saveSettings() {
+        viewModelScope.launch {
+            settingsRepository.saveSettings(savedSettings.value)
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = this[APPLICATION_KEY] as ButkusApplication
+                SettingsViewModel(application.settingsRepository)
+            }
+        }
     }
 }

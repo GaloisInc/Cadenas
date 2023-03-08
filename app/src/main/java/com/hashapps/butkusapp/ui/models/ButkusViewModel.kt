@@ -16,7 +16,6 @@ class ButkusViewModel(app: Application) : AndroidViewModel(app) {
 
     val encode = EncodeViewModel()
     val decode = DecodeViewModel()
-    val settings = SettingsViewModel()
 
     // Since this is an AndroidViewModel, we can access application context
     // It's probably worth figuring out if we can avoid this, since it goes

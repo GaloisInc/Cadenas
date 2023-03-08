@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -20,8 +21,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.SettingsUiState
+import com.hashapps.butkusapp.ui.models.SettingsUiState
 import com.hashapps.butkusapp.ui.models.SettingsViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
@@ -37,7 +40,7 @@ private val SettingsUiState.canAddUrl get () = urlValid && modelUrlToAdd !in mod
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    vm: SettingsViewModel = SettingsViewModel(),
+    vm: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
 ) {
     Column(
         modifier = modifier
@@ -48,6 +51,8 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         val focusManager = LocalFocusManager.current
+        val savedSettings by vm.savedSettings.collectAsStateWithLifecycle()
+        val uiState by vm.uiState.collectAsStateWithLifecycle()
 
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
@@ -62,7 +67,7 @@ fun SettingsScreen(
                 OutlinedTextField(
                     modifier = modifier.weight(1f),
                     readOnly = true,
-                    value = vm.uiState.secretKey,
+                    value = savedSettings.secretKey,
                     onValueChange = { },
                     singleLine = true,
                     label = { Text(stringResource(R.string.key_label)) },
@@ -70,7 +75,7 @@ fun SettingsScreen(
                 )
 
                 FilledTonalIconButton(
-                    onClick = { /* TODO: Generate AES-256 key */ },
+                    onClick = vm::genKey,
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Key,
@@ -87,7 +92,7 @@ fun SettingsScreen(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                value = vm.uiState.seedText,
+                value = savedSettings.seedText,
                 onValueChange = { vm.updateSeedText(it.take(MAX_LEN)) },
                 singleLine = true,
                 label = { Text(stringResource(R.string.seed_label)) },
@@ -95,7 +100,7 @@ fun SettingsScreen(
                     Text(
                         LocalContext.current.getString(
                             R.string.seed_support,
-                            vm.uiState.seedText.length,
+                            savedSettings.seedText.length,
                             MAX_LEN,
                         )
                     )
@@ -113,14 +118,14 @@ fun SettingsScreen(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                value = vm.uiState.modelUrlToAdd,
+                value = uiState.modelUrlToAdd,
                 onValueChange = { vm.updateModelToAdd(it.take(MAX_LEN)) },
                 singleLine = true,
                 label = { Text(stringResource(R.string.url_label)) },
                 trailingIcon = {
                     IconButton(
-                        enabled = vm.uiState.canAddUrl,
-                        onClick = { vm.addUrl(vm.uiState.modelUrlToAdd) },
+                        enabled = uiState.canAddUrl,
+                        onClick = { vm.addUrl(uiState.modelUrlToAdd) },
                     ) {
                         Icon(
                             imageVector = Icons.Filled.AddCircleOutline,
@@ -129,19 +134,19 @@ fun SettingsScreen(
                     }
                 },
                 supportingText = {
-                    if (vm.uiState.isErrorUrl) {
+                    if (uiState.isErrorUrl) {
                         Text(stringResource(R.string.url_error))
                     } else {
                         Text(
                             LocalContext.current.getString(
                                 R.string.url_support,
-                                vm.uiState.modelUrlToAdd.length,
+                                uiState.modelUrlToAdd.length,
                                 MAX_LEN,
                             )
                         )
                     }
                 },
-                isError = vm.uiState.isErrorUrl,
+                isError = uiState.isErrorUrl,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri,
                     imeAction = ImeAction.Next,
@@ -154,7 +159,7 @@ fun SettingsScreen(
             )
 
             ExposedDropdownMenuBox(
-                expanded = vm.uiState.urlMenuExpanded,
+                expanded = uiState.urlMenuExpanded,
                 onExpandedChange = { vm.toggleUrlMenu() },
             ) {
                 OutlinedTextField(
@@ -162,19 +167,19 @@ fun SettingsScreen(
                         .menuAnchor()
                         .padding(8.dp)
                         .fillMaxWidth(),
-                    value = vm.uiState.selectedModel,
+                    value = savedSettings.selectedModel,
                     onValueChange = { },
                     readOnly = true,
                     label = { Text(stringResource(R.string.selected_url_label)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = vm.uiState.urlMenuExpanded) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.urlMenuExpanded) },
                     singleLine = true,
                 )
 
                 ExposedDropdownMenu(
-                    expanded = vm.uiState.urlMenuExpanded,
+                    expanded = uiState.urlMenuExpanded,
                     onDismissRequest = vm::dismissUrlMenu,
                 ) {
-                    vm.uiState.modelUrls.forEach {
+                    uiState.modelUrls.forEach {
                         // TODO: Make the text something more meaningful once we have download machinery
                         DropdownMenuItem(
                             text = { Text(it) },
@@ -185,6 +190,52 @@ fun SettingsScreen(
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                         )
                     }
+                }
+            }
+        }
+
+        ElevatedCard(
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            Button(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                onClick = vm::saveSettings,
+            ) {
+                Text(
+                    text = stringResource(R.string.save),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
+
+            Row(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Button(
+                    modifier = modifier.weight(0.5f),
+                    enabled = true, // TODO: Base this on saved settings
+                    onClick = { },
+                ) {
+                    Text(
+                        text = stringResource(R.string.import_label),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                }
+
+                Button(
+                    modifier = modifier.weight(0.5f),
+                    enabled = true, // TODO: Base this on saved settings
+                    onClick = { },
+                ) {
+                    Text(
+                        text = stringResource(R.string.export_label),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
                 }
             }
         }
