@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui.models
+package com.hashapps.butkusapp
 
 import android.app.Application
 import androidx.compose.runtime.getValue
@@ -6,7 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.butkusapp.Butkus
+import com.hashapps.butkusapp.ui.models.DecodeViewModel
+import com.hashapps.butkusapp.ui.models.EncodeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

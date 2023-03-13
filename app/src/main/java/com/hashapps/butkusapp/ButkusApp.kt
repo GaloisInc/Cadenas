@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui
+package com.hashapps.butkusapp
 
 import android.content.Context
 import android.content.Intent
@@ -18,8 +18,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.models.ButkusViewModel
 import com.hashapps.butkusapp.ui.models.SettingsViewModel
 import com.hashapps.butkusapp.ui.screens.DecodeScreen
 import com.hashapps.butkusapp.ui.screens.EncodeScreen
