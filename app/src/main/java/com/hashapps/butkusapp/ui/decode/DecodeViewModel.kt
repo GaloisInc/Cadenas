@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui.models
+package com.hashapps.butkusapp.ui.decode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,17 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-data class DecodeUiState (
-    /** The message to decode. */
-    val message: String = "",
-
-    /** The decoded message. */
-    val decodedMessage: String? = null,
-
-    /** Flag indicating decoding is in-progress. */
-    val inProgress: Boolean = false,
-)
 
 class DecodeViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(DecodeUiState())

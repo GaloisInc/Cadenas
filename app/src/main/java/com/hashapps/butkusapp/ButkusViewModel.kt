@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.butkusapp.ui.models.DecodeViewModel
-import com.hashapps.butkusapp.ui.models.EncodeViewModel
+import com.hashapps.butkusapp.ui.decode.DecodeViewModel
+import com.hashapps.butkusapp.ui.encode.EncodeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

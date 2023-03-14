@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.models.EncodeUiState
-import com.hashapps.butkusapp.ui.models.EncodeViewModel
+import com.hashapps.butkusapp.ui.encode.EncodeUiState
+import com.hashapps.butkusapp.ui.encode.EncodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")

@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui.models
+package com.hashapps.butkusapp.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

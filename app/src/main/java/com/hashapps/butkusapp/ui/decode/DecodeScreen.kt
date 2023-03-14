@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.models.DecodeViewModel
+import com.hashapps.butkusapp.ui.decode.DecodeViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.models.SettingsUiState
-import com.hashapps.butkusapp.ui.models.SettingsViewModel
+import com.hashapps.butkusapp.ui.settings.SettingsUiState
+import com.hashapps.butkusapp.ui.settings.SettingsViewModel
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 private const val MAX_LEN = 128
