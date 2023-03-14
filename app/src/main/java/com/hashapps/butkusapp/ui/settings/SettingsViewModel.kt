@@ -1,12 +1,7 @@
 package com.hashapps.butkusapp.ui.settings
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.hashapps.butkusapp.ButkusApplication
 import com.hashapps.butkusapp.data.SettingsRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -82,15 +77,6 @@ class SettingsViewModel(
     fun saveSettings() {
         viewModelScope.launch {
             settingsRepository.saveSettings(savedSettings.value)
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = this[APPLICATION_KEY] as ButkusApplication
-                SettingsViewModel(application.settingsRepository)
-            }
         }
     }
 }

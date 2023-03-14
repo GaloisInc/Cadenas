@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui.screens
+package com.hashapps.butkusapp.ui.settings
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.settings.SettingsUiState
-import com.hashapps.butkusapp.ui.settings.SettingsViewModel
+import com.hashapps.butkusapp.ui.AppViewModelProvider
+import com.hashapps.butkusapp.ui.navigation.NavigationDestination
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 private const val MAX_LEN = 128
@@ -36,11 +37,17 @@ private val SettingsUiState.urlValid get() = urlRegex.matches(modelUrlToAdd)
 private val SettingsUiState.isErrorUrl get() = modelUrlToAdd != "" && !urlValid
 private val SettingsUiState.canAddUrl get () = urlValid && modelUrlToAdd !in modelUrls
 
+object SettingsDestination : NavigationDestination {
+    override val route = "settings"
+    override val titleRes = R.string.settings
+    val icon = Icons.Filled.Settings
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    vm: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
+    vm: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Column(
         modifier = modifier

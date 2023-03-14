@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui.screens
+package com.hashapps.butkusapp.ui.encode
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.encode.EncodeUiState
-import com.hashapps.butkusapp.ui.encode.EncodeViewModel
+import com.hashapps.butkusapp.ui.AppViewModelProvider
+import com.hashapps.butkusapp.ui.navigation.NavigationDestination
 import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
 private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
@@ -36,11 +37,17 @@ private val EncodeUiState.tagValid get() = tagRegex.matches(tagToAdd)
 private val EncodeUiState.isErrorTag get() = tagToAdd != "" && !tagValid
 private val EncodeUiState.canAddTag get() = !inProgress && tagValid && tagToAdd !in addedTags
 
+object EncodeDestination : NavigationDestination {
+    override val route = "encode"
+    override val titleRes = R.string.encode
+    val icon = Icons.Filled.Lock
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EncodeScreen(
     modifier: Modifier = Modifier,
-    vm: EncodeViewModel = viewModel(),
+    vm: EncodeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     butkusInitialized: Boolean,
 ) {
     Column(

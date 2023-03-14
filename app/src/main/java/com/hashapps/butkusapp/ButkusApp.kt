@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,16 +17,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hashapps.butkusapp.ui.settings.SettingsViewModel
-import com.hashapps.butkusapp.ui.screens.DecodeScreen
-import com.hashapps.butkusapp.ui.screens.EncodeScreen
-import com.hashapps.butkusapp.ui.screens.SettingsScreen
+import com.hashapps.butkusapp.ui.decode.DecodeDestination
+import com.hashapps.butkusapp.ui.decode.DecodeScreen
+import com.hashapps.butkusapp.ui.encode.EncodeDestination
+import com.hashapps.butkusapp.ui.encode.EncodeScreen
+import com.hashapps.butkusapp.ui.settings.SettingsDestination
+import com.hashapps.butkusapp.ui.settings.SettingsScreen
 
-enum class ButkusScreen(@StringRes val title: Int, val icon: ImageVector) {
-    Encode(title = R.string.encode, icon = Icons.Filled.Lock),
-    Decode(title = R.string.decode, icon = Icons.Filled.LockOpen),
-    Settings(title = R.string.settings, icon = Icons.Filled.Settings),
-}
+@Immutable
+data class ButkusViewState(
+    @StringRes val title: Int? = null,
+    val hasShareable: Boolean = false,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,9 +38,9 @@ fun ButkusApp(
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = ButkusScreen.valueOf(
-        backStackEntry?.destination?.route ?: ButkusScreen.Encode.name
-    )
+    val currentRoute = backStackEntry?.destination?.route ?: EncodeDestination.route
+
+    var butkusViewState by remember { mutableStateOf(ButkusViewState()) }
 
     Scaffold(
         topBar = {
@@ -47,87 +48,102 @@ fun ButkusApp(
             val decodeUiState by vm.decode.uiState.collectAsStateWithLifecycle()
 
             CenterAlignedTopAppBar(
-                title = { Text(stringResource(currentScreen.title)) },
+                title = {
+                    butkusViewState.title?.let {
+                        Text(text = stringResource(it))
+                    }
+                },
                 modifier = modifier,
                 navigationIcon = {
-                    val settings = stringResource(ButkusScreen.Settings.title)
+                    val settings = stringResource(SettingsDestination.titleRes)
 
                     IconButton(
                         enabled = !(encodeUiState.inProgress || decodeUiState.inProgress),
-                        onClick = { navController.navigate(settings) }
+                        onClick = { navController.navigate(SettingsDestination.route) }
                     ) {
                         Icon(
-                            imageVector = ButkusScreen.Settings.icon,
+                            imageVector = SettingsDestination.icon,
                             contentDescription = settings,
                         )
                     }
                 },
                 actions = {
-                    when (currentScreen) {
-                        ButkusScreen.Encode -> {
-                            val context = LocalContext.current
+                    if (butkusViewState.hasShareable) {
+                        val context = LocalContext.current
 
-                            IconButton(
-                                enabled = encodeUiState.encodedMessage != null,
-                                onClick = {
-                                    shareMessage(
-                                        context,
-                                        encodeUiState.encodedMessage!! // Safe by enabled condition
-                                    )
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Share,
-                                    contentDescription = stringResource(R.string.share_button),
+                        IconButton(
+                            enabled = encodeUiState.encodedMessage != null,
+                            onClick = {
+                                shareMessage(
+                                    context,
+                                    encodeUiState.encodedMessage!! // Safe by enabled condition
                                 )
                             }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Share,
+                                contentDescription = stringResource(R.string.share_button),
+                            )
                         }
-                        else -> {}
                     }
                 },
             )
         },
         bottomBar = {
             NavigationBar {
-                val actionScreens = listOf(ButkusScreen.Encode, ButkusScreen.Decode)
+                val actionScreens = listOf(EncodeDestination, DecodeDestination).zip(
+                    listOf(
+                        EncodeDestination.icon,
+                        DecodeDestination.icon
+                    )
+                )
 
-                actionScreens.forEach {
-                    val screen = stringResource(it.title)
-
+                actionScreens.forEach { (nd, icon) ->
+                    val title = stringResource(nd.titleRes)
                     NavigationBarItem(
-                        selected = currentScreen == it,
-                        onClick = { navController.navigate(screen) },
-                        icon = {
-                            Icon(imageVector = it.icon, contentDescription = null)
-                        },
-                        label = { Text(screen) }
+                        selected = currentRoute == nd.route,
+                        onClick = { navController.navigate(nd.route) },
+                        icon = { Icon(imageVector = icon, contentDescription = null) },
+                        label = { Text(title) }
                     )
                 }
             }
         }
     ) { innerPadding ->
-        val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)
         NavHost(
             navController = navController,
-            startDestination = ButkusScreen.Encode.name,
+            startDestination = EncodeDestination.route,
             modifier = modifier.padding(innerPadding),
         ) {
-            composable(route = ButkusScreen.Encode.name) {
+            composable(route = EncodeDestination.route) {
+                butkusViewState = ButkusViewState(
+                    title = EncodeDestination.titleRes,
+                    hasShareable = true,
+                )
+
                 EncodeScreen(
                     vm = vm.encode,
                     butkusInitialized = vm.butkusInitialized,
                 )
             }
 
-            composable(route = ButkusScreen.Decode.name) {
+            composable(route = DecodeDestination.route) {
+                butkusViewState = ButkusViewState(
+                    title = DecodeDestination.titleRes,
+                )
+
                 DecodeScreen(
                     vm = vm.decode,
                     butkusInitialized = vm.butkusInitialized,
                 )
             }
 
-            composable(route = ButkusScreen.Settings.name) {
-                SettingsScreen(vm = settingsViewModel)
+            composable(route = SettingsDestination.route) {
+                butkusViewState = ButkusViewState(
+                    title = SettingsDestination.titleRes,
+                )
+
+                SettingsScreen()
             }
         }
     }
