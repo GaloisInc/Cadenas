@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.hashapps.butkusapp.data.profile.Profile
 import com.hashapps.butkusapp.data.profile.ProfileDao
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -20,8 +19,8 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 )
 
 class ButkusRepository(
+    externalScope: CoroutineScope,
     private val context: Context,
-    private val externalScope: CoroutineScope,
     private val profileDao: ProfileDao,
 ) {
     private companion object {

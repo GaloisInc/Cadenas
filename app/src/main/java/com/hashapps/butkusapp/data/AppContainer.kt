@@ -28,6 +28,10 @@ class AppDataContainer(
     }
 
     override val butkusRepository by lazy {
-        ButkusRepository(context, applicationScope, ButkusDatabase.getDatabase(context).profileDao())
+        ButkusRepository(
+            applicationScope,
+            context,
+            ButkusDatabase.getDatabase(context).profileDao(),
+        )
     }
 }
