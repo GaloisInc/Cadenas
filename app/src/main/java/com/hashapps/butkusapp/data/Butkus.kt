@@ -1,8 +1,7 @@
-package com.hashapps.butkusapp
+package com.hashapps.butkusapp.data
 
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import org.galois.rocky.butkus.mbfte.Context
 import org.galois.rocky.butkus.mbfte.ModelLoader
@@ -13,16 +12,14 @@ import kotlin.io.path.pathString
 
 class DecodeCache {
 
-    private val MAXELEMS = 100
-
     private var cacheOrder: ArrayList<String> = ArrayList()
 
     private var cache: MutableMap<String, String> = mutableMapOf()
 
     fun add(decoded: String, encoded: String) {
-        if (!(decoded in cache)) {
+        if (decoded !in cache) {
             evictIfRequired()
-            cache.put(decoded, encoded)
+            cache[decoded] = encoded
             cacheOrder.add(0, decoded)
         } else {
             adjustLRU(decoded)
@@ -30,12 +27,12 @@ class DecodeCache {
     }
 
     fun get(decoded: String): String? {
-        if (!(decoded in cache))
-            return null
+        return if (decoded !in cache)
+            null
         else {
             val encoded = cache[decoded]
             adjustLRU(decoded)
-            return encoded
+            encoded
         }
     }
 
@@ -45,10 +42,14 @@ class DecodeCache {
     }
 
     private fun evictIfRequired() {
-        if (cache.size >= MAXELEMS) {
+        if (cache.size >= MAX_ELEMENTS) {
             cache.remove(cacheOrder.last())
             cacheOrder.removeLast()
         }
+    }
+
+    companion object {
+        private const val MAX_ELEMENTS = 100
     }
 }
 
@@ -62,11 +63,9 @@ data class ButkusConfig(
     val indexMax: Int = 5
 )
 
-class Butkus(val configFile: String) {
+class Butkus(private val configFile: String) {
 
-    private val tags = listOf("#talktherapy")
-
-    private lateinit var _cover: TextCover
+    private var _cover: TextCover
 
     private var decodeCache: DecodeCache = DecodeCache()
 
@@ -74,7 +73,7 @@ class Butkus(val configFile: String) {
         _cover = makeCover()
     }
 
-    suspend fun encode(text: String): String? {
+    fun encode(text: String): String? {
         val cover = makeCover()
         val coverText = cover.encodeUntilDecodable(text)
         return coverText?.apply {
@@ -83,7 +82,7 @@ class Butkus(val configFile: String) {
     }
 
     //NOTE: We expect a string after stripping off superfluous tags (if any) here
-    suspend fun decode(msg: String): String? {
+    fun decode(msg: String): String? {
         decodeCache.get(msg)?.let { return it }
 
         val cover = makeCover()
@@ -134,7 +133,7 @@ class Butkus(val configFile: String) {
     }
 
     companion object {
-        var butkus: Butkus? = null
+        private var butkus: Butkus? = null
 
         suspend fun initialize(context: android.content.Context) {
             withContext(Dispatchers.IO) {
@@ -142,15 +141,15 @@ class Butkus(val configFile: String) {
 
                 val x = context.assets.list("")
                 for(a in (x ?: arrayOf())) {
-                    println("ASSET: " + a)
+                    println("ASSET: $a")
                 }
                 val file = Path(context.filesDir.absolutePath, "butkusconfig.json")
                 butkus = Butkus(file.pathString)
             }
         }
 
-        fun getInstance(): Butkus {
-            return butkus ?: throw IllegalStateException("Butkus instance has not been initialized")
+        fun getInstance(): Butkus? {
+            return butkus // ?: throw IllegalStateException("Butkus instance has not been initialized")
         }
     }
 }
