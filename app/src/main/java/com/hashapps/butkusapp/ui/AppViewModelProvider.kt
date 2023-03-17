@@ -1,26 +1,44 @@
 package com.hashapps.butkusapp.ui
 
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hashapps.butkusapp.ButkusApplication
-import com.hashapps.butkusapp.ui.decode.DecodeViewModel
-import com.hashapps.butkusapp.ui.encode.EncodeViewModel
-import com.hashapps.butkusapp.ui.settings.SettingsViewModel
+import com.hashapps.butkusapp.ui.processing.ProcessingViewModel
+import com.hashapps.butkusapp.ui.profile.ManageProfilesViewModel
+import com.hashapps.butkusapp.ui.profile.ProfileEditViewModel
+import com.hashapps.butkusapp.ui.profile.ProfileEntryViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            EncodeViewModel()
+            ProcessingViewModel(
+                butkusApplication().container.butkusRepository,
+            )
         }
 
         initializer {
-            SettingsViewModel(butkusApplication().container.settingsRepository)
+            ManageProfilesViewModel(
+                butkusApplication().container.profilesRepository,
+                butkusApplication().container.butkusRepository,
+            )
         }
 
         initializer {
-            DecodeViewModel()
+            ProfileEntryViewModel(
+                butkusApplication().container.profilesRepository,
+                butkusApplication().container.modelsRepository,
+            )
+        }
+
+        initializer {
+            ProfileEditViewModel(
+                this.createSavedStateHandle(),
+                butkusApplication().container.profilesRepository,
+                butkusApplication().container.modelsRepository,
+            )
         }
     }
 }

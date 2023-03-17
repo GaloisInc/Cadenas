@@ -1,41 +1,25 @@
 package com.hashapps.butkusapp.ui.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
-import com.hashapps.butkusapp.ui.AppViewModelProvider
 import com.hashapps.butkusapp.ui.navigation.NavigationDestination
-import com.hashapps.butkusapp.ui.theme.ButkusAppTheme
 
-private const val MAX_LEN = 128
-
-private val urlRegex =
-    Regex("""https?://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()!@:%_+.~#?&/=]*)""")
-private val SettingsUiState.urlValid get() = urlRegex.matches(modelUrlToAdd)
-private val SettingsUiState.isErrorUrl get() = modelUrlToAdd != "" && !urlValid
-private val SettingsUiState.canAddUrl get () = urlValid && modelUrlToAdd !in modelUrls
+//private const val MAX_LEN = 128
+//
+//private val urlRegex =
+//    Regex("""https?://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()!@:%_+.~#?&/=]*)""")
+//private val SettingsUiState.urlValid get() = urlRegex.matches(modelUrlToAdd)
+//private val SettingsUiState.isErrorUrl get() = modelUrlToAdd != "" && !urlValid
+//private val SettingsUiState.canAddUrl get () = urlValid && modelUrlToAdd !in modelUrls
 
 object SettingsDestination : NavigationDestination {
     override val route = "settings"
@@ -46,215 +30,121 @@ object SettingsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    navigateToProcessing: () -> Unit,
+    navigateToManageProfiles: () -> Unit,
+    navigateToManageModels: () -> Unit,
     modifier: Modifier = Modifier,
-    vm: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+) {
+    Scaffold(
+        topBar = {
+            SettingsTopAppBar(
+                title = stringResource(SettingsDestination.titleRes),
+                canNavigateUp = true,
+                navigateUp = navigateToProcessing,
+            )
+        }
+    ) { innerPadding ->
+        SettingsBody(
+            navigateToManageProfiles = navigateToManageProfiles,
+            navigateToManageModels = navigateToManageModels,
+            modifier = modifier.padding(innerPadding),
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsBody(
+    navigateToManageProfiles: () -> Unit,
+    navigateToManageModels: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .padding(8.dp)
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.Start,
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val focusManager = LocalFocusManager.current
-        val savedSettings by vm.savedSettings.collectAsStateWithLifecycle()
-        val uiState by vm.uiState.collectAsStateWithLifecycle()
-
         ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Row(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                OutlinedTextField(
-                    modifier = modifier.weight(1f),
-                    readOnly = true,
-                    value = savedSettings.secretKey,
-                    onValueChange = { },
-                    singleLine = true,
-                    label = { Text(stringResource(R.string.key_label)) },
-                    placeholder = { Text(stringResource(R.string.key_placeholder)) },
-                )
-
-                FilledTonalIconButton(
-                    onClick = vm::genKey,
-                ) {
+            ListItem(
+                headlineText = { Text(stringResource(R.string.manage_profiles)) },
+                modifier = Modifier.clickable(onClick = navigateToManageProfiles),
+                supportingText = { Text(stringResource(R.string.manage_profiles_support)) },
+                leadingContent = {
                     Icon(
-                        imageVector = Icons.Filled.Key,
-                        contentDescription = stringResource(R.string.generate_key)
-                    )
-                }
-            }
-        }
-
-        ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            OutlinedTextField(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                value = savedSettings.seedText,
-                onValueChange = { vm.updateSeedText(it.take(MAX_LEN)) },
-                singleLine = true,
-                label = { Text(stringResource(R.string.seed_label)) },
-                supportingText = {
-                    Text(
-                        LocalContext.current.getString(
-                            R.string.seed_support,
-                            savedSettings.seedText.length,
-                            MAX_LEN,
-                        )
+                        imageVector = Icons.Filled.SwitchAccount,
+                        contentDescription = null,
                     )
                 },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                ),
+                trailingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = null,
+                    )
+                }
             )
         }
 
         ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            OutlinedTextField(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                value = uiState.modelUrlToAdd,
-                onValueChange = { vm.updateModelToAdd(it.take(MAX_LEN)) },
-                singleLine = true,
-                label = { Text(stringResource(R.string.url_label)) },
-                trailingIcon = {
-                    IconButton(
-                        enabled = uiState.canAddUrl,
-                        onClick = { vm.addUrl(uiState.modelUrlToAdd) },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.AddCircleOutline,
-                            contentDescription = stringResource(R.string.add_url),
-                        )
-                    }
+            ListItem(
+                headlineText = { Text(stringResource(R.string.manage_models)) },
+                modifier = Modifier.clickable(onClick = navigateToManageModels),
+                supportingText = { Text(stringResource(R.string.manage_models_support)) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.Tune,
+                        contentDescription = null,
+                    )
                 },
-                supportingText = {
-                    if (uiState.isErrorUrl) {
-                        Text(stringResource(R.string.url_error))
-                    } else {
-                        Text(
-                            LocalContext.current.getString(
-                                R.string.url_support,
-                                uiState.modelUrlToAdd.length,
-                                MAX_LEN,
-                            )
-                        )
-                    }
-                },
-                isError = uiState.isErrorUrl,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Uri,
-                    imeAction = ImeAction.Next,
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        focusManager.moveFocus(FocusDirection.Next)
-                    }
-                ),
+                trailingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = null,
+                    )
+                }
             )
-
-            ExposedDropdownMenuBox(
-                expanded = uiState.urlMenuExpanded,
-                onExpandedChange = { vm.toggleUrlMenu() },
-            ) {
-                OutlinedTextField(
-                    modifier = modifier
-                        .menuAnchor()
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    value = savedSettings.selectedModel,
-                    onValueChange = { },
-                    readOnly = true,
-                    label = { Text(stringResource(R.string.selected_url_label)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.urlMenuExpanded) },
-                    singleLine = true,
-                )
-
-                ExposedDropdownMenu(
-                    expanded = uiState.urlMenuExpanded,
-                    onDismissRequest = vm::dismissUrlMenu,
-                ) {
-                    uiState.modelUrls.forEach {
-                        // TODO: Make the text something more meaningful once we have download machinery
-                        DropdownMenuItem(
-                            text = { Text(it) },
-                            onClick = {
-                                vm.selectModelUrl(it)
-                                vm.dismissUrlMenu()
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                        )
-                    }
-                }
-            }
-        }
-
-        ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            Button(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                onClick = vm::saveSettings,
-            ) {
-                Text(
-                    text = stringResource(R.string.save),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            }
-        }
-
-        ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            Row(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Button(
-                    modifier = modifier.weight(0.5f),
-                    onClick = { },
-                ) {
-                    Text(
-                        text = stringResource(R.string.import_label),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                }
-
-                Button(
-                    modifier = modifier.weight(0.5f),
-                    onClick = { },
-                ) {
-                    Text(
-                        text = stringResource(R.string.export_label),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                }
-            }
         }
     }
 }
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreenPreviewDefault() {
-    ButkusAppTheme {
-        SettingsScreen()
-    }
+fun SettingsTopAppBar(
+    title: String,
+    canNavigateUp: Boolean,
+    modifier: Modifier = Modifier,
+    navigateUp: () -> Unit = {},
+    selectedProfile: Int? = null,
+    canEditItem: Boolean = false,
+    navigateToEditItem: (Int) -> Unit = {},
+) {
+    CenterAlignedTopAppBar(
+        title = { Text(title) },
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateUp) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back),
+                    )
+                }
+            }
+        },
+        actions = {
+            if (canEditItem) {
+                IconButton(onClick = { navigateToEditItem(selectedProfile!!) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = stringResource(R.string.edit_item),
+                    )
+                }
+            }
+        },
+    )
 }
