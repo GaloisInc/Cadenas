@@ -1,21 +1,33 @@
 package com.hashapps.butkusapp.data
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-
-private const val BUTKUS_SETTINGS_NAME = "butkus_settings"
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = BUTKUS_SETTINGS_NAME
-)
+import com.hashapps.butkusapp.data.model.ModelsRepository
+import com.hashapps.butkusapp.data.model.OfflineModelsRepository
+import com.hashapps.butkusapp.data.profile.OfflineProfilesRepository
+import com.hashapps.butkusapp.data.profile.ProfilesRepository
+import kotlinx.coroutines.CoroutineScope
 
 interface AppContainer {
-    val settingsRepository: SettingsRepository
+    val profilesRepository: ProfilesRepository
+
+    val modelsRepository: ModelsRepository
+
+    val butkusRepository: ButkusRepository
 }
 
-class AppDataContainer(private val context: Context) : AppContainer {
-    override val settingsRepository by lazy {
-        SettingsRepository(context.dataStore)
+class AppDataContainer(
+    private val applicationScope: CoroutineScope,
+    private val context: Context
+) : AppContainer {
+    override val profilesRepository by lazy {
+        OfflineProfilesRepository(ButkusDatabase.getDatabase(context).profileDao())
+    }
+
+    override val modelsRepository by lazy {
+        OfflineModelsRepository(ButkusDatabase.getDatabase(context).modelDao())
+    }
+
+    override val butkusRepository by lazy {
+        ButkusRepository(context, applicationScope, ButkusDatabase.getDatabase(context).profileDao())
     }
 }
