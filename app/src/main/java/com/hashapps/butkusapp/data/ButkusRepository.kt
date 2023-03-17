@@ -53,7 +53,7 @@ class ButkusRepository(
 
     init {
         externalScope.launch(Dispatchers.IO) {
-            val id = selectedProfile.filterNotNull().collectLatest {
+            selectedProfile.filterNotNull().collectLatest {
                 val profile = profileDao.getProfile(it).first()
                 // TODO: Use the profile info the initialize Butkus
                 Butkus.initialize(context)
