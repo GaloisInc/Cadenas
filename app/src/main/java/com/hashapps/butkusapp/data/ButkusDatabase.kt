@@ -9,7 +9,7 @@ import com.hashapps.butkusapp.data.model.ModelDao
 import com.hashapps.butkusapp.data.profile.Profile
 import com.hashapps.butkusapp.data.profile.ProfileDao
 
-@Database(entities = [Profile::class, Model::class], version = 3, exportSchema = false)
+@Database(entities = [Profile::class, Model::class], version = 4, exportSchema = false)
 abstract class ButkusDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
 

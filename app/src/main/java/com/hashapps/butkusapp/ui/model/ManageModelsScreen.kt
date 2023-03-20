@@ -120,7 +120,7 @@ fun ButkusModel(
 
         ListItem(
             headlineText = { Text(model.name) },
-            supportingText = { Text(model.uri) },
+            supportingText = { Text(model.description) },
             trailingContent = {
                 IconButton(
                     enabled = canDelete,
