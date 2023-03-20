@@ -128,24 +128,12 @@ fun ButkusProfile(
     ) {
         ListItem(
             headlineText = { Text(profile.name) },
-            modifier = modifier.selectable(
-                selected = profile.id == selectedProfileId,
-                onClick = { onProfileClick(profile) },
-                role = Role.RadioButton,
-            ),
             supportingText = { Text(profile.description) },
-            trailingContent = {
-                if (profile.id == selectedProfileId) {
-                    Icon(
-                        imageVector = Icons.Filled.RadioButtonChecked,
-                        contentDescription = null,
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Filled.RadioButtonUnchecked,
-                        contentDescription = null,
-                    )
-                }
+            leadingContent = {
+                RadioButton(
+                    selected = profile.id == selectedProfileId,
+                    onClick = { onProfileClick(profile) },
+                )
             }
         )
     }
