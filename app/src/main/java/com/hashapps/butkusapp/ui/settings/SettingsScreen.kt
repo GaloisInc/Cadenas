@@ -111,9 +111,6 @@ fun SettingsTopAppBar(
     canNavigateUp: Boolean,
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit = {},
-    selectedProfile: Int? = null,
-    canEditItem: Boolean = false,
-    navigateToEditItem: (Int) -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
@@ -124,16 +121,6 @@ fun SettingsTopAppBar(
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back),
-                    )
-                }
-            }
-        },
-        actions = {
-            if (canEditItem) {
-                IconButton(onClick = { navigateToEditItem(selectedProfile!!) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = stringResource(R.string.edit_item),
                     )
                 }
             }

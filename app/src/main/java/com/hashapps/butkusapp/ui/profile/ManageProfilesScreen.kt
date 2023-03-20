@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -44,9 +45,6 @@ fun ManageProfilesScreen(
                 title = stringResource(ManageProfilesDestination.titleRes),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
-                selectedProfile = selectedProfileId,
-                canEditItem = selectedProfileId != null,
-                navigateToEditItem = navigateToProfileEdit,
             )
         },
         floatingActionButton = {
@@ -67,6 +65,9 @@ fun ManageProfilesScreen(
             onProfileSelect = {
                 viewModel.selectProfile(it)
             },
+            onProfileEdit = {
+                navigateToProfileEdit(it)
+            },
             onProfileDelete = {
                 viewModel.deleteProfile(it)
             },
@@ -79,6 +80,7 @@ fun ManageProfilesBody(
     profiles: List<Profile>,
     selectedProfileId: Int?,
     onProfileSelect: (Int) -> Unit,
+    onProfileEdit: (Int) -> Unit,
     onProfileDelete: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -93,6 +95,7 @@ fun ManageProfilesBody(
             profiles = profiles,
             selectedProfileId = selectedProfileId,
             onProfileSelect = { onProfileSelect(it.id) },
+            onProfileEdit = { onProfileEdit(it) },
             onProfileDelete = { onProfileDelete(it.id) },
         )
     }
@@ -105,6 +108,7 @@ fun ProfileList(
     profiles: List<Profile>,
     selectedProfileId: Int?,
     onProfileSelect: (Profile) -> Unit,
+    onProfileEdit: (Int) -> Unit,
     onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -114,6 +118,7 @@ fun ProfileList(
                 profile = it,
                 selectedProfileId = selectedProfileId,
                 onProfileSelect = onProfileSelect,
+                onProfileEdit = onProfileEdit,
                 onProfileDelete = onProfileDelete,
             )
         }
@@ -126,6 +131,7 @@ fun ButkusProfile(
     profile: Profile,
     selectedProfileId: Int?,
     onProfileSelect: (Profile) -> Unit,
+    onProfileEdit: (Int) -> Unit,
     onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -144,14 +150,23 @@ fun ButkusProfile(
                 )
             },
             trailingContent = {
-                IconButton(
-                    onClick = { deleteConfirmationRequired = true },
-                    enabled = profile.id != selectedProfileId,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.DeleteForever,
-                        contentDescription = stringResource(R.string.delete),
-                    )
+                Row {
+                    IconButton(onClick = { onProfileEdit(profile.id) }) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = stringResource(R.string.edit_item),
+                        )
+                    }
+
+                    IconButton(
+                        onClick = { deleteConfirmationRequired = true },
+                        enabled = profile.id != selectedProfileId,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.DeleteForever,
+                            contentDescription = stringResource(R.string.delete),
+                        )
+                    }
                 }
             },
         )
