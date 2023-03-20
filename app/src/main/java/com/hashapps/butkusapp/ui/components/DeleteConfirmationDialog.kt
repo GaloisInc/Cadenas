@@ -12,6 +12,7 @@ import com.hashapps.butkusapp.R
 
 @Composable
 fun DeleteConfirmationDialog(
+    confirmationQuestion: String,
     onDeleteConfirm: () -> Unit,
     onDeleteCancel: () -> Unit,
     modifier: Modifier = Modifier
@@ -19,7 +20,7 @@ fun DeleteConfirmationDialog(
     AlertDialog(
         onDismissRequest = {},
         title = { Text(stringResource(R.string.attention)) },
-        text = { Text(stringResource(R.string.delete_question)) },
+        text = { Text(confirmationQuestion) },
         modifier = modifier.padding(16.dp),
         dismissButton = {
             TextButton(onClick = onDeleteCancel) {

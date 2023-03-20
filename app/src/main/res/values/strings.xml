@@ -43,7 +43,8 @@
     <string name="description_support">And a brief description</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="attention">Warning</string>
-    <string name="delete_question">Are you sure? This cannot be undone!</string>
+    <string name="delete_profile_question">Are you sure? This cannot be undone!</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="delete_model_question">Are you sure? This will delete all associated profiles.</string>
 </resources>

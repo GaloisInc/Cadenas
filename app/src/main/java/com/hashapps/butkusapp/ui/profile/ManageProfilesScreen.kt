@@ -159,6 +159,7 @@ fun ButkusProfile(
 
         if (deleteConfirmationRequired) {
             DeleteConfirmationDialog(
+                confirmationQuestion = stringResource(R.string.delete_profile_question),
                 onDeleteConfirm = {
                     deleteConfirmationRequired = false
                     onProfileDelete(profile)
