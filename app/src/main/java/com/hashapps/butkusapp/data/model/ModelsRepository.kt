@@ -3,6 +3,8 @@ package com.hashapps.butkusapp.data.model
 import kotlinx.coroutines.flow.Flow
 
 interface ModelsRepository {
+    fun getAllModelsStream(): Flow<List<Model>>
+
     fun getAllModelNamesStream(): Flow<List<String>>
 
     fun getModelStream(id: Int): Flow<Model>
