@@ -13,7 +13,7 @@ import com.hashapps.butkusapp.data.model.Model
             entity = Model::class,
             parentColumns = ["id"],
             childColumns = ["model_id"],
-            onDelete = ForeignKey.CASCADE,
+            onDelete = ForeignKey.RESTRICT,
         )
     ]
 )
