@@ -26,8 +26,8 @@
     <string name="url_error">Must be a valid URL</string>
     <string name="selected_url_label">Selected Model URL</string>
     <string name="save">Save</string>
-    <string name="name_label">Profile Name</string>
-    <string name="name_support">Give this profile a name</string>
+    <string name="profile_name_label">Profile Name</string>
+    <string name="profile_name_support">Give this profile a name</string>
     <string name="selected_model_label">Model</string>
     <string name="profile_entry">Add Profile</string>
     <string name="manage_profiles">Profiles</string>
@@ -39,12 +39,18 @@
     <string name="manage_models_support">Manage models for encoding/decoding</string>
     <string name="unused" />
     <string name="clear">Clear item</string>
-    <string name="description_label">Profile Description</string>
-    <string name="description_support">And a brief description</string>
+    <string name="profile_description_label">Profile Description</string>
+    <string name="profile_description_support">And a brief description</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="attention">Warning</string>
     <string name="delete_profile_question">Are you sure? This cannot be undone!</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="delete_model_question">Are you sure? This will delete all associated profiles.</string>
+    <string name="add_model">Add Model</string>
+    <string name="model_name_label">Model Name</string>
+    <string name="model_name_support">Give this model a name</string>
+    <string name="model_description_label">Model Description</string>
+    <string name="model_description_support">And a brief description</string>
+    <string name="download">Download</string>
 </resources>

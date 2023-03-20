@@ -121,8 +121,8 @@ fun ProfileInputForm(
             value = profileUiState.name,
             onValueChange = { onValueChange(profileUiState.copy(name = it)) },
             singleLine = true,
-            label = { Text(stringResource(R.string.name_label)) },
-            supportingText = { Text(stringResource(R.string.name_support)) },
+            label = { Text(stringResource(R.string.profile_name_label)) },
+            supportingText = { Text(stringResource(R.string.profile_name_support)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
             ),
@@ -136,8 +136,8 @@ fun ProfileInputForm(
             value = profileUiState.description,
             onValueChange = { onValueChange(profileUiState.copy(description = it.take(MAX_LEN))) },
             singleLine = true,
-            label = { Text(stringResource(R.string.description_label)) },
-            supportingText = { Text(stringResource(R.string.description_support)) },
+            label = { Text(stringResource(R.string.profile_description_label)) },
+            supportingText = { Text(stringResource(R.string.profile_description_support)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
             ),

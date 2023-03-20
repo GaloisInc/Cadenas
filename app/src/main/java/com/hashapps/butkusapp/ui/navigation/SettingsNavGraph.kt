@@ -11,6 +11,8 @@ import androidx.navigation.navArgument
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.model.ManageModelsDestination
 import com.hashapps.butkusapp.ui.model.ManageModelsScreen
+import com.hashapps.butkusapp.ui.model.ModelAddDestination
+import com.hashapps.butkusapp.ui.model.ModelAddScreen
 import com.hashapps.butkusapp.ui.profile.*
 import com.hashapps.butkusapp.ui.settings.SettingsDestination
 import com.hashapps.butkusapp.ui.settings.SettingsScreen
@@ -69,7 +71,14 @@ fun SettingsNavHost(
         composable(route = ManageModelsDestination.route) {
             ManageModelsScreen(
                 navigateUp = { navController.navigateUp() },
-                navigateToModelAdd = { /*TODO*/ }
+                navigateToModelAdd = { navController.navigate(ModelAddDestination.route) }
+            )
+        }
+
+        composable(route = ModelAddDestination.route) {
+            ModelAddScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateUp = { navController.navigateUp() },
             )
         }
     }
