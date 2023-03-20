@@ -2,9 +2,21 @@ package com.hashapps.butkusapp.data.profile
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.hashapps.butkusapp.data.model.Model
 
-@Entity(tableName = "profiles")
+@Entity(
+    tableName = "profiles",
+    foreignKeys = [
+        ForeignKey(
+            entity = Model::class,
+            parentColumns = ["id"],
+            childColumns = ["model_id"],
+            onDelete = ForeignKey.CASCADE,
+        )
+    ]
+)
 data class Profile (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -17,7 +29,7 @@ data class Profile (
 
     val seed: String,
 
-    @ColumnInfo(name = "model_id")
+    @ColumnInfo(name = "model_id", index = true)
     val selectedModel: Int,
 
     val tag: String,
