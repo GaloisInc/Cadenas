@@ -3,7 +3,7 @@ package com.hashapps.butkusapp.data.profile
 import kotlinx.coroutines.flow.Flow
 
 interface ProfilesRepository {
-    fun getAllProfilesForModel(model_id: Int): Flow<List<Profile>>
+    fun getAllProfilesForModel(modelId: Int): Flow<List<Profile>>
     fun getAllProfilesStream(): Flow<List<Profile>>
 
     fun getProfileStream(id: Int): Flow<Profile>

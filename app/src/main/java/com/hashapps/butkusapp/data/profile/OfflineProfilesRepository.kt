@@ -3,7 +3,7 @@ package com.hashapps.butkusapp.data.profile
 import kotlinx.coroutines.flow.Flow
 
 class OfflineProfilesRepository(private val profileDao: ProfileDao) : ProfilesRepository {
-    override fun getAllProfilesForModel(model_id: Int) = profileDao.getAllProfilesForModel(model_id)
+    override fun getAllProfilesForModel(modelId: Int) = profileDao.getAllProfilesForModel(modelId)
 
     override fun getAllProfilesStream() = profileDao.getAllProfiles()
 
