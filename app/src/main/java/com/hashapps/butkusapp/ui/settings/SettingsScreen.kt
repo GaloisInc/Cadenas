@@ -13,14 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.ui.navigation.NavigationDestination
 
-//private const val MAX_LEN = 128
-//
-//private val urlRegex =
-//    Regex("""https?://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()!@:%_+.~#?&/=]*)""")
-//private val SettingsUiState.urlValid get() = urlRegex.matches(modelUrlToAdd)
-//private val SettingsUiState.isErrorUrl get() = modelUrlToAdd != "" && !urlValid
-//private val SettingsUiState.canAddUrl get () = urlValid && modelUrlToAdd !in modelUrls
-
 object SettingsDestination : NavigationDestination {
     override val route = "settings"
     override val titleRes = R.string.settings
