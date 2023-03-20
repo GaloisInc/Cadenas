@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hashapps.butkusapp.ButkusApplication
+import com.hashapps.butkusapp.ui.model.ManageModelsViewModel
 import com.hashapps.butkusapp.ui.processing.ProcessingViewModel
 import com.hashapps.butkusapp.ui.profile.ManageProfilesViewModel
 import com.hashapps.butkusapp.ui.profile.ProfileEditViewModel
@@ -37,6 +38,12 @@ object AppViewModelProvider {
             ProfileEditViewModel(
                 this.createSavedStateHandle(),
                 butkusApplication().container.profilesRepository,
+                butkusApplication().container.modelsRepository,
+            )
+        }
+
+        initializer {
+            ManageModelsViewModel(
                 butkusApplication().container.modelsRepository,
             )
         }
