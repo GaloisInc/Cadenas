@@ -31,8 +31,9 @@ class ManageProfilesViewModel(
 
     fun deleteProfile(selectedProfileId: Int) {
         viewModelScope.launch {
-            val selectedProfile = profilesRepository.getProfileStream(selectedProfileId).first()
-            profilesRepository.deleteProfile(selectedProfile)
+            profilesRepository.deleteProfile(
+                profilesRepository.getProfileStream(selectedProfileId).first()
+            )
         }
     }
 }
