@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -129,7 +130,18 @@ fun ButkusProfile(
                     selected = profile.id == selectedProfileId,
                     onClick = { onProfileClick(profile) },
                 )
-            }
+            },
+            trailingContent = {
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    enabled = profile.id != selectedProfileId,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.DeleteForever,
+                        contentDescription = stringResource(R.string.delete),
+                    )
+                }
+            },
         )
     }
 }
