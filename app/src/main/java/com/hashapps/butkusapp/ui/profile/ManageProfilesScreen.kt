@@ -7,9 +7,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,7 +34,7 @@ fun ManageProfilesScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageProfilesViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedProfile by viewModel.selectedProfile.collectAsState()
+    val selectedProfileId by viewModel.selectedProfileId.collectAsState()
     val profiles by viewModel.profiles.collectAsState()
 
     Scaffold(
@@ -44,8 +43,8 @@ fun ManageProfilesScreen(
                 title = stringResource(ManageProfilesDestination.titleRes),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
-                selectedProfile = selectedProfile,
-                canEditItem = selectedProfile != null,
+                selectedProfile = selectedProfileId,
+                canEditItem = selectedProfileId != null,
                 navigateToEditItem = navigateToProfileEdit,
             )
         },
@@ -63,9 +62,12 @@ fun ManageProfilesScreen(
         ManageProfilesBody(
             modifier = modifier.padding(innerPadding),
             profiles = profiles,
-            selectedProfileId = selectedProfile,
-            onProfileClick = {
+            selectedProfileId = selectedProfileId,
+            onProfileSelect = {
                 viewModel.selectProfile(it)
+            },
+            onProfileDelete = {
+                viewModel.deleteProfile(it)
             },
         )
     }
@@ -75,7 +77,8 @@ fun ManageProfilesScreen(
 fun ManageProfilesBody(
     profiles: List<Profile>,
     selectedProfileId: Int?,
-    onProfileClick: (Int) -> Unit,
+    onProfileSelect: (Int) -> Unit,
+    onProfileDelete: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -88,16 +91,20 @@ fun ManageProfilesBody(
         ProfileList(
             profiles = profiles,
             selectedProfileId = selectedProfileId,
-            onProfileClick = { onProfileClick(it.id) }
+            onProfileSelect = { onProfileSelect(it.id) },
+            onProfileDelete = { onProfileDelete(it.id) },
         )
     }
+
+
 }
 
 @Composable
 fun ProfileList(
     profiles: List<Profile>,
     selectedProfileId: Int?,
-    onProfileClick: (Profile) -> Unit,
+    onProfileSelect: (Profile) -> Unit,
+    onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -105,7 +112,8 @@ fun ProfileList(
             ButkusProfile(
                 profile = it,
                 selectedProfileId = selectedProfileId,
-                onProfileClick = onProfileClick
+                onProfileSelect = onProfileSelect,
+                onProfileDelete = onProfileDelete,
             )
         }
     }
@@ -116,24 +124,27 @@ fun ProfileList(
 fun ButkusProfile(
     profile: Profile,
     selectedProfileId: Int?,
-    onProfileClick: (Profile) -> Unit,
+    onProfileSelect: (Profile) -> Unit,
+    onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
     ) {
+        var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
+
         ListItem(
             headlineText = { Text(profile.name) },
             supportingText = { Text(profile.description) },
             leadingContent = {
                 RadioButton(
                     selected = profile.id == selectedProfileId,
-                    onClick = { onProfileClick(profile) },
+                    onClick = { onProfileSelect(profile) },
                 )
             },
             trailingContent = {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { deleteConfirmationRequired = true },
                     enabled = profile.id != selectedProfileId,
                 ) {
                     Icon(
@@ -143,5 +154,40 @@ fun ButkusProfile(
                 }
             },
         )
+
+
+        if (deleteConfirmationRequired) {
+            DeleteConfirmationDialog(
+                onDeleteConfirm = {
+                    deleteConfirmationRequired = false
+                    onProfileDelete(profile)
+                },
+                onDeleteCancel = { deleteConfirmationRequired = false },
+            )
+        }
     }
+}
+
+@Composable
+private fun DeleteConfirmationDialog(
+    onDeleteConfirm: () -> Unit,
+    onDeleteCancel: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        title = { Text(stringResource(R.string.attention)) },
+        text = { Text(stringResource(R.string.delete_question)) },
+        modifier = modifier.padding(16.dp),
+        dismissButton = {
+            TextButton(onClick = onDeleteCancel) {
+                Text(text = stringResource(R.string.no))
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDeleteConfirm) {
+                Text(text = stringResource(R.string.yes))
+            }
+        }
+    )
 }

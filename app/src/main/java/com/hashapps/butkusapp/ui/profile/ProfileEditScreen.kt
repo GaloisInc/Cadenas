@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -54,10 +53,6 @@ fun ProfileEditScreen(
                 viewModel.updateProfile()
                 navigateBack()
             },
-            onDeleteClick = {
-                viewModel.deleteProfile()
-                navigateBack()
-            },
         )
     }
 }
@@ -69,7 +64,6 @@ fun ProfileEditBody(
     onProfileValueChange: (ProfileUiState) -> Unit,
     onKeyGen: () -> Unit,
     onSaveClick: () -> Unit,
-    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -79,7 +73,6 @@ fun ProfileEditBody(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         ProfileInputForm(
             profileUiState = profileUiState,
             models = models,
@@ -97,49 +90,5 @@ fun ProfileEditBody(
                 style = MaterialTheme.typography.titleLarge,
             )
         }
-
-        OutlinedButton(
-            onClick = { deleteConfirmationRequired = true },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(R.string.delete),
-                style = MaterialTheme.typography.titleLarge,
-            )
-        }
-
-        if (deleteConfirmationRequired) {
-            DeleteConfirmationDialog(
-                onDeleteConfirm = {
-                    deleteConfirmationRequired = false
-                    onDeleteClick()
-                },
-                onDeleteCancel = { deleteConfirmationRequired = false },
-            )
-        }
     }
-}
-
-@Composable
-private fun DeleteConfirmationDialog(
-    onDeleteConfirm: () -> Unit,
-    onDeleteCancel: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    AlertDialog(
-        onDismissRequest = {},
-        title = { Text(stringResource(R.string.attention)) },
-        text = { Text(stringResource(R.string.delete_question)) },
-        modifier = modifier.padding(16.dp),
-        dismissButton = {
-            TextButton(onClick = onDeleteCancel) {
-                Text(text = stringResource(R.string.no))
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDeleteConfirm) {
-                Text(text = stringResource(R.string.yes))
-            }
-        }
-    )
 }
