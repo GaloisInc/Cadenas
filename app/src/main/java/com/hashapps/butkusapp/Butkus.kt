@@ -19,7 +19,7 @@ class DecodeCache {
 
     private var cache: MutableMap<String, String> = mutableMapOf()
 
-    public fun add(decoded: String, encoded: String) {
+    fun add(decoded: String, encoded: String) {
         if (!(decoded in cache)) {
             evictIfRequired()
             cache.put(decoded, encoded)
@@ -29,7 +29,7 @@ class DecodeCache {
         }
     }
 
-    public fun get(decoded: String): String? {
+    fun get(decoded: String): String? {
         if (!(decoded in cache))
             return null
         else {
