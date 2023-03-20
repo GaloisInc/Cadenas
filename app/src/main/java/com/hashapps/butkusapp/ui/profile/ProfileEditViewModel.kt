@@ -60,16 +60,6 @@ class ProfileEditViewModel(
         }
     }
 
-    fun deleteProfile() {
-        viewModelScope.launch {
-            val selectedModel = modelsRepository
-                .getModelIdStream(profileUiState.selectedModel)
-                .filterNotNull()
-                .first()
-            profilesRepository.deleteProfile(profileUiState.toProfile(selectedModel))
-        }
-    }
-
     private companion object {
         val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
     }
