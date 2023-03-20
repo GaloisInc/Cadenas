@@ -41,6 +41,6 @@ private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
 fun ProfileUiState.isTagValid() = tag == "" || tagRegex.matches(tag)
 
 fun ProfileUiState.isValid() =
-    name.isNotBlank() && key.isNotBlank() && seed.isNotBlank() && selectedModel.isNotBlank() && isTagValid()
+    name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && seed.isNotBlank() && selectedModel.isNotBlank() && isTagValid()
 
 
