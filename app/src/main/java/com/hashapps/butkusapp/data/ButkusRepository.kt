@@ -19,9 +19,11 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 )
 
 class ButkusRepository(
-    externalScope: CoroutineScope,
     private val context: Context,
     private val profileDao: ProfileDao,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    externalScope: CoroutineScope,
 ) {
     private companion object {
         val SELECTED_PROFILE = intPreferencesKey("selected_profile")
@@ -51,7 +53,7 @@ class ButkusRepository(
     val butkusInitialized: StateFlow<Boolean> = _butkusInitialized.asStateFlow()
 
     init {
-        externalScope.launch(Dispatchers.IO) {
+        externalScope.launch(ioDispatcher) {
             selectedProfile.filterNotNull().collectLatest {
                 val profile = profileDao.getProfile(it).first()
                 // TODO: Use the profile info the initialize Butkus
@@ -64,12 +66,14 @@ class ButkusRepository(
     }
 
     suspend fun encode(plaintext: String): String? = coroutineScope {
-        val encodedMessage = async(Dispatchers.Default) { Butkus.getInstance()?.encode(plaintext) }
-        encodedMessage.await()
+        withContext(defaultDispatcher) {
+            Butkus.getInstance()?.encode(plaintext)
+        }
     }
 
     suspend fun decode(encodedMessage: String): String? = coroutineScope {
-        val plaintext = async(Dispatchers.Default) { Butkus.getInstance()?.decode(encodedMessage) }
-        plaintext.await()
+        withContext(defaultDispatcher) {
+            Butkus.getInstance()?.decode(encodedMessage)
+        }
     }
 }
