@@ -14,6 +14,9 @@ interface ModelDao {
     @Delete
     suspend fun delete(model: Model)
 
+    @Query("SELECT * FROM models WHERE id = :id")
+    fun getModel(id: Int): Flow<Model>
+
     @Query("SELECT id FROM models WHERE name = :name")
     fun getModelId(name: String): Flow<Int>
 

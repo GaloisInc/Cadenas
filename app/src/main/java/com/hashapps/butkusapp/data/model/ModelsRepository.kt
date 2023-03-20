@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 interface ModelsRepository {
     fun getAllModelNamesStream(): Flow<List<String>>
 
+    fun getModelStream(id: Int): Flow<Model>
+
     fun getModelIdStream(name: String): Flow<Int?>
 
     fun getModelNameStream(id: Int): Flow<String?>

@@ -1,7 +1,11 @@
 package com.hashapps.butkusapp.data.model
 
+import kotlinx.coroutines.flow.Flow
+
 class OfflineModelsRepository(private val modelDao: ModelDao) : ModelsRepository {
     override fun getAllModelNamesStream() = modelDao.getAllModelNames()
+
+    override fun getModelStream(id: Int) = modelDao.getModel(id)
 
     override fun getModelIdStream(name: String) = modelDao.getModelId(name)
 
