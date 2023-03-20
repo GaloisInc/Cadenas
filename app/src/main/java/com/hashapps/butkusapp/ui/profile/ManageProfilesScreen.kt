@@ -65,9 +65,7 @@ fun ManageProfilesScreen(
             onProfileSelect = {
                 viewModel.selectProfile(it)
             },
-            onProfileEdit = {
-                navigateToProfileEdit(it)
-            },
+            onProfileEdit = navigateToProfileEdit,
             onProfileDelete = {
                 viewModel.deleteProfile(it)
             },
@@ -95,7 +93,7 @@ fun ManageProfilesBody(
             profiles = profiles,
             selectedProfileId = selectedProfileId,
             onProfileSelect = { onProfileSelect(it.id) },
-            onProfileEdit = { onProfileEdit(it) },
+            onProfileEdit = onProfileEdit,
             onProfileDelete = { onProfileDelete(it.id) },
         )
     }
