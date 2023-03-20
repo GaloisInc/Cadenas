@@ -23,8 +23,8 @@ interface ModelDao {
     @Query("SELECT name FROM models WHERE id = :id")
     fun getModelName(id: Int): Flow<String>
 
-    @Query("SELECT uri FROM models WHERE id = :id")
-    fun getModelUri(id: Int): Flow<String>
+    @Query("SELECT url FROM models WHERE id = :id")
+    fun getModelUrl(id: Int): Flow<String>
 
     @Query("SELECT * FROM models ORDER BY name ASC")
     fun getAllModels(): Flow<List<Model>>

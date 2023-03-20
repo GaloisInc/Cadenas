@@ -13,7 +13,7 @@ interface ModelsRepository {
 
     fun getModelNameStream(id: Int): Flow<String?>
 
-    fun getModelUriStream(id: Int): Flow<String?>
+    fun getModelUrlStream(id: Int): Flow<String?>
 
     suspend fun insertModel(model: Model)
 

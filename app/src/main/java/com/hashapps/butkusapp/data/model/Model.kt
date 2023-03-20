@@ -12,5 +12,5 @@ data class Model(
 
     val description: String,
 
-    val uri: String,
+    val url: String,
 )

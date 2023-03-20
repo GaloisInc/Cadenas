@@ -11,7 +11,7 @@ class OfflineModelsRepository(private val modelDao: ModelDao) : ModelsRepository
 
     override fun getModelNameStream(id: Int) = modelDao.getModelName(id)
 
-    override fun getModelUriStream(id: Int) = modelDao.getModelUri(id)
+    override fun getModelUrlStream(id: Int) = modelDao.getModelUrl(id)
 
     override suspend fun insertModel(model: Model) = modelDao.insert(model)
 
