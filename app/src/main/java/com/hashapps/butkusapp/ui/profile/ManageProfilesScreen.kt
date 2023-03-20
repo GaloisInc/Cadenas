@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.butkusapp.R
 import com.hashapps.butkusapp.data.profile.Profile
 import com.hashapps.butkusapp.ui.AppViewModelProvider
+import com.hashapps.butkusapp.ui.components.DeleteConfirmationDialog
 import com.hashapps.butkusapp.ui.navigation.NavigationDestination
 import com.hashapps.butkusapp.ui.settings.SettingsTopAppBar
 
@@ -168,26 +169,3 @@ fun ButkusProfile(
     }
 }
 
-@Composable
-private fun DeleteConfirmationDialog(
-    onDeleteConfirm: () -> Unit,
-    onDeleteCancel: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    AlertDialog(
-        onDismissRequest = {},
-        title = { Text(stringResource(R.string.attention)) },
-        text = { Text(stringResource(R.string.delete_question)) },
-        modifier = modifier.padding(16.dp),
-        dismissButton = {
-            TextButton(onClick = onDeleteCancel) {
-                Text(text = stringResource(R.string.no))
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDeleteConfirm) {
-                Text(text = stringResource(R.string.yes))
-            }
-        }
-    )
-}
