@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Butkus</string>
+    <string name="app_name">Cadenas</string>
     <string name="encode">Encode</string>
     <string name="decode">Decode</string>
     <string name="settings">Settings</string>
     <string name="share_button">Share encoded message</string>
     <string name="import_label">Import</string>
     <string name="export_label">Export</string>
-    <string name="butkus_message">Encoded Message</string>
+    <string name="cadenas_message">Encoded Message</string>
     <string name="plaintext_message_label">Private Message</string>
     <string name="plaintext_message_support">Enter a message to be encoded</string>
     <string name="tag_label">(Optional) Tag</string>

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.hashapps.butkusapp'
+    namespace 'com.hashapps.cadenas'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.hashapps.butkusapp"
+        applicationId "com.hashapps.cadenas"
         minSdk 26
         targetSdk 33
         versionCode 1
