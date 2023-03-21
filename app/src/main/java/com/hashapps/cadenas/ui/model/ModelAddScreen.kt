@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -20,6 +21,8 @@ import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
+
+private const val MAX_LEN = 128
 
 object ModelAddDestination : NavigationDestination {
     override val route = "model_add"
@@ -136,12 +139,18 @@ fun ModelInputForm(
                 .fillMaxWidth(),
             enabled = enabled,
             value = modelUiState.url,
-            onValueChange = { onValueChange(modelUiState.copy(url = it)) },
+            onValueChange = { onValueChange(modelUiState.copy(url = it.take(MAX_LEN))) },
             singleLine = true,
             label = { Text(stringResource(R.string.url_label)) },
             supportingText = {
                 if (modelUiState.isUrlValid()) {
-                    Text(stringResource(R.string.url_support))
+                    Text(
+                        LocalContext.current.getString(
+                            R.string.url_support,
+                            modelUiState.url.length,
+                            MAX_LEN,
+                        )
+                    )
                 } else {
                     Text(stringResource(R.string.url_error))
                 }

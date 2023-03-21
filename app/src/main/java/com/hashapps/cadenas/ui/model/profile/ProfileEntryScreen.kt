@@ -115,7 +115,7 @@ fun ProfileInputForm(
                 .fillMaxWidth(),
             enabled = enabled,
             value = profileUiState.name,
-            onValueChange = { onValueChange(profileUiState.copy(name = it)) },
+            onValueChange = { onValueChange(profileUiState.copy(name = it.take(MAX_LEN))) },
             singleLine = true,
             label = { Text(stringResource(R.string.profile_name_label)) },
             supportingText = { Text(stringResource(R.string.profile_name_support)) },
