@@ -53,4 +53,8 @@
     <string name="model_description_label">Model Description</string>
     <string name="model_description_support">And a brief description</string>
     <string name="download">Download</string>
+    <string name="profile_menu">Profile settings</string>
+    <string name="edit">Edit</string>
+    <string name="model_menu">Model actions</string>
+    <string name="model_selected">Model selected</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui.profile
+package com.hashapps.butkusapp.ui.model.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,9 @@ import com.hashapps.butkusapp.ui.settings.SettingsTopAppBar
 object ProfileEditDestination : NavigationDestination {
     override val route = "profile_edit"
     override val titleRes = R.string.edit_profile
+    const val modelIdArg = "modelId"
     const val profileIdArg = "profileId"
-    val routeWithArgs = "$route/{$profileIdArg}"
+    val routeWithArgs = "$route/{$modelIdArg}/{$profileIdArg}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,8 +33,6 @@ fun ProfileEditScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val models by viewModel.models.collectAsState()
-
     Scaffold(
         topBar = {
             SettingsTopAppBar(
@@ -46,7 +45,6 @@ fun ProfileEditScreen(
         ProfileEditBody(
             modifier = modifier.padding(innerPadding),
             profileUiState = viewModel.profileUiState,
-            models = models,
             onProfileValueChange = viewModel::updateUiState,
             onKeyGen = viewModel::genKey,
             onSaveClick = {
@@ -60,7 +58,6 @@ fun ProfileEditScreen(
 @Composable
 fun ProfileEditBody(
     profileUiState: ProfileUiState,
-    models: List<String>,
     onProfileValueChange: (ProfileUiState) -> Unit,
     onKeyGen: () -> Unit,
     onSaveClick: () -> Unit,
@@ -75,7 +72,6 @@ fun ProfileEditBody(
     ) {
         ProfileInputForm(
             profileUiState = profileUiState,
-            models = models,
             onValueChange = onProfileValueChange,
             onKeyGen = onKeyGen,
         )

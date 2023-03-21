@@ -1,14 +1,10 @@
 package com.hashapps.butkusapp.ui.model
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,9 +30,11 @@ object ManageModelsDestination : NavigationDestination {
 fun ManageModelsScreen(
     navigateUp: () -> Unit,
     navigateToModelAdd: () -> Unit,
+    navigateToManageProfiles: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val selectedModelId by viewModel.selectedModelId.collectAsState()
     val models by viewModel.models.collectAsState()
 
     Scaffold(
@@ -61,6 +59,8 @@ fun ManageModelsScreen(
         ManageModelsBody(
             modifier = modifier.padding(innerPadding),
             models = models,
+            selectedModelId = selectedModelId,
+            onManageProfiles = navigateToManageProfiles,
             onModelDelete = {
                 viewModel.deleteModel(it)
             }
@@ -71,7 +71,9 @@ fun ManageModelsScreen(
 @Composable
 fun ManageModelsBody(
     models: List<Model>,
-    onModelDelete: (Int) -> Unit,
+    selectedModelId: Int?,
+    onManageProfiles: (Int) -> Unit,
+    onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,7 +85,9 @@ fun ManageModelsBody(
     ) {
         ModelList(
             models = models,
-            onModelDelete = { onModelDelete(it.id) }
+            selectedModelId = selectedModelId,
+            onManageProfiles = onManageProfiles,
+            onModelDelete = onModelDelete,
         )
     }
 }
@@ -91,6 +95,8 @@ fun ManageModelsBody(
 @Composable
 fun ModelList(
     models: List<Model>,
+    selectedModelId: Int?,
+    onManageProfiles: (Int) -> Unit,
     onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -98,7 +104,8 @@ fun ModelList(
         items(items = models, key = { it.id }) {
             ButkusModel(
                 model = it,
-                canDelete = models.size > 1,
+                selectedModelId = selectedModelId,
+                onManageProfiles = onManageProfiles,
                 onModelDelete = onModelDelete,
             )
         }
@@ -109,7 +116,8 @@ fun ModelList(
 @Composable
 fun ButkusModel(
     model: Model,
-    canDelete: Boolean,
+    selectedModelId: Int?,
+    onManageProfiles: (Int) -> Unit,
     onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -118,18 +126,48 @@ fun ButkusModel(
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
+        var expanded by remember { mutableStateOf(false) }
+
         ListItem(
             headlineText = { Text(model.name) },
             supportingText = { Text(model.description) },
-            trailingContent = {
-                IconButton(
-                    enabled = canDelete,
-                    onClick = { deleteConfirmationRequired = true },
-                ) {
+            leadingContent = {
+                if (model.id == selectedModelId) {
                     Icon(
-                        imageVector = Icons.Filled.DeleteForever,
-                        contentDescription = stringResource(R.string.delete),
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = stringResource(R.string.model_selected),
                     )
+                }
+            },
+            trailingContent = {
+                Box(
+                    modifier.wrapContentSize(Alignment.TopStart),
+                ) {
+                    IconButton(
+                        onClick = { expanded = true },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreHoriz,
+                            contentDescription = stringResource(R.string.model_menu),
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.manage_profiles)) },
+                            onClick = { onManageProfiles(model.id) },
+                            leadingIcon = { Icon(imageVector = Icons.Filled.SwitchAccount, contentDescription = null) },
+                        )
+
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.delete)) },
+                            onClick = { deleteConfirmationRequired = true },
+                            leadingIcon = { Icon(imageVector = Icons.Filled.DeleteForever, contentDescription = null) },
+                            enabled = model.id != selectedModelId,
+                        )
+                    }
                 }
             },
         )

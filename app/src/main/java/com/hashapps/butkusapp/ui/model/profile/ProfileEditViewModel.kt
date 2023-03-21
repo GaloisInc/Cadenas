@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.ui.profile
+package com.hashapps.butkusapp.ui.model.profile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.data.model.ModelsRepository
-import com.hashapps.butkusapp.data.profile.ProfilesRepository
+import com.hashapps.butkusapp.data.model.profile.ProfilesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -20,27 +20,18 @@ class ProfileEditViewModel(
     private val profilesRepository: ProfilesRepository,
     private val modelsRepository: ModelsRepository,
 ) : ViewModel() {
+    private val modelId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.modelIdArg])
+    private val itemId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.profileIdArg])
+
     var profileUiState by mutableStateOf(ProfileUiState())
         private set
-
-    val models = modelsRepository.getAllModelNamesStream().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = listOf(),
-    )
-
-    private val itemId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.profileIdArg])
 
     init {
         viewModelScope.launch {
             val profile = profilesRepository.getProfileStream(itemId)
                 .filterNotNull()
                 .first()
-            val selectedModel = modelsRepository
-                .getModelNameStream(profile.selectedModel)
-                .filterNotNull()
-                .first()
-            profileUiState = profile.toProfileUiState(selectedModel, actionEnabled = true)
+            profileUiState = profile.toProfileUiState(actionEnabled = true)
         }
     }
 
@@ -51,11 +42,7 @@ class ProfileEditViewModel(
     fun updateProfile() {
         viewModelScope.launch {
             if (profileUiState.isValid()) {
-                val selectedModel = modelsRepository
-                    .getModelIdStream(profileUiState.selectedModel)
-                    .filterNotNull()
-                    .first()
-                profilesRepository.updateProfile(profileUiState.toProfile(selectedModel))
+                profilesRepository.updateProfile(profileUiState.toProfile(modelId))
             }
         }
     }

@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.hashapps.butkusapp.data.profile.ProfileDao
+import com.hashapps.butkusapp.data.model.profile.ProfileDao
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.IOException
@@ -52,10 +52,14 @@ class ButkusRepository(
     private var _butkusInitialized: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val butkusInitialized: StateFlow<Boolean> = _butkusInitialized.asStateFlow()
 
+    private var _selectedModel: MutableStateFlow<Int?> = MutableStateFlow(null)
+    val selectedModel: StateFlow<Int?> = _selectedModel.asStateFlow()
+
     init {
         externalScope.launch(ioDispatcher) {
             selectedProfile.filterNotNull().collectLatest {
                 val profile = profileDao.getProfile(it).first()
+                _selectedModel.update { profile.selectedModel }
                 // TODO: Use the profile info the initialize Butkus
                 Butkus.initialize(context)
                 if (Butkus.getInstance() != null) {

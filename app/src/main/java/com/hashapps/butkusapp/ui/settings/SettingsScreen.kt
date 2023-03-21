@@ -22,8 +22,7 @@ object SettingsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    navigateToProcessing: () -> Unit,
-    navigateToManageProfiles: () -> Unit,
+    navigateUp: () -> Unit,
     navigateToManageModels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -32,12 +31,11 @@ fun SettingsScreen(
             SettingsTopAppBar(
                 title = stringResource(SettingsDestination.titleRes),
                 canNavigateUp = true,
-                navigateUp = navigateToProcessing,
+                navigateUp = navigateUp,
             )
         }
     ) { innerPadding ->
         SettingsBody(
-            navigateToManageProfiles = navigateToManageProfiles,
             navigateToManageModels = navigateToManageModels,
             modifier = modifier.padding(innerPadding),
         )
@@ -47,7 +45,6 @@ fun SettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsBody(
-    navigateToManageProfiles: () -> Unit,
     navigateToManageModels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -58,28 +55,6 @@ fun SettingsBody(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            ListItem(
-                headlineText = { Text(stringResource(R.string.manage_profiles)) },
-                modifier = Modifier.clickable(onClick = navigateToManageProfiles),
-                supportingText = { Text(stringResource(R.string.manage_profiles_support)) },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Filled.SwitchAccount,
-                        contentDescription = null,
-                    )
-                },
-                trailingContent = {
-                    Icon(
-                        imageVector = Icons.Filled.NavigateNext,
-                        contentDescription = null,
-                    )
-                }
-            )
-        }
-
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
         ) {

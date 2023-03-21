@@ -7,9 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hashapps.butkusapp.ui.processing.ProcessingDestination
 import com.hashapps.butkusapp.ui.processing.ProcessingScreen
-import com.hashapps.butkusapp.ui.profile.ManageProfilesDestination
-import com.hashapps.butkusapp.ui.settings.SettingsDestination
-import com.hashapps.butkusapp.ui.settings.SettingsScreen
 
 @Composable
 fun ButkusRootNavHost(
@@ -26,7 +23,7 @@ fun ButkusRootNavHost(
         }
 
         composable(route = SettingsNavDestination.route) {
-            SettingsNavHost(navigateToProcessing = { navController.navigate(ProcessingDestination.route) })
+            SettingsNavHost(navigateUp = { navController.navigate(ProcessingDestination.route) })
         }
     }
 }

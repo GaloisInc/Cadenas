@@ -1,28 +1,25 @@
-package com.hashapps.butkusapp.ui.profile
+package com.hashapps.butkusapp.ui.model.profile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.butkusapp.data.model.ModelsRepository
-import com.hashapps.butkusapp.data.profile.ProfilesRepository
+import com.hashapps.butkusapp.data.model.profile.ProfilesRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.crypto.KeyGenerator
 
 class ProfileEntryViewModel(
+    savedStateHandle: SavedStateHandle,
     private val profilesRepository: ProfilesRepository,
-    private val modelsRepository: ModelsRepository,
 ) : ViewModel() {
+    private val modelId: Int = checkNotNull(savedStateHandle[ProfileEntryDestination.modelIdArg])
+
     var profileUiState by mutableStateOf(ProfileUiState())
         private set
-
-    val models = modelsRepository.getAllModelNamesStream().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = listOf(),
-    )
 
     fun updateUiState(newProfileUiState: ProfileUiState) {
         profileUiState = newProfileUiState.copy(actionEnabled = newProfileUiState.isValid())
@@ -31,11 +28,7 @@ class ProfileEntryViewModel(
     fun saveProfile() {
         viewModelScope.launch {
             if (profileUiState.isValid()) {
-                val selectedModel = modelsRepository
-                    .getModelIdStream(profileUiState.selectedModel)
-                    .filterNotNull()
-                    .first()
-                profilesRepository.insertProfile(profileUiState.toProfile(selectedModel))
+                profilesRepository.insertProfile(profileUiState.toProfile(modelId))
             }
         }
     }

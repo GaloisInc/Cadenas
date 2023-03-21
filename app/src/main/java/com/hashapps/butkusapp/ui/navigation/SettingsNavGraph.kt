@@ -13,7 +13,7 @@ import com.hashapps.butkusapp.ui.model.ManageModelsDestination
 import com.hashapps.butkusapp.ui.model.ManageModelsScreen
 import com.hashapps.butkusapp.ui.model.ModelAddDestination
 import com.hashapps.butkusapp.ui.model.ModelAddScreen
-import com.hashapps.butkusapp.ui.profile.*
+import com.hashapps.butkusapp.ui.model.profile.*
 import com.hashapps.butkusapp.ui.settings.SettingsDestination
 import com.hashapps.butkusapp.ui.settings.SettingsScreen
 
@@ -24,7 +24,7 @@ object SettingsNavDestination : NavigationDestination {
 
 @Composable
 fun SettingsNavHost(
-    navigateToProcessing: () -> Unit,
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -35,21 +35,45 @@ fun SettingsNavHost(
     ) {
         composable(route = SettingsDestination.route) {
             SettingsScreen(
-                navigateToProcessing = navigateToProcessing,
-                navigateToManageProfiles = { navController.navigate(ManageProfilesDestination.route) },
+                navigateUp = navigateUp,
                 navigateToManageModels = { navController.navigate(ManageModelsDestination.route) },
             )
         }
 
-        composable(route = ManageProfilesDestination.route) {
-            ManageProfilesScreen(
+        composable(route = ManageModelsDestination.route) {
+            ManageModelsScreen(
                 navigateUp = { navController.navigateUp() },
-                navigateToProfileEntry = { navController.navigate(ProfileEntryDestination.route) },
-                navigateToProfileEdit = { navController.navigate("${ProfileEditDestination.route}/$it") },
+                navigateToModelAdd = { navController.navigate(ModelAddDestination.route) },
+                navigateToManageProfiles = { navController.navigate("${ManageProfilesDestination.route}/$it") },
             )
         }
 
-        composable(route = ProfileEntryDestination.route) {
+        composable(route = ModelAddDestination.route) {
+            ModelAddScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateUp = { navController.navigateUp() },
+            )
+        }
+
+        composable(
+            route = ManageProfilesDestination.routeWithArgs,
+            arguments = listOf(navArgument(ManageProfilesDestination.modelIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            ManageProfilesScreen(
+                navigateUp = { navController.navigateUp() },
+                navigateToProfileEntry = { navController.navigate("${ProfileEntryDestination.route}/$it") },
+                navigateToProfileEdit = { model, profile -> navController.navigate("${ProfileEditDestination.route}/$model/$profile") },
+            )
+        }
+
+        composable(
+            route = ProfileEntryDestination.routeWithArgs,
+            arguments = listOf(navArgument(ProfileEntryDestination.modelIdArg) {
+                type = NavType.IntType
+            })
+        ) {
             ProfileEntryScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateUp = { navController.navigateUp() },
@@ -58,25 +82,13 @@ fun SettingsNavHost(
 
         composable(
             route = ProfileEditDestination.routeWithArgs,
-            arguments = listOf(navArgument(ProfileEditDestination.profileIdArg) {
+            arguments = listOf(navArgument(ProfileEditDestination.modelIdArg) {
+                type = NavType.IntType
+            }, navArgument(ProfileEditDestination.profileIdArg) {
                 type = NavType.IntType
             })
         ) {
             ProfileEditScreen(
-                navigateBack = { navController.popBackStack() },
-                navigateUp = { navController.navigateUp() },
-            )
-        }
-
-        composable(route = ManageModelsDestination.route) {
-            ManageModelsScreen(
-                navigateUp = { navController.navigateUp() },
-                navigateToModelAdd = { navController.navigate(ModelAddDestination.route) }
-            )
-        }
-
-        composable(route = ModelAddDestination.route) {
-            ModelAddScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateUp = { navController.navigateUp() },
             )

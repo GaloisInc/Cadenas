@@ -1,6 +1,6 @@
-package com.hashapps.butkusapp.ui.profile
+package com.hashapps.butkusapp.ui.model.profile
 
-import com.hashapps.butkusapp.data.profile.Profile
+import com.hashapps.butkusapp.data.model.profile.Profile
 
 data class ProfileUiState(
     val id: Int = 0,
@@ -8,7 +8,6 @@ data class ProfileUiState(
     val description: String = "",
     val key: String = "",
     val seed: String = "",
-    val selectedModel: String = "",
     val tag: String = "",
     val actionEnabled: Boolean = false,
 )
@@ -24,7 +23,6 @@ fun ProfileUiState.toProfile(selectedModel: Int): Profile = Profile(
 )
 
 fun Profile.toProfileUiState(
-    selectedModel: String,
     actionEnabled: Boolean = false
 ): ProfileUiState = ProfileUiState(
     id = id,
@@ -32,7 +30,6 @@ fun Profile.toProfileUiState(
     description = description,
     key = key,
     seed = seed,
-    selectedModel = selectedModel,
     tag = tag,
     actionEnabled = actionEnabled,
 )
@@ -41,6 +38,6 @@ private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
 fun ProfileUiState.isTagValid() = tag == "" || tagRegex.matches(tag)
 
 fun ProfileUiState.isValid() =
-    name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && seed.isNotBlank() && selectedModel.isNotBlank() && isTagValid()
+    name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && seed.isNotBlank() && isTagValid()
 
 
