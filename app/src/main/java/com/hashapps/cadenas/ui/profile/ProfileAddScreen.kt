@@ -33,11 +33,11 @@ object ProfileEntryDestination : NavigationDestination {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileEntryScreen(
+fun ProfileAddScreen(
     navigateBack: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProfileEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ProfileAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Scaffold(
         topBar = {
@@ -48,7 +48,7 @@ fun ProfileEntryScreen(
             )
         }
     ) { innerPadding ->
-        ProfileEntryBody(
+        ProfileAddBody(
             modifier = modifier.padding(innerPadding),
             profileUiState = viewModel.profileUiState,
             onProfileValueChange = viewModel::updateUiState,
@@ -62,7 +62,7 @@ fun ProfileEntryScreen(
 }
 
 @Composable
-fun ProfileEntryBody(
+fun ProfileAddBody(
     profileUiState: ProfileUiState,
     onProfileValueChange: (ProfileUiState) -> Unit,
     onKeyGen: () -> Unit,

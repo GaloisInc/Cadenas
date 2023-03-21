@@ -10,7 +10,7 @@ import com.hashapps.cadenas.data.profile.ProfilesRepository
 import kotlinx.coroutines.launch
 import javax.crypto.KeyGenerator
 
-class ProfileEntryViewModel(
+class ProfileAddViewModel(
     savedStateHandle: SavedStateHandle,
     private val profilesRepository: ProfilesRepository,
 ) : ViewModel() {

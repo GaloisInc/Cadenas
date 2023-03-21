@@ -10,7 +10,7 @@ import com.hashapps.cadenas.ui.model.ManageModelsViewModel
 import com.hashapps.cadenas.ui.model.ModelAddViewModel
 import com.hashapps.cadenas.ui.profile.ManageProfilesViewModel
 import com.hashapps.cadenas.ui.profile.ProfileEditViewModel
-import com.hashapps.cadenas.ui.profile.ProfileEntryViewModel
+import com.hashapps.cadenas.ui.profile.ProfileAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
 
 object AppViewModelProvider {
@@ -22,7 +22,7 @@ object AppViewModelProvider {
         }
 
         initializer {
-            ProfileEntryViewModel(
+            ProfileAddViewModel(
                 this.createSavedStateHandle(),
                 cadenasApplication().container.profilesRepository,
             )

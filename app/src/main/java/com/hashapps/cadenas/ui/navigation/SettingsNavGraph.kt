@@ -74,7 +74,7 @@ fun SettingsNavHost(
                 type = NavType.IntType
             })
         ) {
-            ProfileEntryScreen(
+            ProfileAddScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateUp = { navController.navigateUp() },
             )
