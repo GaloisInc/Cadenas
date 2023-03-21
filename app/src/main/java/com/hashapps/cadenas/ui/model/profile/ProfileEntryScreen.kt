@@ -191,48 +191,6 @@ fun ProfileInputForm(
             ),
         )
 
-//        key(models) {
-//            var expanded by remember { mutableStateOf(false) }
-//            ExposedDropdownMenuBox(
-//                expanded = expanded,
-//                onExpandedChange = {
-//                    if (models.isNotEmpty()) {
-//                        expanded = !expanded
-//                    }
-//                },
-//            ) {
-//                TextField(
-//                    modifier = modifier
-//                        .menuAnchor()
-//                        .padding(8.dp)
-//                        .fillMaxWidth(),
-//                    value = profileUiState.selectedModel,
-//                    onValueChange = { },
-//                    enabled = enabled,
-//                    readOnly = true,
-//                    label = { Text(stringResource(R.string.selected_model_label)) },
-//                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-//                    singleLine = true,
-//                )
-//
-//                ExposedDropdownMenu(
-//                    expanded = expanded,
-//                    onDismissRequest = { expanded = false },
-//                ) {
-//                    models.forEach {
-//                        DropdownMenuItem(
-//                            text = { Text(it) },
-//                            onClick = {
-//                                onValueChange(profileUiState.copy(selectedModel = it))
-//                                expanded = false
-//                            },
-//                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-//                        )
-//                    }
-//                }
-//            }
-//        }
-
         OutlinedTextField(
             modifier = modifier
                 .padding(8.dp)
