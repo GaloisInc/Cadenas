@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data.model.profile
+package com.hashapps.cadenas.data.profile
 
 class OfflineProfilesRepository(private val profileDao: ProfileDao) : ProfilesRepository {
     override fun getAllProfilesForModel(modelId: Int) = profileDao.getAllProfilesForModel(modelId)

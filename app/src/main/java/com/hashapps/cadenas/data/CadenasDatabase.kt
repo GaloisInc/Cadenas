@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.hashapps.cadenas.data.model.Model
 import com.hashapps.cadenas.data.model.ModelDao
-import com.hashapps.cadenas.data.model.profile.Profile
-import com.hashapps.cadenas.data.model.profile.ProfileDao
+import com.hashapps.cadenas.data.profile.Profile
+import com.hashapps.cadenas.data.profile.ProfileDao
 
 @Database(entities = [Profile::class, Model::class], version = 5, exportSchema = false)
 abstract class CadenasDatabase : RoomDatabase() {

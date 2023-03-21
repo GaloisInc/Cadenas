@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data.model.profile
+package com.hashapps.cadenas.data.profile
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

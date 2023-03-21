@@ -3,8 +3,8 @@ package com.hashapps.cadenas.data
 import android.content.Context
 import com.hashapps.cadenas.data.model.ModelsRepository
 import com.hashapps.cadenas.data.model.OfflineModelsRepository
-import com.hashapps.cadenas.data.model.profile.OfflineProfilesRepository
-import com.hashapps.cadenas.data.model.profile.ProfilesRepository
+import com.hashapps.cadenas.data.profile.OfflineProfilesRepository
+import com.hashapps.cadenas.data.profile.ProfilesRepository
 import kotlinx.coroutines.CoroutineScope
 
 interface AppContainer {

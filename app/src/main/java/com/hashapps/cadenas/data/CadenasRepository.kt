@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.hashapps.cadenas.data.model.profile.ProfileDao
+import com.hashapps.cadenas.data.profile.ProfileDao
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.IOException

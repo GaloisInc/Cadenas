@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.model.profile
+package com.hashapps.cadenas.ui.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

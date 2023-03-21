@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.model.profile
+package com.hashapps.cadenas.ui.profile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.model.profile.ProfilesRepository
+import com.hashapps.cadenas.data.profile.ProfilesRepository
 import kotlinx.coroutines.launch
 import javax.crypto.KeyGenerator
 

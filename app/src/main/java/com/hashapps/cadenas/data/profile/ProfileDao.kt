@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data.model.profile
+package com.hashapps.cadenas.data.profile
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

@@ -8,9 +8,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hashapps.cadenas.CadenasApplication
 import com.hashapps.cadenas.ui.model.ManageModelsViewModel
 import com.hashapps.cadenas.ui.model.ModelAddViewModel
-import com.hashapps.cadenas.ui.model.profile.ManageProfilesViewModel
-import com.hashapps.cadenas.ui.model.profile.ProfileEditViewModel
-import com.hashapps.cadenas.ui.model.profile.ProfileEntryViewModel
+import com.hashapps.cadenas.ui.profile.ManageProfilesViewModel
+import com.hashapps.cadenas.ui.profile.ProfileEditViewModel
+import com.hashapps.cadenas.ui.profile.ProfileEntryViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
 
 object AppViewModelProvider {
