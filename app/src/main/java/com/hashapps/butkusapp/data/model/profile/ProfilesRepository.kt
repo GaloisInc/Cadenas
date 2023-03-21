@@ -1,14 +1,11 @@
-package com.hashapps.butkusapp.data.profile
+package com.hashapps.butkusapp.data.model.profile
 
 import kotlinx.coroutines.flow.Flow
 
 interface ProfilesRepository {
     fun getAllProfilesForModel(modelId: Int): Flow<List<Profile>>
-    fun getAllProfilesStream(): Flow<List<Profile>>
 
     fun getProfileStream(id: Int): Flow<Profile>
-
-    fun getModelForProfileStream(id: Int): Flow<Int>
 
     suspend fun insertProfile(profile: Profile)
 

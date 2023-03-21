@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.hashapps.butkusapp.data.model.Model
 import com.hashapps.butkusapp.data.model.ModelDao
-import com.hashapps.butkusapp.data.profile.Profile
-import com.hashapps.butkusapp.data.profile.ProfileDao
+import com.hashapps.butkusapp.data.model.profile.Profile
+import com.hashapps.butkusapp.data.model.profile.ProfileDao
 
 @Database(entities = [Profile::class, Model::class], version = 5, exportSchema = false)
 abstract class ButkusDatabase : RoomDatabase() {

@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.data.profile
+package com.hashapps.butkusapp.data.model.profile
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

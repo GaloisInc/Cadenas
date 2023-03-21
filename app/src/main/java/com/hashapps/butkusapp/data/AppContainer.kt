@@ -3,8 +3,8 @@ package com.hashapps.butkusapp.data
 import android.content.Context
 import com.hashapps.butkusapp.data.model.ModelsRepository
 import com.hashapps.butkusapp.data.model.OfflineModelsRepository
-import com.hashapps.butkusapp.data.profile.OfflineProfilesRepository
-import com.hashapps.butkusapp.data.profile.ProfilesRepository
+import com.hashapps.butkusapp.data.model.profile.OfflineProfilesRepository
+import com.hashapps.butkusapp.data.model.profile.ProfilesRepository
 import kotlinx.coroutines.CoroutineScope
 
 interface AppContainer {

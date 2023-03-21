@@ -1,4 +1,4 @@
-package com.hashapps.butkusapp.data.profile
+package com.hashapps.butkusapp.data.model.profile
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
@@ -19,10 +19,4 @@ interface ProfileDao {
 
     @Query("SELECT * FROM profiles WHERE id = :id")
     fun getProfile(id: Int): Flow<Profile>
-
-    @Query("SELECT model_id FROM profiles WHERE id = :id")
-    fun getModelForProfile(id: Int): Flow<Int>
-
-    @Query("SELECT * FROM profiles ORDER BY name ASC")
-    fun getAllProfiles(): Flow<List<Profile>>
 }
