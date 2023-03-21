@@ -41,7 +41,7 @@ buildscript {
 
 
 
-rootProject.name = "ButkusApp"
+rootProject.name = "Cadenas"
 
 include ':app'
 include ':butkuscore'
