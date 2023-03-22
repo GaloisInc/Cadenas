@@ -6,13 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.profile.ProfilesRepository
+import com.hashapps.cadenas.data.ConfigRepository
 import kotlinx.coroutines.launch
 import javax.crypto.KeyGenerator
 
 class ProfileAddViewModel(
     savedStateHandle: SavedStateHandle,
-    private val profilesRepository: ProfilesRepository,
+    private val configRepository: ConfigRepository,
 ) : ViewModel() {
     private val modelId: Int = checkNotNull(savedStateHandle[ProfileEntryDestination.modelIdArg])
 
@@ -26,7 +26,7 @@ class ProfileAddViewModel(
     fun saveProfile() {
         viewModelScope.launch {
             if (profileUiState.isValid()) {
-                profilesRepository.insertProfile(profileUiState.toProfile(modelId))
+                configRepository.insertProfile(profileUiState.toProfile(modelId))
             }
         }
     }

@@ -5,11 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.model.ModelsRepository
+import com.hashapps.cadenas.data.ConfigRepository
 import kotlinx.coroutines.launch
 
 class ModelAddViewModel(
-    private val modelsRepository: ModelsRepository,
+    private val configRepository: ConfigRepository,
 ) : ViewModel() {
     var modelUiState: ModelUiState by mutableStateOf(ModelUiState())
         private set
@@ -23,7 +23,7 @@ class ModelAddViewModel(
     fun saveModel() {
         viewModelScope.launch {
             if (modelUiState.isValid()) {
-                modelsRepository.insertModel(modelUiState.toModel())
+                configRepository.insertModel(modelUiState.toModel())
             }
         }
     }

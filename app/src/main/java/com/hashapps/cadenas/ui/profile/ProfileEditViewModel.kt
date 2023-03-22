@@ -6,8 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.model.ModelsRepository
-import com.hashapps.cadenas.data.profile.ProfilesRepository
+import com.hashapps.cadenas.data.ConfigRepository
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -15,8 +14,7 @@ import javax.crypto.KeyGenerator
 
 class ProfileEditViewModel(
     savedStateHandle: SavedStateHandle,
-    private val profilesRepository: ProfilesRepository,
-    private val modelsRepository: ModelsRepository,
+    private val configRepository: ConfigRepository,
 ) : ViewModel() {
     private val modelId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.modelIdArg])
     private val itemId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.profileIdArg])
@@ -26,7 +24,7 @@ class ProfileEditViewModel(
 
     init {
         viewModelScope.launch {
-            val profile = profilesRepository.getProfileStream(itemId)
+            val profile = configRepository.getProfileStream(itemId)
                 .filterNotNull()
                 .first()
             profileUiState = profile.toProfileUiState(actionEnabled = true)
@@ -40,7 +38,7 @@ class ProfileEditViewModel(
     fun updateProfile() {
         viewModelScope.launch {
             if (profileUiState.isValid()) {
-                profilesRepository.updateProfile(profileUiState.toProfile(modelId))
+                configRepository.updateProfile(profileUiState.toProfile(modelId))
             }
         }
     }

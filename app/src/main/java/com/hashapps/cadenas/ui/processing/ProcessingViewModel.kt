@@ -7,13 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.Cadenas
 import com.hashapps.cadenas.data.SettingsRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProcessingViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    settingsRepository: SettingsRepository,
 ) : ViewModel() {
     val cadenasInitialized = settingsRepository.cadenasInitialized
 
