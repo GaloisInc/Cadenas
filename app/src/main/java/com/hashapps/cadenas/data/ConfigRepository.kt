@@ -6,7 +6,7 @@ import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfileDao
 import javax.crypto.KeyGenerator
 
-class ConfigRepository (
+class ConfigRepository(
     private val modelDao: ModelDao,
     private val profileDao: ProfileDao,
 ) {

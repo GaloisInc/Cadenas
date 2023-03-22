@@ -47,7 +47,10 @@ fun ManageProfilesScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = LocalContext.current.getString(ManageProfilesDestination.titleRes, modelName),
+                title = LocalContext.current.getString(
+                    ManageProfilesDestination.titleRes,
+                    modelName
+                ),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
             )

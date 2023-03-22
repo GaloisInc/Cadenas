@@ -4,7 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 
 interface AppContainer {
-    val configRepository : ConfigRepository
+    val configRepository: ConfigRepository
     val settingsRepository: SettingsRepository
 }
 
