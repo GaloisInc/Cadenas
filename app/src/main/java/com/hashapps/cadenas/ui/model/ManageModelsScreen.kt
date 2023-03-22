@@ -156,7 +156,7 @@ fun CadenasModel(
                         onDismissRequest = { expanded = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(R.string.manage_profiles)) },
+                            text = { Text(stringResource(R.string.profiles)) },
                             onClick = { onManageProfiles(model.id) },
                             leadingIcon = {
                                 Icon(

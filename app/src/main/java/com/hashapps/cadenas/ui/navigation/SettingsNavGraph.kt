@@ -63,14 +63,14 @@ fun SettingsNavHost(
         ) {
             ManageProfilesScreen(
                 navigateUp = { navController.navigateUp() },
-                navigateToProfileEntry = { navController.navigate("${ProfileEntryDestination.route}/$it") },
+                navigateToProfileEntry = { navController.navigate("${ProfileAddDestination.route}/$it") },
                 navigateToProfileEdit = { model, profile -> navController.navigate("${ProfileEditDestination.route}/$model/$profile") },
             )
         }
 
         composable(
-            route = ProfileEntryDestination.routeWithArgs,
-            arguments = listOf(navArgument(ProfileEntryDestination.modelIdArg) {
+            route = ProfileAddDestination.routeWithArgs,
+            arguments = listOf(navArgument(ProfileAddDestination.modelIdArg) {
                 type = NavType.IntType
             })
         ) {

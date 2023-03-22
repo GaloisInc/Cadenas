@@ -27,8 +27,8 @@
     <string name="profile_name_label">Profile Name</string>
     <string name="profile_name_support">Give this profile a name</string>
     <string name="selected_model_label">Model</string>
-    <string name="profile_entry">Add Profile</string>
-    <string name="manage_profiles">Profiles</string>
+    <string name="profile_entry">%1s - Add Profile</string>
+    <string name="manage_profiles">%1s - Profiles</string>
     <string name="back">Back</string>
     <string name="add_item">Add item</string>
     <string name="edit_item">Edit item</string>
@@ -38,7 +38,7 @@
     <string name="clear">Clear item</string>
     <string name="profile_description_label">Profile Description</string>
     <string name="profile_description_support">And a brief description</string>
-    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_profile">%1s - Edit Profile</string>
     <string name="attention">Warning</string>
     <string name="delete_profile_question">Are you sure? This cannot be undone!</string>
     <string name="no">No</string>
@@ -54,4 +54,5 @@
     <string name="edit">Edit</string>
     <string name="model_menu">Model actions</string>
     <string name="model_selected">Model selected</string>
+    <string name="profiles">Profiles</string>
 </resources>

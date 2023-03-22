@@ -7,6 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ConfigRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.crypto.KeyGenerator
 
@@ -14,7 +16,12 @@ class ProfileAddViewModel(
     savedStateHandle: SavedStateHandle,
     private val configRepository: ConfigRepository,
 ) : ViewModel() {
-    private val modelId: Int = checkNotNull(savedStateHandle[ProfileEntryDestination.modelIdArg])
+    private val modelId: Int = checkNotNull(savedStateHandle[ProfileAddDestination.modelIdArg])
+    val modelName = configRepository.getModelNameStream(modelId).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = "",
+    )
 
     var profileUiState by mutableStateOf(ProfileUiState())
         private set

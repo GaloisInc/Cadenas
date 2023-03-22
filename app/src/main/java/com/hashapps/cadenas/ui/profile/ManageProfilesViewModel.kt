@@ -16,6 +16,11 @@ class ManageProfilesViewModel(
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
     val modelId: Int = checkNotNull(savedStateHandle[ManageProfilesDestination.modelIdArg])
+    val modelName = configRepository.getModelNameStream(modelId).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = "",
+    )
 
     val selectedProfileId = settingsRepository.selectedProfile.stateIn(
         scope = viewModelScope,

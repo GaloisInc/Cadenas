@@ -24,7 +24,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 private const val MAX_LEN = 128
 
-object ProfileEntryDestination : NavigationDestination {
+object ProfileAddDestination : NavigationDestination {
     override val route = "profile_entry"
     override val titleRes = R.string.profile_entry
     const val modelIdArg = "modelId"
@@ -39,10 +39,12 @@ fun ProfileAddScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val modelName by viewModel.modelName.collectAsState()
+
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(ProfileEntryDestination.titleRes),
+                title = LocalContext.current.getString(ProfileAddDestination.titleRes, modelName),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
             )

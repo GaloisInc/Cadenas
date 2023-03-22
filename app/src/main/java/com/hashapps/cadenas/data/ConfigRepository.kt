@@ -11,6 +11,7 @@ class ConfigRepository (
 ) {
     suspend fun insertModel(model: Model) = modelDao.insert(model)
     suspend fun deleteModel(model: Model) = modelDao.delete(model)
+    fun getModelNameStream(id: Int) = modelDao.getModelName(id)
     fun getAllModelsStream() = modelDao.getAllModels()
 
     suspend fun insertProfile(profile: Profile) = profileDao.insert(profile)

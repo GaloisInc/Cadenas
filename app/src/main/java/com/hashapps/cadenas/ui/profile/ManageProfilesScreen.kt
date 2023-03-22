@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,13 +40,14 @@ fun ManageProfilesScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageProfilesViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val modelName by viewModel.modelName.collectAsState()
     val selectedProfileId by viewModel.selectedProfileId.collectAsState()
     val profiles by viewModel.profiles.collectAsState()
 
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(ManageProfilesDestination.titleRes),
+                title = LocalContext.current.getString(ManageProfilesDestination.titleRes, modelName),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
             )
