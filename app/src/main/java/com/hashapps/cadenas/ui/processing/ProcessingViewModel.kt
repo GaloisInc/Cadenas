@@ -5,13 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.CadenasRepository
+import com.hashapps.cadenas.data.Cadenas
+import com.hashapps.cadenas.data.SettingsRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProcessingViewModel(
-    private val cadenasRepository: CadenasRepository,
+    private val settingsRepository: SettingsRepository,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ViewModel() {
-    val cadenasInitialized = cadenasRepository.cadenasInitialized
+    val cadenasInitialized = settingsRepository.cadenasInitialized
 
     var encodeUiState by mutableStateOf(ProcessingUiState())
         private set
@@ -30,7 +34,7 @@ class ProcessingViewModel(
     fun encodeMessage() {
         viewModelScope.launch {
             encodeUiState = encodeUiState.copy(inProgress = true, result = null)
-            val encodedMessage = cadenasRepository.encode(encodeUiState.toProcess)
+            val encodedMessage = Cadenas.getInstance()?.encode(encodeUiState.toProcess)
             encodeUiState = encodeUiState.copy(inProgress = false, result = encodedMessage)
         }
     }
@@ -38,7 +42,7 @@ class ProcessingViewModel(
     fun decodeMessage() {
         viewModelScope.launch {
             decodeUiState = decodeUiState.copy(inProgress = true, result = null)
-            val decodedMessage = cadenasRepository.decode(decodeUiState.toProcess)
+            val decodedMessage = Cadenas.getInstance()?.decode(decodeUiState.toProcess)
             decodeUiState = decodeUiState.copy(inProgress = false, result = decodedMessage)
         }
     }

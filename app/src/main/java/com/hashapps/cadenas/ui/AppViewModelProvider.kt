@@ -17,7 +17,7 @@ object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             ProcessingViewModel(
-                cadenasApplication().container.cadenasRepository,
+                cadenasApplication().container.settingsRepository,
             )
         }
 
@@ -39,7 +39,7 @@ object AppViewModelProvider {
         initializer {
             ManageModelsViewModel(
                 cadenasApplication().container.modelsRepository,
-                cadenasApplication().container.cadenasRepository,
+                cadenasApplication().container.settingsRepository,
             )
         }
 
@@ -53,7 +53,7 @@ object AppViewModelProvider {
             ManageProfilesViewModel(
                 this.createSavedStateHandle(),
                 cadenasApplication().container.profilesRepository,
-                cadenasApplication().container.cadenasRepository,
+                cadenasApplication().container.settingsRepository,
             )
         }
     }

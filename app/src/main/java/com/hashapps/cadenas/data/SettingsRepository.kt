@@ -18,11 +18,10 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = CADENAS_SETTINGS_NAME
 )
 
-class CadenasRepository(
+class SettingsRepository(
     private val context: Context,
     private val profileDao: ProfileDao,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     externalScope: CoroutineScope,
 ) {
     private companion object {
@@ -66,18 +65,6 @@ class CadenasRepository(
                     _cadenasInitialized.update { true }
                 }
             }
-        }
-    }
-
-    suspend fun encode(plaintext: String): String? = coroutineScope {
-        withContext(defaultDispatcher) {
-            Cadenas.getInstance()?.encode(plaintext)
-        }
-    }
-
-    suspend fun decode(encodedMessage: String): String? = coroutineScope {
-        withContext(defaultDispatcher) {
-            Cadenas.getInstance()?.decode(encodedMessage)
         }
     }
 }

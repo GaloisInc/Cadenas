@@ -3,7 +3,7 @@ package com.hashapps.cadenas.ui.profile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.CadenasRepository
+import com.hashapps.cadenas.data.SettingsRepository
 import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfilesRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,11 +13,11 @@ import kotlinx.coroutines.launch
 class ManageProfilesViewModel(
     savedStateHandle: SavedStateHandle,
     private val profilesRepository: ProfilesRepository,
-    private val cadenasRepository: CadenasRepository,
+    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
     val modelId: Int = checkNotNull(savedStateHandle[ManageProfilesDestination.modelIdArg])
 
-    val selectedProfileId = cadenasRepository.selectedProfile.stateIn(
+    val selectedProfileId = settingsRepository.selectedProfile.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = null,
@@ -25,7 +25,7 @@ class ManageProfilesViewModel(
 
     fun selectProfile(id: Int) {
         viewModelScope.launch {
-            cadenasRepository.saveSelectedProfile(id)
+            settingsRepository.saveSelectedProfile(id)
         }
     }
 

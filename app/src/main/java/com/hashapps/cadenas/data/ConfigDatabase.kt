@@ -10,18 +10,18 @@ import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfileDao
 
 @Database(entities = [Profile::class, Model::class], version = 5, exportSchema = false)
-abstract class CadenasDatabase : RoomDatabase() {
+abstract class ConfigDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
 
     abstract fun modelDao(): ModelDao
 
     companion object {
         @Volatile
-        private var Instance: CadenasDatabase? = null
+        private var Instance: ConfigDatabase? = null
 
-        fun getDatabase(context: Context): CadenasDatabase {
+        fun getDatabase(context: Context): ConfigDatabase {
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, CadenasDatabase::class.java, "cadenas_database")
+                Room.databaseBuilder(context, ConfigDatabase::class.java, "cadenas_database")
                     .build()
                     .also { Instance = it }
             }

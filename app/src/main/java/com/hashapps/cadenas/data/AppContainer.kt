@@ -12,7 +12,7 @@ interface AppContainer {
 
     val modelsRepository: ModelsRepository
 
-    val cadenasRepository: CadenasRepository
+    val settingsRepository: SettingsRepository
 }
 
 class AppDataContainer(
@@ -20,17 +20,17 @@ class AppDataContainer(
     private val context: Context
 ) : AppContainer {
     override val profilesRepository by lazy {
-        OfflineProfilesRepository(CadenasDatabase.getDatabase(context).profileDao())
+        OfflineProfilesRepository(ConfigDatabase.getDatabase(context).profileDao())
     }
 
     override val modelsRepository by lazy {
-        OfflineModelsRepository(CadenasDatabase.getDatabase(context).modelDao())
+        OfflineModelsRepository(ConfigDatabase.getDatabase(context).modelDao())
     }
 
-    override val cadenasRepository by lazy {
-        CadenasRepository(
+    override val settingsRepository by lazy {
+        SettingsRepository(
             context = context,
-            profileDao = CadenasDatabase.getDatabase(context).profileDao(),
+            profileDao = ConfigDatabase.getDatabase(context).profileDao(),
             externalScope = applicationScope,
         )
     }
