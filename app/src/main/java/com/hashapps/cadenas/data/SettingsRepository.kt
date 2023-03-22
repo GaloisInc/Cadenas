@@ -24,8 +24,8 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 class SettingsRepository(
     private val context: Context,
     private val profileDao: ProfileDao,
-    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     externalScope: CoroutineScope,
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private companion object {
         val SELECTED_PROFILE = intPreferencesKey("selected_profile")
