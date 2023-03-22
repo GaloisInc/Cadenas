@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.crypto.KeyGenerator
 
 class ProfileEditViewModel(
     savedStateHandle: SavedStateHandle,
@@ -51,12 +50,7 @@ class ProfileEditViewModel(
         }
     }
 
-    private companion object {
-        val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
-    }
-
-    private fun ByteArray.toHex(): String = joinToString(separator = "") { "%02x".format(it) }
     fun genKey() {
-        profileUiState = profileUiState.copy(key = KEYGEN.generateKey().encoded.toHex())
+        profileUiState = profileUiState.copy(key = configRepository.genKey())
     }
 }

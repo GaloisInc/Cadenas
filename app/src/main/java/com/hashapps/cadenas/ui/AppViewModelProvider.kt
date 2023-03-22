@@ -9,10 +9,10 @@ import com.hashapps.cadenas.CadenasApplication
 import com.hashapps.cadenas.ui.model.ManageModelsViewModel
 import com.hashapps.cadenas.ui.model.ModelAddViewModel
 import com.hashapps.cadenas.ui.model.ModelEditViewModel
-import com.hashapps.cadenas.ui.profile.ManageProfilesViewModel
-import com.hashapps.cadenas.ui.profile.ProfileEditViewModel
-import com.hashapps.cadenas.ui.profile.ProfileAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
+import com.hashapps.cadenas.ui.profile.ManageProfilesViewModel
+import com.hashapps.cadenas.ui.profile.ProfileAddViewModel
+import com.hashapps.cadenas.ui.profile.ProfileEditViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {

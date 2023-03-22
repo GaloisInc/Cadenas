@@ -10,7 +10,6 @@ import com.hashapps.cadenas.data.ConfigRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.crypto.KeyGenerator
 
 class ProfileAddViewModel(
     savedStateHandle: SavedStateHandle,
@@ -38,12 +37,7 @@ class ProfileAddViewModel(
         }
     }
 
-    private companion object {
-        val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
-    }
-
-    private fun ByteArray.toHex(): String = joinToString(separator = "") { "%02x".format(it) }
     fun genKey() {
-        profileUiState = profileUiState.copy(key = KEYGEN.generateKey().encoded.toHex())
+        profileUiState = profileUiState.copy(key = configRepository.genKey())
     }
 }
