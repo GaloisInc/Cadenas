@@ -2,6 +2,7 @@ package com.hashapps.cadenas.data
 
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.galois.rocky.butkus.mbfte.Context
 import org.galois.rocky.butkus.mbfte.ModelLoader
@@ -73,23 +74,31 @@ class Cadenas(private val configFile: String) {
         _cover = makeCover()
     }
 
-    fun encode(text: String): String? {
-        val cover = makeCover()
-        val coverText = cover.encodeUntilDecodable(text)
-        return coverText?.apply {
-            decodeCache.add(this, text)
+    suspend fun encode(text: String): String? {
+        return coroutineScope {
+            withContext(Dispatchers.Default) {
+                val cover = makeCover()
+                val coverText = cover.encodeUntilDecodable(text)
+                coverText?.apply {
+                    decodeCache.add(this, text)
+                }
+            }
         }
     }
 
     //NOTE: We expect a string after stripping off superfluous tags (if any) here
-    fun decode(msg: String): String? {
+    suspend fun decode(msg: String): String? {
         decodeCache.get(msg)?.let { return it }
 
-        val cover = makeCover()
-        val text = cover.decode(msg)
+        return coroutineScope {
+            withContext(Dispatchers.Default) {
+                val cover = makeCover()
+                val text = cover.decode(msg)
 
-        return text?.apply {
-            decodeCache.add(msg, text)
+                text?.apply {
+                    decodeCache.add(msg, text)
+                }
+            }
         }
     }
 
