@@ -9,10 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.model.ManageModelsDestination
-import com.hashapps.cadenas.ui.model.ManageModelsScreen
-import com.hashapps.cadenas.ui.model.ModelAddDestination
-import com.hashapps.cadenas.ui.model.ModelAddScreen
+import com.hashapps.cadenas.ui.model.*
 import com.hashapps.cadenas.ui.profile.*
 import com.hashapps.cadenas.ui.settings.SettingsDestination
 import com.hashapps.cadenas.ui.settings.SettingsScreen
@@ -45,11 +42,24 @@ fun SettingsNavHost(
                 navigateUp = { navController.navigateUp() },
                 navigateToModelAdd = { navController.navigate(ModelAddDestination.route) },
                 navigateToManageProfiles = { navController.navigate("${ManageProfilesDestination.route}/$it") },
+                navigateToModelEdit = { navController.navigate("${ModelEditDestination.route}/$it") },
             )
         }
 
         composable(route = ModelAddDestination.route) {
             ModelAddScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateUp = { navController.navigateUp() },
+            )
+        }
+
+        composable(
+            route = ModelEditDestination.routeWithArgs,
+            arguments = listOf(navArgument(ModelEditDestination.modelIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            ModelEditScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateUp = { navController.navigateUp() },
             )

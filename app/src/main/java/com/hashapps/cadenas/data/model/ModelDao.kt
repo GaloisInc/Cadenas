@@ -8,8 +8,14 @@ interface ModelDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(model: Model)
 
+    @Update
+    suspend fun update(model: Model)
+
     @Delete
     suspend fun delete(model: Model)
+
+    @Query("SELECT * FROM models WHERE id = :id")
+    fun getModel(id: Int): Flow<Model>
 
     @Query("SELECT name FROM models WHERE id = :id")
     fun getModelName(id: Int): Flow<String>

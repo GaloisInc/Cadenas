@@ -55,4 +55,5 @@
     <string name="model_menu">Model actions</string>
     <string name="model_selected">Model selected</string>
     <string name="profiles">Profiles</string>
+    <string name="edit_model">Edit Model</string>
 </resources>

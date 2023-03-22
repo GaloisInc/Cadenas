@@ -50,7 +50,7 @@ fun ModelAddScreen(
             modifier = modifier.padding(innerPadding),
             modelUiState = viewModel.modelUiState,
             onModelValueChange = viewModel::updateUiState,
-            onSaveClick = {
+            onDownloadClick = {
                 viewModel.saveModel()
                 navigateBack()
             },
@@ -63,7 +63,7 @@ fun ModelAddBody(
     modifier: Modifier,
     modelUiState: ModelUiState,
     onModelValueChange: (ModelUiState) -> Unit,
-    onSaveClick: () -> Unit,
+    onDownloadClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -78,7 +78,7 @@ fun ModelAddBody(
         )
 
         Button(
-            onClick = onSaveClick,
+            onClick = onDownloadClick,
             modifier = Modifier.fillMaxWidth(),
             enabled = modelUiState.actionEnabled,
         ) {
@@ -96,7 +96,7 @@ fun ModelInputForm(
     modelUiState: ModelUiState,
     modifier: Modifier = Modifier,
     onValueChange: (ModelUiState) -> Unit = {},
-    enabled: Boolean = true,
+    urlEnabled: Boolean = true,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -107,7 +107,6 @@ fun ModelInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            enabled = enabled,
             value = modelUiState.name,
             onValueChange = { onValueChange(modelUiState.copy(name = it)) },
             singleLine = true,
@@ -122,7 +121,6 @@ fun ModelInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            enabled = enabled,
             value = modelUiState.description,
             onValueChange = { onValueChange(modelUiState.copy(description = it)) },
             singleLine = true,
@@ -137,7 +135,7 @@ fun ModelInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            enabled = enabled,
+            enabled = urlEnabled,
             value = modelUiState.url,
             onValueChange = { onValueChange(modelUiState.copy(url = it.take(MAX_LEN))) },
             singleLine = true,
