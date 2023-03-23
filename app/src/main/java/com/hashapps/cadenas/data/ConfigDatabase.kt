@@ -11,9 +11,9 @@ import com.hashapps.cadenas.data.profile.ProfileDao
 
 @Database(entities = [Profile::class, Model::class], version = 5, exportSchema = false)
 abstract class ConfigDatabase : RoomDatabase() {
-    abstract fun profileDao(): ProfileDao
-
     abstract fun modelDao(): ModelDao
+    abstract fun profileDao(): ProfileDao
+    abstract fun configDao() : ConfigDao
 
     companion object {
         @Volatile
