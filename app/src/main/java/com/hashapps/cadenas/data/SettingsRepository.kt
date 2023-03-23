@@ -8,13 +8,14 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.hashapps.cadenas.data.profile.ProfileDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
+import kotlin.io.path.Path
+import kotlin.io.path.pathString
 
 private const val CADENAS_SETTINGS_NAME = "cadenas_settings"
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
@@ -23,7 +24,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 
 class SettingsRepository(
     private val context: Context,
-    private val profileDao: ProfileDao,
+    private val configDao: ConfigDao,
     externalScope: CoroutineScope,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -60,12 +61,20 @@ class SettingsRepository(
     init {
         externalScope.launch(ioDispatcher) {
             selectedProfile.filterNotNull().collectLatest {
-                val profile = profileDao.getProfile(it).first()
-                _selectedModel.update { profile.selectedModel }
-                // TODO: Use the profile info the initialize Cadenas
-                Cadenas.initialize(context)
-                if (Cadenas.getInstance() != null) {
-                    _cadenasInitialized.update { true }
+                configDao.getConfig(it).collectLatest { savedConfig ->
+                    _selectedModel.update { savedConfig.modelId }
+
+                    val config = CadenasConfig(
+                        modelDir = Path(context.filesDir.absolutePath, savedConfig.modelDir).pathString,
+                        key = savedConfig.key,
+                        seed = savedConfig.seed,
+                    )
+
+                    Cadenas.initialize(config)
+
+                    if (Cadenas.getInstance() != null) {
+                        _cadenasInitialized.update { true }
+                    }
                 }
             }
         }

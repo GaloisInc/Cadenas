@@ -22,7 +22,7 @@ class AppDataContainer(
     override val settingsRepository by lazy {
         SettingsRepository(
             context = context,
-            profileDao = ConfigDatabase.getDatabase(context).profileDao(),
+            configDao = ConfigDatabase.getDatabase(context).configDao(),
             externalScope = applicationScope,
         )
     }
