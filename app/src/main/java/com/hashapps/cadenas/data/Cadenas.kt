@@ -1,15 +1,10 @@
 package com.hashapps.cadenas.data
 
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.galois.rocky.butkus.mbfte.Context
-import org.galois.rocky.butkus.mbfte.ModelLoader
 import org.galois.rocky.butkus.mbfte.TextCover
-import java.io.File
-import kotlin.io.path.Path
-import kotlin.io.path.pathString
 
 class DecodeCache {
 
@@ -55,56 +50,23 @@ class DecodeCache {
 }
 
 data class CadenasConfig(
-    val modelDir: String = "", //TODO: We want to use a directory, but this requires change in butkuscoremodels
-    val key: String = "SecretKey",
-    val seed: String = "Little Lilly was so upset after the loss of Pluto, her beloved pet dog. She was missing him so much, and in grief, she did not even come for the dinner and went to sleep without eating.<|endoftext|>",
+    val modelDir: String,
+    val key: String,
+    val seed: String,
     val temperature: Float = 1.0f,
     val topK: Int = 100,
     val topP: Float = 0.0f,
     val indexMax: Int = 5
 )
 
-class Cadenas(private val configFile: String) {
+class Cadenas(config: CadenasConfig) {
 
-    private var _cover: TextCover
+    private var cover: TextCover
 
     private var decodeCache: DecodeCache = DecodeCache()
 
     init {
-        _cover = makeCover()
-    }
-
-    suspend fun encode(text: String): String? {
-        return coroutineScope {
-            withContext(Dispatchers.Default) {
-                val cover = makeCover()
-                val coverText = cover.encodeUntilDecodable(text)
-                coverText?.apply {
-                    decodeCache.add(this, text)
-                }
-            }
-        }
-    }
-
-    //NOTE: We expect a string after stripping off superfluous tags (if any) here
-    suspend fun decode(msg: String): String? {
-        decodeCache.get(msg)?.let { return it }
-
-        return coroutineScope {
-            withContext(Dispatchers.Default) {
-                val cover = makeCover()
-                val text = cover.decode(msg)
-
-                text?.apply {
-                    decodeCache.add(msg, text)
-                }
-            }
-        }
-    }
-
-    private fun makeCover(): TextCover {
-        val config = fetchCadenasConfig()
-        return TextCover(
+        cover = TextCover(
             context = Context(),
             dataDirectory = config.modelDir,
             key = config.key,
@@ -116,49 +78,37 @@ class Cadenas(private val configFile: String) {
         )
     }
 
-    private fun fetchCadenasConfig(): CadenasConfig {
-        val file = File(configFile)
-        if (file.exists()) {
-            val text = file.readText()
-
-            try {
-                val json = Gson().fromJson(text, CadenasConfig::class.java)
-                if (json != null)
-                    return json
-            } catch (ex: Exception) {
-                ex.printStackTrace()
+    suspend fun encode(text: String): String? {
+        return coroutineScope {
+            withContext(Dispatchers.Default) {
+                cover.encodeUntilDecodable(text)?.apply {
+                    decodeCache.add(this, text)
+                }
             }
+        }
+    }
 
-            // If we got here, our parse failed !
-            print("Unable to parse config file! Using defaults")
-            return CadenasConfig()
+    suspend fun decode(msg: String): String? {
+        decodeCache.get(msg)?.let { return it }
 
-        } else {
-            val config = CadenasConfig()
-            val text = Gson().toJson(config)
-            file.writeText(text)
-            return config
+        return coroutineScope {
+            withContext(Dispatchers.Default) {
+                cover.decode(msg)?.apply {
+                    decodeCache.add(msg, this)
+                }
+            }
         }
     }
 
     companion object {
         private var cadenas: Cadenas? = null
 
-        suspend fun initialize(context: android.content.Context) {
+        suspend fun initialize(config: CadenasConfig) {
             withContext(Dispatchers.IO) {
-                ModelLoader.initialize(context)
-
-                val x = context.assets.list("")
-                for (a in (x ?: arrayOf())) {
-                    println("ASSET: $a")
-                }
-                val file = Path(context.filesDir.absolutePath, "butkusconfig.json")
-                cadenas = Cadenas(file.pathString)
+                cadenas = Cadenas(config)
             }
         }
 
-        fun getInstance(): Cadenas? {
-            return cadenas
-        }
+        fun getInstance(): Cadenas? = cadenas
     }
 }
