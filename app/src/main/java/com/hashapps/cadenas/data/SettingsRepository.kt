@@ -1,29 +1,24 @@
 package com.hashapps.cadenas.data
 
-import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.File
 import java.io.IOException
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
 
-private const val CADENAS_SETTINGS_NAME = "cadenas_settings"
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = CADENAS_SETTINGS_NAME
-)
-
 class SettingsRepository(
-    private val context: Context,
+    private val dataStore: DataStore<Preferences>,
+    private val internalStorage: File,
     private val configDao: ConfigDao,
     externalScope: CoroutineScope,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
@@ -34,7 +29,7 @@ class SettingsRepository(
         const val TAG = "SettingsRepo"
     }
 
-    val selectedProfile: Flow<Int?> = context.dataStore.data
+    val selectedProfile: Flow<Int?> = dataStore.data
         .catch {
             if (it is IOException) {
                 Log.e(TAG, "Error reading settings.", it)
@@ -47,7 +42,7 @@ class SettingsRepository(
         }
 
     suspend fun saveSelectedProfile(selectedProfile: Int) {
-        context.dataStore.edit {
+        dataStore.edit {
             it[SELECTED_PROFILE] = selectedProfile
         }
     }
@@ -65,7 +60,7 @@ class SettingsRepository(
                     _selectedModel.update { savedConfig.modelId }
 
                     val config = CadenasConfig(
-                        modelDir = Path(context.filesDir.absolutePath, savedConfig.modelDir).pathString,
+                        modelDir = Path(internalStorage.path, savedConfig.modelDir).pathString,
                         key = savedConfig.key,
                         seed = savedConfig.seed,
                     )

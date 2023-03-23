@@ -1,7 +1,15 @@
 package com.hashapps.cadenas.data
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineScope
+
+private const val CADENAS_SETTINGS_NAME = "cadenas_settings"
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = CADENAS_SETTINGS_NAME
+)
 
 interface AppContainer {
     val configRepository: ConfigRepository
@@ -21,7 +29,8 @@ class AppDataContainer(
 
     override val settingsRepository by lazy {
         SettingsRepository(
-            context = context,
+            dataStore = context.dataStore,
+            internalStorage = context.filesDir,
             configDao = ConfigDatabase.getDatabase(context).configDao(),
             externalScope = applicationScope,
         )
