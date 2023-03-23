@@ -19,25 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
-# ----- Begin GSON Rules -----
--keepattributes Signature
-
--keepattributes *Annotation*
-
--dontwarn sun.misc.**
-
--keep class com.hashapps.cadenas.data.CadenasConfig { <fields>; }
-
--keep class * extends com.google.gson.TypeAdapter
--keep class * implements com.google.gson.TypeAdapterFactory
--keep class * implements com.google.gson.JsonSerializer
--keep class * implements com.google.gson.JsonDeserializer
-
--keepclassmembers,allowobfuscation class * {
-  @com.google.gson.annotations.SerializedName <fields>;
-}
-
--keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
--keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
-# ----- End GSON Rules -----
