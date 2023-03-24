@@ -13,7 +13,7 @@ import com.hashapps.cadenas.data.profile.ProfileDao
 abstract class ConfigDatabase : RoomDatabase() {
     abstract fun modelDao(): ModelDao
     abstract fun profileDao(): ProfileDao
-    abstract fun configDao() : SavedConfigDao
+    abstract fun configDao(): SavedConfigDao
 
     companion object {
         @Volatile

@@ -59,11 +59,13 @@ class SettingsRepository(
                 savedConfigDao.getConfig(it).collectLatest { savedConfig ->
                     _selectedModel.update { savedConfig.modelId }
 
-                    Cadenas.initialize(CadenasConfig(
-                        modelDir = Path(internalStorage.path, savedConfig.modelDir).pathString,
-                        key = savedConfig.key,
-                        seed = savedConfig.seed,
-                    ))
+                    Cadenas.initialize(
+                        CadenasConfig(
+                            modelDir = Path(internalStorage.path, savedConfig.modelDir).pathString,
+                            key = savedConfig.key,
+                            seed = savedConfig.seed,
+                        )
+                    )
 
                     if (Cadenas.getInstance() != null) {
                         _cadenasInitialized.update { true }

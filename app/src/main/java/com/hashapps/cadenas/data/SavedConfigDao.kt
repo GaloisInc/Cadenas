@@ -15,8 +15,8 @@ data class SavedConfig(
 interface SavedConfigDao {
     @Query(
         "SELECT models.id AS modelId, models.name AS modelDir, profiles.key, profiles.seed " +
-        "FROM models, profiles " +
-        "WHERE profiles.id = :id AND profiles.model_id = models.id"
+                "FROM models, profiles " +
+                "WHERE profiles.id = :id AND profiles.model_id = models.id"
     )
     fun getConfig(id: Int): Flow<SavedConfig>
 }

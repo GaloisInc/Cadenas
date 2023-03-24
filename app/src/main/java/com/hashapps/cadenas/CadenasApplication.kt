@@ -3,8 +3,6 @@ package com.hashapps.cadenas
 import android.app.Application
 import com.hashapps.cadenas.data.AppContainer
 import com.hashapps.cadenas.data.AppDataContainer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 
 class CadenasApplication : Application() {
     lateinit var container: AppContainer
