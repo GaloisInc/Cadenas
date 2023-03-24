@@ -25,9 +25,6 @@ class ConfigRepository(
         .asFlow()
         .map { it.getOrNull(0) }
 
-    private var _working = MutableStateFlow(false)
-    val working = _working.asStateFlow()
-
     fun fetchModel(model: Model) {
         val data = Data.Builder()
 
@@ -48,12 +45,6 @@ class ConfigRepository(
                 ExistingWorkPolicy.KEEP,
                 modelDownloadWordRequest,
             )
-
-        _working.update { true }
-    }
-
-    fun finishWork() {
-        _working.update { false }
     }
 
     suspend fun insertModel(model: Model) = modelDao.insert(model)
