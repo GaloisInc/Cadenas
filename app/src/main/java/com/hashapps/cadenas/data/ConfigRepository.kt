@@ -7,7 +7,10 @@ import com.hashapps.cadenas.data.model.ModelDao
 import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfileDao
 import com.hashapps.cadenas.workers.ModelDownloadWorker
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import java.io.File
 import javax.crypto.KeyGenerator
 
@@ -21,6 +24,9 @@ class ConfigRepository(
         .getWorkInfosForUniqueWorkLiveData("downloadModel")
         .asFlow()
         .map { it.getOrNull(0) }
+
+    private var _working = MutableStateFlow(false)
+    val working = _working.asStateFlow()
 
     fun fetchModel(model: Model) {
         val data = Data.Builder()
@@ -42,6 +48,12 @@ class ConfigRepository(
                 ExistingWorkPolicy.KEEP,
                 modelDownloadWordRequest,
             )
+
+        _working.update { true }
+    }
+
+    fun finishWork() {
+        _working.update { false }
     }
 
     suspend fun insertModel(model: Model) = modelDao.insert(model)
