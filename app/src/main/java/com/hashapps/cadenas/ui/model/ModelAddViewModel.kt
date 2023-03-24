@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ConfigRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ModelAddViewModel(
@@ -18,8 +20,18 @@ class ModelAddViewModel(
         modelUiState = newModelUiState.copy(actionEnabled = newModelUiState.isValid())
     }
 
-    // TODO: This just adds to the DB, but should try fetching the model from
-    // the given URL and reporting any relevant failures.
+    val modelDownloaderState = configRepository.modelDownloaderState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = null,
+    )
+
+    fun downloadModel() {
+        if (modelUiState.isValid()) {
+            configRepository.fetchModel(modelUiState.toModel())
+        }
+    }
+
     fun saveModel() {
         viewModelScope.launch {
             if (modelUiState.isValid()) {

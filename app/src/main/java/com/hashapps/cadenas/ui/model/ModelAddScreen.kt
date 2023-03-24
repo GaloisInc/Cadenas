@@ -9,7 +9,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -17,10 +19,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.work.WorkInfo
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
+import com.hashapps.cadenas.workers.ModelDownloadWorker
+import kotlinx.coroutines.launch
 
 private const val MAX_LEN = 128
 
@@ -37,55 +42,85 @@ fun ModelAddScreen(
     modifier: Modifier = Modifier,
     viewModel: ModelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    var showProgressIndicator by rememberSaveable { mutableStateOf(false) }
+
+    var modelDownloadTriggered by rememberSaveable { mutableStateOf(false) }
+    val workerState by viewModel.modelDownloaderState.collectAsState()
+    workerState?.also {
+        LaunchedEffect(it.state) {
+            when (it.state) {
+                WorkInfo.State.RUNNING -> showProgressIndicator = true
+                WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED -> {
+                    if (modelDownloadTriggered) {
+                        this.launch {
+                            snackbarHostState.showSnackbar(
+                                it.outputData.getString(
+                                    ModelDownloadWorker.KEY_RESULT_MSG
+                                )!!
+                            )
+                        }
+
+                        if (it.state == WorkInfo.State.SUCCEEDED) {
+                            viewModel.saveModel()
+                            viewModel.updateUiState(ModelUiState())
+                        }
+                    }
+
+                    showProgressIndicator = false
+                    modelDownloadTriggered = false
+                }
+                else -> {}
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(ModelAddDestination.titleRes),
-                canNavigateUp = true,
+                canNavigateUp = !showProgressIndicator,
                 navigateUp = navigateUp,
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
-        ModelAddBody(
-            modifier = modifier.padding(innerPadding),
-            modelUiState = viewModel.modelUiState,
-            onModelValueChange = viewModel::updateUiState,
-            onDownloadClick = {
-                viewModel.saveModel()
-                navigateBack()
-            },
-        )
-    }
-}
-
-@Composable
-fun ModelAddBody(
-    modifier: Modifier,
-    modelUiState: ModelUiState,
-    onModelValueChange: (ModelUiState) -> Unit,
-    onDownloadClick: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(8.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        ModelInputForm(
-            modelUiState = modelUiState,
-            onValueChange = onModelValueChange,
-        )
-
-        Button(
-            onClick = onDownloadClick,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = modelUiState.actionEnabled,
+        Column(
+            modifier = modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(
-                text = stringResource(R.string.download),
-                style = MaterialTheme.typography.titleLarge
+            ModelInputForm(
+                modelUiState = viewModel.modelUiState,
+                onValueChange = viewModel::updateUiState,
+                enabled = !showProgressIndicator,
             )
+
+            Button(
+                onClick = {
+                    viewModel.downloadModel()
+                    modelDownloadTriggered = true
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !showProgressIndicator && viewModel.modelUiState.actionEnabled,
+            ) {
+                Text(
+                    text = stringResource(R.string.download),
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            if (showProgressIndicator) {
+                LinearProgressIndicator(
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -96,7 +131,7 @@ fun ModelInputForm(
     modelUiState: ModelUiState,
     modifier: Modifier = Modifier,
     onValueChange: (ModelUiState) -> Unit = {},
-    urlEnabled: Boolean = true,
+    enabled: Boolean = true,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -108,6 +143,7 @@ fun ModelInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
+            enabled = enabled,
             value = modelUiState.name,
             onValueChange = { onValueChange(modelUiState.copy(name = it)) },
             singleLine = true,
@@ -130,7 +166,7 @@ fun ModelInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            enabled = urlEnabled,
+            enabled = enabled,
             value = modelUiState.url,
             onValueChange = { onValueChange(modelUiState.copy(url = it.take(MAX_LEN))) },
             singleLine = true,
