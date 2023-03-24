@@ -23,7 +23,7 @@ fun CadenasRootNavHost(
         }
 
         composable(route = SettingsNavDestination.route) {
-            SettingsNavHost(navigateUp = { navController.navigate(ProcessingDestination.route) })
+            SettingsNavHost(navigateToProcessing = { navController.navigate(ProcessingDestination.route) })
         }
     }
 }

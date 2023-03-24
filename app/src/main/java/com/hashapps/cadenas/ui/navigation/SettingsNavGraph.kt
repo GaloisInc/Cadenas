@@ -21,7 +21,7 @@ object SettingsNavDestination : NavigationDestination {
 
 @Composable
 fun SettingsNavHost(
-    navigateUp: () -> Unit,
+    navigateToProcessing: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -32,7 +32,7 @@ fun SettingsNavHost(
     ) {
         composable(route = SettingsDestination.route) {
             SettingsScreen(
-                navigateUp = navigateUp,
+                navigateUp = navigateToProcessing,
                 navigateToManageModels = { navController.navigate(ManageModelsDestination.route) },
             )
         }
