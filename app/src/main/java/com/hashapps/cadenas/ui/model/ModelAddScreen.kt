@@ -125,20 +125,6 @@ fun ModelInputForm(
             ),
         )
 
-        OutlinedTextField(
-            modifier = modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            value = modelUiState.description,
-            onValueChange = { onValueChange(modelUiState.copy(description = it)) },
-            singleLine = true,
-            label = { Text(stringResource(R.string.model_description_label)) },
-            supportingText = { Text(stringResource(R.string.model_description_support)) },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
-            ),
-        )
-
         displaySupportText = modelUiState.url == "" || modelUiState.isUrlValid()
         OutlinedTextField(
             modifier = modifier

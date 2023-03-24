@@ -42,24 +42,11 @@ fun SettingsNavHost(
                 navigateUp = { navController.navigateUp() },
                 navigateToModelAdd = { navController.navigate(ModelAddDestination.route) },
                 navigateToManageProfiles = { navController.navigate("${ManageProfilesDestination.route}/$it") },
-                navigateToModelEdit = { navController.navigate("${ModelEditDestination.route}/$it") },
             )
         }
 
         composable(route = ModelAddDestination.route) {
             ModelAddScreen(
-                navigateBack = { navController.popBackStack() },
-                navigateUp = { navController.navigateUp() },
-            )
-        }
-
-        composable(
-            route = ModelEditDestination.routeWithArgs,
-            arguments = listOf(navArgument(ModelEditDestination.modelIdArg) {
-                type = NavType.IntType
-            })
-        ) {
-            ModelEditScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateUp = { navController.navigateUp() },
             )

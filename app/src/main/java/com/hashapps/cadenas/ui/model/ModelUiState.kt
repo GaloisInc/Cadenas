@@ -5,7 +5,6 @@ import com.hashapps.cadenas.data.model.Model
 data class ModelUiState(
     val id: Int = 0,
     val name: String = "",
-    val description: String = "",
     val url: String = "",
     val actionEnabled: Boolean = false,
 )
@@ -13,7 +12,6 @@ data class ModelUiState(
 fun ModelUiState.toModel(): Model = Model(
     id = id,
     name = name,
-    description = description,
     url = url,
 )
 
@@ -22,7 +20,6 @@ fun Model.toModelUiState(
 ): ModelUiState = ModelUiState(
     id = id,
     name = name,
-    description = description,
     url = url,
     actionEnabled = actionEnabled,
 )
@@ -36,4 +33,4 @@ private val urlRegex =
 fun ModelUiState.isUrlValid() = urlRegex.matches(url)
 
 fun ModelUiState.isValid() =
-    isNameValid() && description.isNotBlank() && isUrlValid()
+    isNameValid() && isUrlValid()

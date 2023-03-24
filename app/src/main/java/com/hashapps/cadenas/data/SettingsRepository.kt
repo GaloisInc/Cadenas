@@ -19,7 +19,7 @@ import kotlin.io.path.pathString
 class SettingsRepository(
     private val dataStore: DataStore<Preferences>,
     private val internalStorage: File,
-    private val configDao: ConfigDao,
+    private val savedConfigDao: SavedConfigDao,
     externalScope: CoroutineScope,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -56,7 +56,7 @@ class SettingsRepository(
     init {
         externalScope.launch(ioDispatcher) {
             selectedProfile.filterNotNull().collectLatest {
-                configDao.getConfig(it).collectLatest { savedConfig ->
+                savedConfigDao.getConfig(it).collectLatest { savedConfig ->
                     _selectedModel.update { savedConfig.modelId }
 
                     Cadenas.initialize(CadenasConfig(

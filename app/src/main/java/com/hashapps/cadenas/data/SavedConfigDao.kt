@@ -12,7 +12,7 @@ data class SavedConfig(
 )
 
 @Dao
-interface ConfigDao {
+interface SavedConfigDao {
     @Query(
         "SELECT models.id AS modelId, models.name AS modelDir, profiles.key, profiles.seed " +
         "FROM models, profiles " +

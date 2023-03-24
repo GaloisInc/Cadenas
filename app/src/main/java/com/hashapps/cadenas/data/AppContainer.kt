@@ -31,7 +31,7 @@ class AppDataContainer(
         SettingsRepository(
             dataStore = context.dataStore,
             internalStorage = context.filesDir,
-            configDao = ConfigDatabase.getDatabase(context).configDao(),
+            savedConfigDao = ConfigDatabase.getDatabase(context).configDao(),
             externalScope = applicationScope,
         )
     }

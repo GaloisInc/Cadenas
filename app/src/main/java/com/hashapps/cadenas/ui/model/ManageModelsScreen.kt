@@ -31,7 +31,6 @@ fun ManageModelsScreen(
     navigateUp: () -> Unit,
     navigateToModelAdd: () -> Unit,
     navigateToManageProfiles: (Int) -> Unit,
-    navigateToModelEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -62,7 +61,6 @@ fun ManageModelsScreen(
             models = models,
             selectedModelId = selectedModelId,
             onManageProfiles = navigateToManageProfiles,
-            onModelEdit = navigateToModelEdit,
             onModelDelete = {
                 viewModel.deleteModel(it)
             }
@@ -75,7 +73,6 @@ fun ManageModelsBody(
     models: List<Model>,
     selectedModelId: Int?,
     onManageProfiles: (Int) -> Unit,
-    onModelEdit: (Int) -> Unit,
     onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,7 +87,6 @@ fun ManageModelsBody(
             models = models,
             selectedModelId = selectedModelId,
             onManageProfiles = onManageProfiles,
-            onModelEdit = onModelEdit,
             onModelDelete = onModelDelete,
         )
     }
@@ -101,7 +97,6 @@ fun ModelList(
     models: List<Model>,
     selectedModelId: Int?,
     onManageProfiles: (Int) -> Unit,
-    onModelEdit: (Int) -> Unit,
     onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -111,7 +106,6 @@ fun ModelList(
                 model = it,
                 selectedModelId = selectedModelId,
                 onManageProfiles = onManageProfiles,
-                onModelEdit = onModelEdit,
                 onModelDelete = onModelDelete,
             )
         }
@@ -124,7 +118,6 @@ fun CadenasModel(
     model: Model,
     selectedModelId: Int?,
     onManageProfiles: (Int) -> Unit,
-    onModelEdit: (Int) -> Unit,
     onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -137,7 +130,6 @@ fun CadenasModel(
 
         ListItem(
             headlineText = { Text(model.name) },
-            supportingText = { Text(model.description) },
             leadingContent = {
                 if (model.id == selectedModelId) {
                     Icon(
@@ -169,17 +161,6 @@ fun CadenasModel(
                                 Icon(
                                     imageVector = Icons.Filled.SwitchAccount,
                                     contentDescription = null
-                                )
-                            },
-                        )
-
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.edit)) },
-                            onClick = { onModelEdit(model.id) },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = null,
                                 )
                             },
                         )
