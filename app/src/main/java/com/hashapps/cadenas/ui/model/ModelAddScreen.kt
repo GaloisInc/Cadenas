@@ -103,6 +103,7 @@ fun ModelInputForm(
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
     ) {
+        var displaySupportText = modelUiState.name == "" || modelUiState.isNameValid()
         OutlinedTextField(
             modifier = modifier
                 .padding(8.dp)
@@ -111,7 +112,14 @@ fun ModelInputForm(
             onValueChange = { onValueChange(modelUiState.copy(name = it)) },
             singleLine = true,
             label = { Text(stringResource(R.string.model_name_label)) },
-            supportingText = { Text(stringResource(R.string.model_name_support)) },
+            supportingText = {
+                if (displaySupportText) {
+                    Text(stringResource(R.string.model_name_support))
+                } else {
+                    Text(stringResource(R.string.name_error))
+                }
+            },
+            isError = !displaySupportText,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
             ),
@@ -131,6 +139,7 @@ fun ModelInputForm(
             ),
         )
 
+        displaySupportText = modelUiState.url == "" || modelUiState.isUrlValid()
         OutlinedTextField(
             modifier = modifier
                 .padding(8.dp)
@@ -141,7 +150,7 @@ fun ModelInputForm(
             singleLine = true,
             label = { Text(stringResource(R.string.url_label)) },
             supportingText = {
-                if (modelUiState.isUrlValid()) {
+                if (displaySupportText) {
                     Text(
                         LocalContext.current.getString(
                             R.string.url_support,
@@ -153,7 +162,7 @@ fun ModelInputForm(
                     Text(stringResource(R.string.url_error))
                 }
             },
-            isError = !modelUiState.isUrlValid(),
+            isError = !displaySupportText,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
             ),

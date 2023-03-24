@@ -56,4 +56,5 @@
     <string name="model_selected">Model selected</string>
     <string name="profiles">Profiles</string>
     <string name="edit_model">Edit Model</string>
+    <string name="name_error">Model names must be alphanumeric</string>
 </resources>
