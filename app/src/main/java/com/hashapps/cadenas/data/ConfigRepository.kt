@@ -1,10 +1,13 @@
 package com.hashapps.cadenas.data
 
+import androidx.lifecycle.asFlow
 import androidx.work.*
 import com.hashapps.cadenas.data.model.Model
 import com.hashapps.cadenas.data.model.ModelDao
 import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfileDao
+import com.hashapps.cadenas.workers.ModelDownloadWorker
+import kotlinx.coroutines.flow.map
 import java.io.File
 import javax.crypto.KeyGenerator
 
@@ -14,6 +17,33 @@ class ConfigRepository(
     private val modelDao: ModelDao,
     private val profileDao: ProfileDao,
 ) {
+    val modelDownloaderState = workManager
+        .getWorkInfosForUniqueWorkLiveData("downloadModel")
+        .asFlow()
+        .map { it[0].state }
+
+    fun fetchModel(model: Model) {
+        val data = Data.Builder()
+
+        data.putString(ModelDownloadWorker.KEY_MODEL_URL, model.url)
+
+        val outDir = File(internalStorage, model.name)
+        outDir.mkdirs()
+        data.putString(ModelDownloadWorker.KEY_MODEL_DIR, outDir.path)
+
+        val modelDownloadWordRequest = OneTimeWorkRequestBuilder<ModelDownloadWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setInputData(data.build())
+            .build()
+
+        workManager
+            .enqueueUniqueWork(
+                "downloadModel",
+                ExistingWorkPolicy.KEEP,
+                modelDownloadWordRequest,
+            )
+    }
+
     suspend fun insertModel(model: Model) = modelDao.insert(model)
     suspend fun deleteModel(model: Model) = modelDao.delete(model)
     fun getModelNameStream(id: Int) = modelDao.getModelName(id)
