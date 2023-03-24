@@ -11,9 +11,7 @@ class ConfigRepository(
     private val profileDao: ProfileDao,
 ) {
     suspend fun insertModel(model: Model) = modelDao.insert(model)
-    suspend fun updateModel(model: Model) = modelDao.update(model)
     suspend fun deleteModel(model: Model) = modelDao.delete(model)
-    fun getModelStream(id: Int) = modelDao.getModel(id)
     fun getModelNameStream(id: Int) = modelDao.getModelName(id)
     fun getAllModelsStream() = modelDao.getAllModels()
 

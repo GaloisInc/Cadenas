@@ -91,13 +91,14 @@ fun SettingsTopAppBar(
         title = { Text(title) },
         modifier = modifier,
         navigationIcon = {
-            if (canNavigateUp) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                    )
-                }
+            IconButton(
+                enabled = canNavigateUp,
+                onClick = navigateUp,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back),
+                )
             }
         },
     )
