@@ -1,12 +1,16 @@
 package com.hashapps.cadenas.data
 
+import androidx.work.*
 import com.hashapps.cadenas.data.model.Model
 import com.hashapps.cadenas.data.model.ModelDao
 import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfileDao
+import java.io.File
 import javax.crypto.KeyGenerator
 
 class ConfigRepository(
+    private val internalStorage: File,
+    private val workManager: WorkManager,
     private val modelDao: ModelDao,
     private val profileDao: ProfileDao,
 ) {

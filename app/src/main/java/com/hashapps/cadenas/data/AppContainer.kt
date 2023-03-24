@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.work.WorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -22,6 +23,8 @@ class AppDataContainer(
 ) : AppContainer {
     override val configRepository by lazy {
         ConfigRepository(
+            internalStorage = context.filesDir,
+            workManager = WorkManager.getInstance(context),
             modelDao = ConfigDatabase.getDatabase(context).modelDao(),
             profileDao = ConfigDatabase.getDatabase(context).profileDao(),
         )
