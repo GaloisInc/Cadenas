@@ -1,4 +1,4 @@
-package com.hashapps.cadenas
+package com.hashapps.cadenas.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
