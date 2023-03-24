@@ -20,7 +20,7 @@ class ConfigRepository(
     val modelDownloaderState = workManager
         .getWorkInfosForUniqueWorkLiveData("downloadModel")
         .asFlow()
-        .map { it[0].state }
+        .map { it.getOrNull(0) }
 
     fun fetchModel(model: Model) {
         val data = Data.Builder()
