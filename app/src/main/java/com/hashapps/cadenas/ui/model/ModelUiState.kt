@@ -15,15 +15,6 @@ fun ModelUiState.toModel(): Model = Model(
     url = url,
 )
 
-fun Model.toModelUiState(
-    actionEnabled: Boolean = false,
-): ModelUiState = ModelUiState(
-    id = id,
-    name = name,
-    url = url,
-    actionEnabled = actionEnabled,
-)
-
 val nameRegex =
     Regex("""[a-zA-Z\d]+""")
 fun ModelUiState.isNameValid() = nameRegex.matches(name)
