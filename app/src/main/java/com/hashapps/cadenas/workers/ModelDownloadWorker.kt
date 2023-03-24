@@ -26,7 +26,7 @@ class ModelDownloadWorker(
             try {
                 downloadModelTo(url, outDir)
                 downloadSuccessful = true
-                "Download complete! You can now use $outDir."
+                "Download complete!"
             } catch (_: IOException) {
                 "An IO error occurred - please try again."
             } catch (_: ZipException) {
