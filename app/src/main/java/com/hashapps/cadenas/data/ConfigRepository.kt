@@ -6,6 +6,7 @@ import com.hashapps.cadenas.data.model.Model
 import com.hashapps.cadenas.data.model.ModelDao
 import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfileDao
+import com.hashapps.cadenas.workers.ModelDeleteWorker
 import com.hashapps.cadenas.workers.ModelDownloadWorker
 import kotlinx.coroutines.flow.map
 import java.io.File
@@ -42,6 +43,15 @@ class ConfigRepository(
                 ExistingWorkPolicy.KEEP,
                 modelDownloadWordRequest,
             )
+    }
+
+    fun deleteModelFiles(model: Model) {
+        val modelDeleteWorkRequest = OneTimeWorkRequestBuilder<ModelDeleteWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setInputData(Data.Builder().putString(ModelDeleteWorker.KEY_MODEL_DIR, File(internalStorage, model.name).path).build())
+            .build()
+
+        workManager.enqueue(modelDeleteWorkRequest)
     }
 
     suspend fun insertModel(model: Model) = modelDao.insert(model)

@@ -24,6 +24,7 @@ class ManageModelsViewModel(
     fun deleteModel(model: Model) {
         viewModelScope.launch {
             configRepository.deleteModel(model)
+            configRepository.deleteModelFiles(model)
         }
     }
 }
