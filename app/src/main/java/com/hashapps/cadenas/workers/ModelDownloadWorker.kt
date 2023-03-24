@@ -57,6 +57,6 @@ class ModelDownloadWorker(
     companion object {
         const val KEY_MODEL_URL = "model_url"
         const val KEY_MODEL_DIR = "model_dir"
-        const val KEY_RESULT_MSG = "error_msg"
+        const val KEY_RESULT_MSG = "msg"
     }
 }
