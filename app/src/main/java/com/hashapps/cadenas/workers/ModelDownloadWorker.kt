@@ -6,6 +6,7 @@ import androidx.work.Data
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.IOException
 import java.net.URL
 import java.util.zip.ZipException
@@ -51,6 +52,8 @@ class ModelDownloadWorker(
                         inStream.copyTo(outStream)
                     }
                 }
+
+            File(outDir, URL_FILE).writeText(url)
         }
     }
 
@@ -58,5 +61,6 @@ class ModelDownloadWorker(
         const val KEY_MODEL_URL = "model_url"
         const val KEY_MODEL_DIR = "model_dir"
         const val KEY_RESULT_MSG = "msg"
+        private const val URL_FILE = ".url"
     }
 }
