@@ -33,7 +33,7 @@
     <string name="add_item">Add item</string>
     <string name="edit_item">Edit item</string>
     <string name="manage_models">Models</string>
-    <string name="manage_models_support">Configure models and messaging profiles</string>
+    <string name="manage_models_support">Download/manage models</string>
     <string name="unused" />
     <string name="clear">Clear item</string>
     <string name="profile_description_label">Profile Description</string>
@@ -57,4 +57,5 @@
     <string name="profiles">Profiles</string>
     <string name="edit_model">Edit Model</string>
     <string name="name_error">Model names must be alphanumeric</string>
+    <string name="manage_profiles_support">Manage messaging profiles</string>
 </resources>

@@ -37,6 +37,7 @@ fun SettingsNavHost(
             SettingsScreen(
                 navigateUp = navigateToProcessing,
                 navigateToManageModels = { navController.navigate(ManageModelsDestination.route) },
+                navigateToManageProfiles = { },
             )
         }
 

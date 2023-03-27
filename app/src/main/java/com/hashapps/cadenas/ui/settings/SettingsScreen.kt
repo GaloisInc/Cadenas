@@ -24,6 +24,7 @@ object SettingsDestination : NavigationDestination {
 fun SettingsScreen(
     navigateUp: () -> Unit,
     navigateToManageModels: () -> Unit,
+    navigateToManageProfiles: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -37,6 +38,7 @@ fun SettingsScreen(
     ) { innerPadding ->
         SettingsBody(
             navigateToManageModels = navigateToManageModels,
+            navigateToManageProfiles = navigateToManageProfiles,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -46,6 +48,7 @@ fun SettingsScreen(
 @Composable
 fun SettingsBody(
     navigateToManageModels: () -> Unit,
+    navigateToManageProfiles: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -74,6 +77,24 @@ fun SettingsBody(
                         contentDescription = null,
                     )
                 }
+            )
+
+            ListItem(
+                headlineText = { Text(stringResource(R.string.profiles)) },
+                modifier = Modifier.clickable(onClick = navigateToManageProfiles),
+                supportingText = { Text(stringResource(R.string.manage_profiles_support)) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.SwitchAccount,
+                        contentDescription = null,
+                    )
+                },
+                trailingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = null,
+                    )
+                },
             )
         }
     }
