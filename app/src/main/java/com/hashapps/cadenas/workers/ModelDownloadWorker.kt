@@ -44,17 +44,21 @@ class ModelDownloadWorker(
     }
 
     private fun downloadModelTo(url: String, outDir: String) {
+        val tempOutDir = File("$outDir.temp").also { it.mkdir() }
+
         ZipInputStream(URL(url).openConnection().inputStream).use { inStream ->
             generateSequence { inStream.nextEntry }
                 .filterNot { it.isDirectory }
                 .forEach {
-                    Path(outDir, it.name).outputStream().use { outStream ->
+                    Path(tempOutDir.path, it.name).outputStream().use { outStream ->
                         inStream.copyTo(outStream)
                     }
                 }
-
-            File(outDir, URL_FILE).writeText(url)
         }
+
+        File(tempOutDir, URL_FILE).writeText(url)
+
+        tempOutDir.renameTo(File(outDir))
     }
 
     companion object {
