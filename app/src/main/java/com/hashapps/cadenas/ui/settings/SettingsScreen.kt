@@ -79,6 +79,8 @@ fun SettingsBody(
                 }
             )
 
+            Divider(thickness = 1.dp)
+
             ListItem(
                 headlineText = { Text(stringResource(R.string.profiles)) },
                 modifier = Modifier.clickable(onClick = navigateToManageProfiles),

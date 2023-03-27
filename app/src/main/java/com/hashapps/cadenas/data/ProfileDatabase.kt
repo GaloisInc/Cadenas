@@ -4,16 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.hashapps.cadenas.data.model.Model
-import com.hashapps.cadenas.data.model.ModelDao
 import com.hashapps.cadenas.data.profile.Profile
 import com.hashapps.cadenas.data.profile.ProfileDao
 
-@Database(entities = [Profile::class, Model::class], version = 6, exportSchema = false)
+@Database(entities = [Profile::class], version = 7, exportSchema = false)
 abstract class ConfigDatabase : RoomDatabase() {
-    abstract fun modelDao(): ModelDao
     abstract fun profileDao(): ProfileDao
-    abstract fun configDao(): SavedConfigDao
 
     companion object {
         @Volatile
