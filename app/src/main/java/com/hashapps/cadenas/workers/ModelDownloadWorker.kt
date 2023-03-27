@@ -32,6 +32,8 @@ class ModelDownloadWorker(
                 "An IO error occurred - please try again."
             } catch (_: ZipException) {
                 "The model ZIP at $url is invalid."
+            } catch (_: java.lang.Exception) {
+                "An unknown error occurred."
             }
         }
 
