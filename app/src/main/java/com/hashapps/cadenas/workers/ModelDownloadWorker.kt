@@ -46,7 +46,7 @@ class ModelDownloadWorker(
     }
 
     private fun downloadModelTo(url: String, outDir: String) {
-        val tempOutDir = File("$outDir.temp").also { it.mkdir() }
+        val tempOutDir = File("$outDir.temp").also { it.mkdirs() }
 
         ZipInputStream(URL(url).openConnection().inputStream).use { inStream ->
             generateSequence { inStream.nextEntry }
