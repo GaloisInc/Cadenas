@@ -14,9 +14,9 @@ interface ProfileDao {
     @Delete
     suspend fun delete(profile: Profile)
 
-    @Query("SELECT * FROM profiles WHERE model_id = :modelId")
-    fun getAllProfilesForModel(modelId: Int): Flow<List<Profile>>
-
     @Query("SELECT * FROM profiles WHERE id = :id")
     fun getProfile(id: Int): Flow<Profile>
+
+    @Query("SELECT * FROM profiles ORDER BY name ASC")
+    fun getAllProfiles(): Flow<List<Profile>>
 }

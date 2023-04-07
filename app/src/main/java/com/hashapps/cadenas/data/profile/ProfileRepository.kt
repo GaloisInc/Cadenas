@@ -1,7 +1,5 @@
-package com.hashapps.cadenas.data
+package com.hashapps.cadenas.data.profile
 
-import com.hashapps.cadenas.data.profile.Profile
-import com.hashapps.cadenas.data.profile.ProfileDao
 import javax.crypto.KeyGenerator
 
 class ProfileRepository(private val profileDao: ProfileDao) {

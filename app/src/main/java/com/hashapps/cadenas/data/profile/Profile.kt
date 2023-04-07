@@ -1,22 +1,9 @@
 package com.hashapps.cadenas.data.profile
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.hashapps.cadenas.data.model.Model
 
-@Entity(
-    tableName = "profiles",
-    foreignKeys = [
-        ForeignKey(
-            entity = Model::class,
-            parentColumns = ["id"],
-            childColumns = ["model_id"],
-            onDelete = ForeignKey.CASCADE,
-        )
-    ]
-)
+@Entity(tableName = "profiles")
 data class Profile(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -29,8 +16,7 @@ data class Profile(
 
     val seed: String,
 
-    @ColumnInfo(name = "model_id", index = true)
-    val selectedModel: Int,
+    val selectedModel: String,
 
     val tag: String,
 )
