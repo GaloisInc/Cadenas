@@ -1,18 +1,9 @@
 package com.hashapps.cadenas.ui.model
 
-import com.hashapps.cadenas.data.model.Model
-
 data class ModelUiState(
-    val id: Int = 0,
     val name: String = "",
     val url: String = "",
     val actionEnabled: Boolean = false,
-)
-
-fun ModelUiState.toModel(): Model = Model(
-    id = id,
-    name = name,
-    url = url,
 )
 
 val nameRegex =

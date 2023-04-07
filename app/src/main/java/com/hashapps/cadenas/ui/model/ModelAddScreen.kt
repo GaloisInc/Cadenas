@@ -37,7 +37,6 @@ object ModelAddDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModelAddScreen(
-    navigateBack: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ModelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -63,7 +62,6 @@ fun ModelAddScreen(
                         }
 
                         if (it.state == WorkInfo.State.SUCCEEDED) {
-                            viewModel.saveModel()
                             viewModel.updateUiState(ModelUiState())
                         }
                     }

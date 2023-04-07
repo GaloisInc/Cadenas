@@ -5,13 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.ConfigRepository
+import com.hashapps.cadenas.data.ModelRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class ModelAddViewModel(
-    private val configRepository: ConfigRepository,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
     var modelUiState: ModelUiState by mutableStateOf(ModelUiState())
         private set
@@ -20,7 +19,7 @@ class ModelAddViewModel(
         modelUiState = newModelUiState.copy(actionEnabled = newModelUiState.isValid())
     }
 
-    val modelDownloaderState = configRepository.modelDownloaderState.stateIn(
+    val modelDownloaderState = modelRepository.modelDownloaderState.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = null,
@@ -28,15 +27,7 @@ class ModelAddViewModel(
 
     fun downloadModel() {
         if (modelUiState.isValid()) {
-            configRepository.fetchModel(modelUiState.toModel())
-        }
-    }
-
-    fun saveModel() {
-        viewModelScope.launch {
-            if (modelUiState.isValid()) {
-                configRepository.insertModel(modelUiState.toModel())
-            }
+            modelRepository.downloadModelFromAndSaveAs(modelUiState.url, modelUiState.name)
         }
     }
 }

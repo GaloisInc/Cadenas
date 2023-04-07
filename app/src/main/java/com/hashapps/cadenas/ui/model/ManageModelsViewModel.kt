@@ -1,30 +1,27 @@
 package com.hashapps.cadenas.ui.model
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.ConfigRepository
+import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.data.SettingsRepository
-import com.hashapps.cadenas.data.model.Model
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ManageModelsViewModel(
-    private val configRepository: ConfigRepository,
+    private val modelRepository: ModelRepository,
     settingsRepository: SettingsRepository,
 ) : ViewModel() {
-    val selectedModelId = settingsRepository.selectedModel
+    val selectedModel = settingsRepository.selectedModel
 
-    val models = configRepository.getAllModelsStream().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = listOf(),
-    )
+    var availableModels: List<String> by mutableStateOf(modelRepository.downloadedModels())
+        private set
 
-    fun deleteModel(model: Model) {
+    fun deleteModel(model: String) {
         viewModelScope.launch {
-            configRepository.deleteModel(model)
-            configRepository.deleteModelFiles(model)
+            modelRepository.deleteFilesForModel(model)
+            availableModels = modelRepository.downloadedModels()
         }
     }
 }

@@ -23,35 +23,35 @@ object AppViewModelProvider {
 
         initializer {
             ProfileAddViewModel(
-                this.createSavedStateHandle(),
-                cadenasApplication().container.configRepository,
+                cadenasApplication().container.profileRepository,
+                cadenasApplication().container.modelRepository,
             )
         }
 
         initializer {
             ProfileEditViewModel(
                 this.createSavedStateHandle(),
-                cadenasApplication().container.configRepository,
+                cadenasApplication().container.profileRepository,
+                cadenasApplication().container.modelRepository,
             )
         }
 
         initializer {
             ManageModelsViewModel(
-                cadenasApplication().container.configRepository,
+                cadenasApplication().container.modelRepository,
                 cadenasApplication().container.settingsRepository,
             )
         }
 
         initializer {
             ModelAddViewModel(
-                cadenasApplication().container.configRepository,
+                cadenasApplication().container.modelRepository,
             )
         }
 
         initializer {
             ManageProfilesViewModel(
-                this.createSavedStateHandle(),
-                cadenasApplication().container.configRepository,
+                cadenasApplication().container.profileRepository,
                 cadenasApplication().container.settingsRepository,
             )
         }

@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.data.model.Model
 import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
@@ -30,12 +29,10 @@ object ManageModelsDestination : NavigationDestination {
 fun ManageModelsScreen(
     navigateUp: () -> Unit,
     navigateToModelAdd: () -> Unit,
-    navigateToManageProfiles: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedModelId by viewModel.selectedModelId.collectAsState()
-    val models by viewModel.models.collectAsState()
+    val selectedModel by viewModel.selectedModel.collectAsState()
 
     Scaffold(
         topBar = {
@@ -58,22 +55,18 @@ fun ManageModelsScreen(
     ) { innerPadding ->
         ManageModelsBody(
             modifier = modifier.padding(innerPadding),
-            models = models,
-            selectedModelId = selectedModelId,
-            onManageProfiles = navigateToManageProfiles,
-            onModelDelete = {
-                viewModel.deleteModel(it)
-            }
+            models = viewModel.availableModels,
+            selectedModel = selectedModel,
+            onModelDelete = viewModel::deleteModel,
         )
     }
 }
 
 @Composable
 fun ManageModelsBody(
-    models: List<Model>,
-    selectedModelId: Int?,
-    onManageProfiles: (Int) -> Unit,
-    onModelDelete: (Model) -> Unit,
+    models: List<String>,
+    selectedModel: String?,
+    onModelDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -85,8 +78,7 @@ fun ManageModelsBody(
     ) {
         ModelList(
             models = models,
-            selectedModelId = selectedModelId,
-            onManageProfiles = onManageProfiles,
+            selectedModel = selectedModel,
             onModelDelete = onModelDelete,
         )
     }
@@ -94,18 +86,15 @@ fun ManageModelsBody(
 
 @Composable
 fun ModelList(
-    models: List<Model>,
-    selectedModelId: Int?,
-    onManageProfiles: (Int) -> Unit,
-    onModelDelete: (Model) -> Unit,
+    models: List<String>,
+    selectedModel: String?,
+    onModelDelete: (String) -> Unit,
     modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = models, key = { it.id }) {
+) {LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(items = models) {
             CadenasModel(
                 model = it,
-                selectedModelId = selectedModelId,
-                onManageProfiles = onManageProfiles,
+                selectedModel = selectedModel,
                 onModelDelete = onModelDelete,
             )
         }
@@ -115,10 +104,9 @@ fun ModelList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CadenasModel(
-    model: Model,
-    selectedModelId: Int?,
-    onManageProfiles: (Int) -> Unit,
-    onModelDelete: (Model) -> Unit,
+    model: String,
+    selectedModel: String?,
+    onModelDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
@@ -126,55 +114,19 @@ fun CadenasModel(
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
-        var expanded by remember { mutableStateOf(false) }
-
         ListItem(
-            headlineText = { Text(model.name) },
-            leadingContent = {
-                if (model.id == selectedModelId) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = stringResource(R.string.model_selected),
-                    )
-                }
-            },
+            headlineText = { Text(model) },
             trailingContent = {
                 Box(
                     modifier.wrapContentSize(Alignment.TopStart),
                 ) {
                     IconButton(
-                        onClick = { expanded = true },
+                        enabled = model != selectedModel,
+                        onClick = { deleteConfirmationRequired = true },
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.MoreHoriz,
-                            contentDescription = stringResource(R.string.model_menu),
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.profiles)) },
-                            onClick = { onManageProfiles(model.id) },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.SwitchAccount,
-                                    contentDescription = null
-                                )
-                            },
-                        )
-
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.delete)) },
-                            onClick = { deleteConfirmationRequired = true },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.DeleteForever,
-                                    contentDescription = null
-                                )
-                            },
-                            enabled = model.id != selectedModelId,
+                            imageVector = Icons.Filled.DeleteForever,
+                            contentDescription = stringResource(R.string.delete),
                         )
                     }
                 }
