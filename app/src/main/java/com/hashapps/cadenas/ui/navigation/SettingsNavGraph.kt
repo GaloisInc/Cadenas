@@ -37,44 +37,32 @@ fun SettingsNavHost(
             SettingsScreen(
                 navigateUp = navigateToProcessing,
                 navigateToManageModels = { navController.navigate(ManageModelsDestination.route) },
-                navigateToManageProfiles = { },
+                navigateToManageProfiles = { navController.navigate(ManageProfilesDestination.route) },
             )
         }
 
         composable(route = ManageModelsDestination.route) {
             ManageModelsScreen(
-                navigateUp = { navController.navigateUp() },
+                navigateUp = { navController.navigate(SettingsDestination.route) },
                 navigateToModelAdd = { navController.navigate(ModelAddDestination.route) },
-                navigateToManageProfiles = { navController.navigate("${ManageProfilesDestination.route}/$it") },
             )
         }
 
         composable(route = ModelAddDestination.route) {
             ModelAddScreen(
-                navigateBack = { navController.popBackStack() },
-                navigateUp = { navController.navigateUp() },
+                navigateUp = { navController.navigate(ManageModelsDestination.route) },
             )
         }
 
-        composable(
-            route = ManageProfilesDestination.routeWithArgs,
-            arguments = listOf(navArgument(ManageProfilesDestination.modelIdArg) {
-                type = NavType.IntType
-            })
-        ) {
+        composable(route = ManageProfilesDestination.route) {
             ManageProfilesScreen(
                 navigateUp = { navController.navigateUp() },
-                navigateToProfileEntry = { navController.navigate("${ProfileAddDestination.route}/$it") },
-                navigateToProfileEdit = { model, profile -> navController.navigate("${ProfileEditDestination.route}/$model/$profile") },
+                navigateToProfileEntry = { navController.navigate(ProfileAddDestination.route) },
+                navigateToProfileEdit = { profile -> navController.navigate("${ProfileEditDestination.route}/$profile") },
             )
         }
 
-        composable(
-            route = ProfileAddDestination.routeWithArgs,
-            arguments = listOf(navArgument(ProfileAddDestination.modelIdArg) {
-                type = NavType.IntType
-            })
-        ) {
+        composable(route = ProfileAddDestination.route) {
             ProfileAddScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateUp = { navController.navigateUp() },
@@ -83,9 +71,7 @@ fun SettingsNavHost(
 
         composable(
             route = ProfileEditDestination.routeWithArgs,
-            arguments = listOf(navArgument(ProfileEditDestination.modelIdArg) {
-                type = NavType.IntType
-            }, navArgument(ProfileEditDestination.profileIdArg) {
+            arguments = listOf(navArgument(ProfileEditDestination.profileIdArg) {
                 type = NavType.IntType
             })
         ) {
