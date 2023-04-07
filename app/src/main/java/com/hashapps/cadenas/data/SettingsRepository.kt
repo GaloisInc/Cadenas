@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import com.hashapps.cadenas.data.profile.ProfileDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,13 +14,11 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
-import kotlin.io.path.Path
-import kotlin.io.path.pathString
 
 class SettingsRepository(
     private val dataStore: DataStore<Preferences>,
     private val internalStorage: File,
-    private val savedConfigDao: SavedConfigDao,
+    private val profileDao: ProfileDao,
     externalScope: CoroutineScope,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -50,20 +49,20 @@ class SettingsRepository(
     private var _cadenasInitialized: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val cadenasInitialized: StateFlow<Boolean> = _cadenasInitialized.asStateFlow()
 
-    private var _selectedModel: MutableStateFlow<Int?> = MutableStateFlow(null)
-    val selectedModel: StateFlow<Int?> = _selectedModel.asStateFlow()
+    private var _selectedModel: MutableStateFlow<String?> = MutableStateFlow(null)
+    val selectedModel: StateFlow<String?> = _selectedModel.asStateFlow()
 
     init {
         externalScope.launch(ioDispatcher) {
             selectedProfile.filterNotNull().collectLatest {
-                savedConfigDao.getConfig(it).collectLatest { savedConfig ->
-                    _selectedModel.update { savedConfig.modelId }
+                profileDao.getProfile(it).collectLatest { profile ->
+                    _selectedModel.update { profile.selectedModel }
 
                     Cadenas.initialize(
                         CadenasConfig(
-                            modelDir = Path(internalStorage.path, savedConfig.modelDir).pathString,
-                            key = savedConfig.key,
-                            seed = savedConfig.seed,
+                            modelDir = internalStorage.resolve("models/${profile.selectedModel}").path,
+                            key = profile.key,
+                            seed = profile.seed,
                         )
                     )
 
