@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.WorkManager
+import com.hashapps.cadenas.data.profile.ProfileRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -14,19 +15,17 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 )
 
 interface AppContainer {
-    val configRepository: ConfigRepository
+    val profileRepository: ProfileRepository
     val settingsRepository: SettingsRepository
+    val modelRepository: ModelRepository
 }
 
 class AppDataContainer(
     private val context: Context
 ) : AppContainer {
-    override val configRepository by lazy {
-        ConfigRepository(
-            internalStorage = context.filesDir,
-            workManager = WorkManager.getInstance(context),
-            modelDao = ConfigDatabase.getDatabase(context).modelDao(),
-            profileDao = ConfigDatabase.getDatabase(context).profileDao(),
+    override val profileRepository by lazy {
+        ProfileRepository(
+            profileDao = ProfileDatabase.getDatabase(context).profileDao(),
         )
     }
 
@@ -34,8 +33,15 @@ class AppDataContainer(
         SettingsRepository(
             dataStore = context.dataStore,
             internalStorage = context.filesDir,
-            savedConfigDao = ConfigDatabase.getDatabase(context).configDao(),
+            profileDao = ProfileDatabase.getDatabase(context).profileDao(),
             externalScope = CoroutineScope(SupervisorJob()),
+        )
+    }
+
+    override val modelRepository by lazy {
+        ModelRepository(
+            internalStorage = context.filesDir,
+            workManager = WorkManager.getInstance(context),
         )
     }
 }
