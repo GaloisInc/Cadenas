@@ -39,6 +39,7 @@ object AppViewModelProvider {
         initializer {
             ManageModelsViewModel(
                 cadenasApplication().container.modelRepository,
+                cadenasApplication().container.profileRepository,
                 cadenasApplication().container.settingsRepository,
             )
         }

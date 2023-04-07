@@ -6,6 +6,9 @@ class ProfileRepository(private val profileDao: ProfileDao) {
     suspend fun insertProfile(profile: Profile) = profileDao.insert(profile)
     suspend fun updateProfile(profile: Profile) = profileDao.update(profile)
     suspend fun deleteProfile(profile: Profile) = profileDao.delete(profile)
+
+    suspend fun deleteProfilesForModel(model: String) = profileDao.deleteProfilesForModel(model)
+
     fun getProfileStream(id: Int) = profileDao.getProfile(id)
     fun getAllProfilesStream() = profileDao.getAllProfiles()
 

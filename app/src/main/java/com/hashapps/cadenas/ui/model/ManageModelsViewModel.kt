@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.data.SettingsRepository
+import com.hashapps.cadenas.data.profile.ProfileRepository
 import kotlinx.coroutines.launch
 
 class ManageModelsViewModel(
     private val modelRepository: ModelRepository,
+    private val profileRepository: ProfileRepository,
     settingsRepository: SettingsRepository,
 ) : ViewModel() {
     val selectedModel = settingsRepository.selectedModel
@@ -20,6 +22,7 @@ class ManageModelsViewModel(
 
     fun deleteModel(model: String) {
         viewModelScope.launch {
+            profileRepository.deleteProfilesForModel(model)
             modelRepository.deleteFilesForModel(model)
             availableModels = modelRepository.downloadedModels()
         }
