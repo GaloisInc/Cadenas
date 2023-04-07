@@ -116,6 +116,14 @@ fun CadenasModel(
 
         ListItem(
             headlineText = { Text(model) },
+            leadingContent = {
+                if (model == selectedModel) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = stringResource(R.string.model_selected),
+                    )
+                }
+            },
             trailingContent = {
                 Box(
                     modifier.wrapContentSize(Alignment.TopStart),
