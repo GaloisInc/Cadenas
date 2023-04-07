@@ -27,8 +27,6 @@ private const val MAX_LEN = 128
 object ProfileAddDestination : NavigationDestination {
     override val route = "profile_entry"
     override val titleRes = R.string.profile_entry
-    const val modelIdArg = "modelId"
-    val routeWithArgs = "$route/{$modelIdArg}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,12 +37,10 @@ fun ProfileAddScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val modelName by viewModel.modelName.collectAsState()
-
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = LocalContext.current.getString(ProfileAddDestination.titleRes, modelName),
+                title = stringResource(ProfileAddDestination.titleRes),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
             )
@@ -53,6 +49,7 @@ fun ProfileAddScreen(
         ProfileAddBody(
             modifier = modifier.padding(innerPadding),
             profileUiState = viewModel.profileUiState,
+            models = viewModel.availableModels,
             onProfileValueChange = viewModel::updateUiState,
             onKeyGen = viewModel::genKey,
             onSaveClick = {
@@ -66,6 +63,7 @@ fun ProfileAddScreen(
 @Composable
 fun ProfileAddBody(
     profileUiState: ProfileUiState,
+    models: List<String>,
     onProfileValueChange: (ProfileUiState) -> Unit,
     onKeyGen: () -> Unit,
     onSaveClick: () -> Unit,
@@ -80,6 +78,7 @@ fun ProfileAddBody(
     ) {
         ProfileInputForm(
             profileUiState = profileUiState,
+            models = models,
             onValueChange = onProfileValueChange,
             onKeyGen = onKeyGen,
         )
@@ -102,9 +101,10 @@ fun ProfileAddBody(
 fun ProfileInputForm(
     profileUiState: ProfileUiState,
     modifier: Modifier = Modifier,
+    models: List<String>,
     onValueChange: (ProfileUiState) -> Unit = {},
     onKeyGen: () -> Unit = {},
-    enabled: Boolean = true,
+    editing: Boolean = false,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -115,7 +115,6 @@ fun ProfileInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            enabled = enabled,
             value = profileUiState.name,
             onValueChange = { onValueChange(profileUiState.copy(name = it.take(MAX_LEN))) },
             singleLine = true,
@@ -130,7 +129,6 @@ fun ProfileInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            enabled = enabled,
             value = profileUiState.description,
             onValueChange = { onValueChange(profileUiState.copy(description = it.take(MAX_LEN))) },
             singleLine = true,
@@ -141,32 +139,32 @@ fun ProfileInputForm(
             ),
         )
 
-        Row(
-            modifier = modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            OutlinedTextField(
-                modifier = modifier.weight(1f),
-                enabled = enabled,
-                readOnly = true,
-                value = profileUiState.key,
-                onValueChange = {},
-                singleLine = true,
-                label = { Text(stringResource(R.string.key_label)) },
-                placeholder = { Text(stringResource(R.string.key_placeholder)) },
-            )
-
-            FilledTonalIconButton(
-                onClick = onKeyGen,
-                enabled = enabled,
+        if (!editing) {
+            Row(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Key,
-                    contentDescription = stringResource(R.string.generate_key)
+                OutlinedTextField(
+                    modifier = modifier.weight(1f),
+                    readOnly = true,
+                    value = profileUiState.key,
+                    onValueChange = {},
+                    singleLine = true,
+                    label = { Text(stringResource(R.string.key_label)) },
+                    placeholder = { Text(stringResource(R.string.key_placeholder)) },
                 )
+
+                FilledTonalIconButton(
+                    onClick = onKeyGen,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Key,
+                        contentDescription = stringResource(R.string.generate_key)
+                    )
+                }
             }
         }
 
@@ -174,7 +172,6 @@ fun ProfileInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            enabled = enabled,
             value = profileUiState.seed,
             onValueChange = { onValueChange(profileUiState.copy(seed = it.take(MAX_LEN))) },
             singleLine = true,
@@ -192,6 +189,48 @@ fun ProfileInputForm(
                 imeAction = ImeAction.Next,
             ),
         )
+
+        if (!editing) {
+            var expanded by remember { mutableStateOf(false) }
+            ExposedDropdownMenuBox(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                expanded = expanded,
+                onExpandedChange = {
+                    if (models.isNotEmpty()) {
+                        expanded = !expanded
+                    }
+                },
+            ) {
+                TextField(
+                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    readOnly = true,
+                    value = profileUiState.selectedModel,
+                    onValueChange = {},
+                    label = { Text(stringResource(R.string.model)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                )
+
+                ExposedDropdownMenu(
+                    modifier = Modifier.fillMaxWidth(),
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    models.forEach {
+                        DropdownMenuItem(
+                            text = { Text(it) },
+                            onClick = {
+                                onValueChange(profileUiState.copy(selectedModel = it))
+                                expanded = false
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                        )
+                    }
+                }
+            }
+        }
 
         OutlinedTextField(
             modifier = modifier

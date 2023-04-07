@@ -9,7 +9,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,9 +20,8 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 object ProfileEditDestination : NavigationDestination {
     override val route = "profile_edit"
     override val titleRes = R.string.edit_profile
-    const val modelIdArg = "modelId"
     const val profileIdArg = "profileId"
-    val routeWithArgs = "$route/{$modelIdArg}/{$profileIdArg}"
+    val routeWithArgs = "$route/{$profileIdArg}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,12 +32,10 @@ fun ProfileEditScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val modelName by viewModel.modelName.collectAsState()
-
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = LocalContext.current.getString(ProfileEditDestination.titleRes, modelName),
+                title = stringResource(ProfileEditDestination.titleRes),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
             )
@@ -48,6 +44,7 @@ fun ProfileEditScreen(
         ProfileEditBody(
             modifier = modifier.padding(innerPadding),
             profileUiState = viewModel.profileUiState,
+            models = viewModel.availableModels,
             onProfileValueChange = viewModel::updateUiState,
             onKeyGen = viewModel::genKey,
             onSaveClick = {
@@ -61,6 +58,7 @@ fun ProfileEditScreen(
 @Composable
 fun ProfileEditBody(
     profileUiState: ProfileUiState,
+    models: List<String>,
     onProfileValueChange: (ProfileUiState) -> Unit,
     onKeyGen: () -> Unit,
     onSaveClick: () -> Unit,
@@ -75,8 +73,10 @@ fun ProfileEditBody(
     ) {
         ProfileInputForm(
             profileUiState = profileUiState,
+            models = models,
             onValueChange = onProfileValueChange,
             onKeyGen = onKeyGen,
+            editing = true,
         )
 
         Button(

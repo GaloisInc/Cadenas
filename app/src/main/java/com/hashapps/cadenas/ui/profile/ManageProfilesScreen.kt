@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,37 +26,31 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 object ManageProfilesDestination : NavigationDestination {
     override val route = "manage_profiles"
     override val titleRes = R.string.manage_profiles
-    const val modelIdArg = "modelId"
-    val routeWithArgs = "$route/{$modelIdArg}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageProfilesScreen(
     navigateUp: () -> Unit,
-    navigateToProfileEntry: (Int) -> Unit,
-    navigateToProfileEdit: (Int, Int) -> Unit,
+    navigateToProfileEntry: () -> Unit,
+    navigateToProfileEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageProfilesViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val modelName by viewModel.modelName.collectAsState()
     val selectedProfileId by viewModel.selectedProfileId.collectAsState()
     val profiles by viewModel.profiles.collectAsState()
 
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = LocalContext.current.getString(
-                    ManageProfilesDestination.titleRes,
-                    modelName
-                ),
+                title = stringResource(ManageProfilesDestination.titleRes),
                 canNavigateUp = true,
                 navigateUp = navigateUp,
             )
         },
         floatingActionButton = {
             LargeFloatingActionButton(
-                onClick = { navigateToProfileEntry(viewModel.modelId) },
+                onClick = { navigateToProfileEntry() },
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
@@ -71,7 +64,7 @@ fun ManageProfilesScreen(
             profiles = profiles,
             selectedProfileId = selectedProfileId,
             onProfileSelect = { viewModel.selectProfile(it) },
-            onProfileEdit = { navigateToProfileEdit(viewModel.modelId, it) },
+            onProfileEdit = { navigateToProfileEdit(it) },
             onProfileDelete = { viewModel.deleteProfile(it) },
         )
     }

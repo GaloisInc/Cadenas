@@ -6,23 +6,23 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.ConfigRepository
-import kotlinx.coroutines.flow.SharingStarted
+import com.hashapps.cadenas.data.profile.ProfileRepository
+import com.hashapps.cadenas.data.ModelRepository
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ProfileEditViewModel(
     savedStateHandle: SavedStateHandle,
-    private val configRepository: ConfigRepository,
+    private val profileRepository: ProfileRepository,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
-    private val modelId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.modelIdArg])
-    val modelName = configRepository.getModelNameStream(modelId).stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = "",
-    )
+//    private val modelId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.modelIdArg])
+//    val modelName = configRepository.getModelNameStream(modelId).stateIn(
+//        scope = viewModelScope,
+//        started = SharingStarted.WhileSubscribed(5_000L),
+//        initialValue = "",
+//    )
 
     private val itemId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.profileIdArg])
 
@@ -31,7 +31,7 @@ class ProfileEditViewModel(
 
     init {
         viewModelScope.launch {
-            val profile = configRepository.getProfileStream(itemId)
+            val profile = profileRepository.getProfileStream(itemId)
                 .filterNotNull()
                 .first()
             profileUiState = profile.toProfileUiState(actionEnabled = true)
@@ -42,15 +42,17 @@ class ProfileEditViewModel(
         profileUiState = newProfileUiState.copy(actionEnabled = newProfileUiState.isValid())
     }
 
+    val availableModels = modelRepository.downloadedModels()
+
     fun updateProfile() {
         viewModelScope.launch {
             if (profileUiState.isValid()) {
-                configRepository.updateProfile(profileUiState.toProfile(modelId))
+                profileRepository.updateProfile(profileUiState.toProfile())
             }
         }
     }
 
     fun genKey() {
-        profileUiState = profileUiState.copy(key = configRepository.genKey())
+        profileUiState = profileUiState.copy(key = profileRepository.genKey())
     }
 }
