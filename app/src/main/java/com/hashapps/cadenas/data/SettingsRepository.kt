@@ -52,11 +52,15 @@ class SettingsRepository(
     private var _selectedModel: MutableStateFlow<String?> = MutableStateFlow(null)
     val selectedModel: StateFlow<String?> = _selectedModel.asStateFlow()
 
+    private var _profileTag: MutableStateFlow<String?> = MutableStateFlow(null)
+    val profileTag: StateFlow<String?> = _profileTag.asStateFlow()
+
     init {
         externalScope.launch(ioDispatcher) {
             selectedProfile.filterNotNull().collectLatest {
                 profileDao.getProfile(it).collectLatest { profile ->
                     _selectedModel.update { profile.selectedModel }
+                    _profileTag.update { profile.tag }
 
                     Cadenas.initialize(
                         CadenasConfig(

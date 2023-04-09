@@ -14,6 +14,8 @@ class ProcessingViewModel(
 ) : ViewModel() {
     val cadenasInitialized = settingsRepository.cadenasInitialized
 
+    val tag = settingsRepository.profileTag
+
     var encodeUiState by mutableStateOf(ProcessingUiState())
         private set
 
@@ -28,18 +30,18 @@ class ProcessingViewModel(
         decodeUiState = newDecodeUiState.copy(actionEnabled = newDecodeUiState.isValid())
     }
 
-    fun encodeMessage() {
+    fun encodeMessage(tag: String) {
         viewModelScope.launch {
             encodeUiState = encodeUiState.copy(inProgress = true, result = null)
             val encodedMessage = Cadenas.getInstance()?.encode(encodeUiState.toProcess)
-            encodeUiState = encodeUiState.copy(inProgress = false, result = encodedMessage)
+            encodeUiState = encodeUiState.copy(inProgress = false, result = encodedMessage + tag)
         }
     }
 
-    fun decodeMessage() {
+    fun decodeMessage(tag: String) {
         viewModelScope.launch {
             decodeUiState = decodeUiState.copy(inProgress = true, result = null)
-            val decodedMessage = Cadenas.getInstance()?.decode(decodeUiState.toProcess)
+            val decodedMessage = Cadenas.getInstance()?.decode(decodeUiState.toProcess.removeSuffix(tag))
             decodeUiState = decodeUiState.copy(inProgress = false, result = decodedMessage)
         }
     }

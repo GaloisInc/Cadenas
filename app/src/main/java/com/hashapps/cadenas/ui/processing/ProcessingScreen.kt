@@ -127,6 +127,14 @@ fun ProcessingScreen(
         }
     ) { innerPadding ->
         val cadenasInitialized by viewModel.cadenasInitialized.collectAsState()
+
+        val tag by viewModel.tag.collectAsState()
+        val formattedTag = if (!tag.isNullOrBlank()) {
+            " #$tag"
+        } else {
+            ""
+        }
+
         NavHost(
             navController = navController,
             startDestination = EncodeDestination.route,
@@ -146,7 +154,7 @@ fun ProcessingScreen(
                     onValueChange = viewModel::updateEncodeUiState,
                     toProcessLabel = stringResource(R.string.plaintext_message_label),
                     toProcessSupport = stringResource(R.string.plaintext_message_support),
-                    action = viewModel::encodeMessage,
+                    action = { viewModel.encodeMessage(formattedTag) },
                     actionLabel = stringResource(R.string.encode),
                 )
             }
@@ -162,7 +170,7 @@ fun ProcessingScreen(
                     onValueChange = viewModel::updateDecodeUiState,
                     toProcessLabel = stringResource(R.string.encoded_message_label),
                     toProcessSupport = stringResource(R.string.encoded_message_support),
-                    action = viewModel::decodeMessage,
+                    action = { viewModel.decodeMessage(formattedTag) },
                     actionLabel = stringResource(R.string.decode),
                     preventKeyboardInput = true,
                 )
