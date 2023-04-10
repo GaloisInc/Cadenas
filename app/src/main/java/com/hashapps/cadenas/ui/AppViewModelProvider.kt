@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hashapps.cadenas.CadenasApplication
+import com.hashapps.cadenas.domain.ManageModelsUseCase
 import com.hashapps.cadenas.ui.model.ManageModelsViewModel
 import com.hashapps.cadenas.ui.model.ModelAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
@@ -38,8 +39,10 @@ object AppViewModelProvider {
 
         initializer {
             ManageModelsViewModel(
-                cadenasApplication().container.modelRepository,
-                cadenasApplication().container.profileRepository,
+                ManageModelsUseCase(
+                    cadenasApplication().container.modelRepository,
+                    cadenasApplication().container.profileRepository
+                ),
                 cadenasApplication().container.settingsRepository,
             )
         }
