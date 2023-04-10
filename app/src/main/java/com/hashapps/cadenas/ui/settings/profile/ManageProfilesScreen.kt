@@ -44,7 +44,6 @@ fun ManageProfilesScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(ManageProfilesDestination.titleRes),
-                canNavigateUp = true,
                 navigateUp = navigateUp,
             )
         },

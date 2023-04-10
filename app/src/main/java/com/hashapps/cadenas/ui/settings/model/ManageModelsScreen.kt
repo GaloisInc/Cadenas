@@ -38,7 +38,6 @@ fun ManageModelsScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(ManageModelsDestination.titleRes),
-                canNavigateUp = true,
                 navigateUp = navigateUp,
             )
         },

@@ -31,7 +31,6 @@ fun SettingsScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(SettingsDestination.titleRes),
-                canNavigateUp = true,
                 navigateUp = navigateUp,
             )
         }
@@ -106,22 +105,25 @@ fun SettingsBody(
 @Composable
 fun SettingsTopAppBar(
     title: String,
-    canNavigateUp: Boolean,
     modifier: Modifier = Modifier,
+    navigationNeeded: Boolean = true,
+    canNavigateUp: Boolean = true,
     navigateUp: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
         modifier = modifier,
         navigationIcon = {
-            IconButton(
-                enabled = canNavigateUp,
-                onClick = navigateUp,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back),
-                )
+            if (navigationNeeded) {
+                IconButton(
+                    enabled = canNavigateUp,
+                    onClick = navigateUp,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back),
+                    )
+                }
             }
         },
     )
