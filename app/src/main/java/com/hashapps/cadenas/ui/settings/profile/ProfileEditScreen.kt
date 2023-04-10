@@ -36,7 +36,6 @@ fun ProfileEditScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(ProfileEditDestination.titleRes),
-                canNavigateUp = true,
                 navigateUp = navigateUp,
             )
         }
