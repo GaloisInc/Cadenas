@@ -55,7 +55,6 @@ object DecodeDestination : NavigationDestination {
 @Immutable
 data class ProcessingViewState(
     @StringRes val title: Int? = null,
-    val canShare: Boolean = false,
     val onShare: () -> Unit = {},
 )
 
@@ -93,7 +92,7 @@ fun ProcessingScreen(
                     }
                 },
                 actions = {
-                    if (processingViewState.canShare) {
+                    if (processingViewState.title == EncodeDestination.titleRes) {
                         IconButton(
                             enabled = viewModel.encodeUiState.result != null,
                             onClick = processingViewState.onShare,
@@ -144,7 +143,6 @@ fun ProcessingScreen(
                 val context = LocalContext.current
                 processingViewState = ProcessingViewState(
                     title = EncodeDestination.titleRes,
-                    canShare = true,
                     onShare = { shareMessage(context, viewModel.encodeUiState.result) }
                 )
 
