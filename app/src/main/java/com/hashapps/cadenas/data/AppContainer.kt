@@ -32,7 +32,7 @@ class AppDataContainer(
     override val settingsRepository by lazy {
         SettingsRepository(
             dataStore = context.dataStore,
-            internalStorage = context.filesDir,
+            modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
             profileDao = ProfileDatabase.getDatabase(context).profileDao(),
             externalScope = CoroutineScope(SupervisorJob()),
         )

@@ -13,7 +13,7 @@ class ManageModelsViewModel(
     private val manageModelsUseCase: ManageModelsUseCase,
     settingsRepository: SettingsRepository,
 ) : ViewModel() {
-    val selectedModel = settingsRepository.selectedModel
+    val selectedProfile = settingsRepository.selectedProfile
 
     var availableModels: List<String> by mutableStateOf(manageModelsUseCase())
         private set

@@ -32,7 +32,7 @@ fun ManageModelsScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedModel by viewModel.selectedModel.collectAsState()
+    val selectedProfile by viewModel.selectedProfile.collectAsState()
 
     Scaffold(
         topBar = {
@@ -56,7 +56,7 @@ fun ManageModelsScreen(
         ManageModelsBody(
             modifier = modifier.padding(innerPadding),
             models = viewModel.availableModels,
-            selectedModel = selectedModel,
+            selectedModel = selectedProfile?.selectedModel,
             onModelDelete = viewModel::deleteModel,
         )
     }

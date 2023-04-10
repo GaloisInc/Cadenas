@@ -14,7 +14,7 @@ class ProcessingViewModel(
 ) : ViewModel() {
     val cadenasInitialized = settingsRepository.cadenasInitialized
 
-    val tag = settingsRepository.profileTag
+    val selectedProfile = settingsRepository.selectedProfile
 
     var encodeUiState by mutableStateOf(ProcessingUiState())
         private set

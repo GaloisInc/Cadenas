@@ -37,7 +37,7 @@ fun ManageProfilesScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageProfilesViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedProfileId by viewModel.selectedProfileId.collectAsState()
+    val selectedProfile by viewModel.selectedProfile.collectAsState()
     val profiles by viewModel.profiles.collectAsState()
 
     Scaffold(
@@ -62,7 +62,7 @@ fun ManageProfilesScreen(
         ManageProfilesBody(
             modifier = modifier.padding(innerPadding),
             profiles = profiles,
-            selectedProfileId = selectedProfileId,
+            selectedProfileId = selectedProfile?.id,
             onProfileSelect = { viewModel.selectProfile(it) },
             onProfileEdit = { navigateToProfileEdit(it) },
             onProfileDelete = { viewModel.deleteProfile(it) },
@@ -107,7 +107,7 @@ fun ProfileList(
 ) {
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(profiles, key = { it.id }) {
-            CadenasProfile(
+            Profile(
                 profile = it,
                 selectedProfileId = selectedProfileId,
                 onProfileSelect = onProfileSelect,
@@ -120,7 +120,7 @@ fun ProfileList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CadenasProfile(
+fun Profile(
     profile: Profile,
     selectedProfileId: Int?,
     onProfileSelect: (Profile) -> Unit,

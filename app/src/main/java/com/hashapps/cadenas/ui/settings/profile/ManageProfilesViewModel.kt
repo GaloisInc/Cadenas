@@ -13,11 +13,7 @@ class ManageProfilesViewModel(
     private val profileRepository: ProfileRepository,
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
-    val selectedProfileId = settingsRepository.selectedProfile.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = null,
-    )
+    val selectedProfile = settingsRepository.selectedProfile
 
     fun selectProfile(id: Int) {
         viewModelScope.launch {
