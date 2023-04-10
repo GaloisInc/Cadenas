@@ -34,7 +34,7 @@ class ProcessingViewModel(
         viewModelScope.launch {
             encodeUiState = encodeUiState.copy(inProgress = true, result = null)
             val encodedMessage = Cadenas.getInstance()?.encode(encodeUiState.toProcess)
-            encodeUiState = encodeUiState.copy(inProgress = false, result = encodedMessage + tag)
+            encodeUiState = encodeUiState.copy(inProgress = false, result = encodedMessage?.plus(tag) )
         }
     }
 
