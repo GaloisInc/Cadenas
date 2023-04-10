@@ -32,16 +32,17 @@ object ProfileAddDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileAddScreen(
-    navigateBack: () -> Unit,
+    navigateNext: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
+    firstTime: Boolean = false,
     viewModel: ProfileAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(ProfileAddDestination.titleRes),
-                canNavigateUp = true,
+                navigationNeeded = !firstTime,
                 navigateUp = navigateUp,
             )
         }
@@ -54,7 +55,7 @@ fun ProfileAddScreen(
             onKeyGen = viewModel::genKey,
             onSaveClick = {
                 viewModel.saveProfile()
-                navigateBack()
+                navigateNext()
             },
         )
     }

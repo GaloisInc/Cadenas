@@ -1,9 +1,6 @@
 package com.hashapps.cadenas.ui.settings.model
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -37,8 +34,9 @@ object ModelAddDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModelAddScreen(
-    navigateUp: () -> Unit,
+    navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
+    firstTime: Boolean = false,
     viewModel: ModelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -46,6 +44,7 @@ fun ModelAddScreen(
     var showProgressIndicator by rememberSaveable { mutableStateOf(false) }
 
     var modelDownloadTriggered by rememberSaveable { mutableStateOf(false) }
+    var modelDownloaded by rememberSaveable { mutableStateOf(false) }
     val workerState by viewModel.modelDownloaderState.collectAsState()
     workerState?.also {
         LaunchedEffect(it.state) {
@@ -62,6 +61,7 @@ fun ModelAddScreen(
                         }
 
                         if (it.state == WorkInfo.State.SUCCEEDED) {
+                            modelDownloaded = true
                             viewModel.updateUiState(ModelUiState())
                         }
                     }
@@ -78,8 +78,9 @@ fun ModelAddScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(ModelAddDestination.titleRes),
+                navigationNeeded = !firstTime,
                 canNavigateUp = !showProgressIndicator,
-                navigateUp = navigateUp,
+                navigateUp = navigateNext,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -118,6 +119,19 @@ fun ModelAddScreen(
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth()
                 )
+            }
+
+            if (firstTime) {
+                Button(
+                    onClick = navigateNext,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = modelDownloaded,
+                ) {
+                    Text(
+                        text = stringResource(R.string.next),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                }
             }
         }
     }

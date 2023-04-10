@@ -50,7 +50,7 @@ fun SettingsNavHost(
 
         composable(route = ModelAddDestination.route) {
             ModelAddScreen(
-                navigateUp = { navController.navigate(ManageModelsDestination.route) },
+                navigateNext = { navController.navigate(ManageModelsDestination.route) },
             )
         }
 
@@ -64,7 +64,7 @@ fun SettingsNavHost(
 
         composable(route = ProfileAddDestination.route) {
             ProfileAddScreen(
-                navigateBack = { navController.popBackStack() },
+                navigateNext = { navController.popBackStack() },
                 navigateUp = { navController.navigateUp() },
             )
         }

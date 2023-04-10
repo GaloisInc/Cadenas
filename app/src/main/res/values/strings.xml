@@ -59,4 +59,13 @@
     <string name="name_error">Model names must be alphanumeric</string>
     <string name="manage_profiles_support">Manage messaging profiles</string>
     <string name="model">Model</string>
+    <string name="intro">Welcome</string>
+    <string name="intro_text">Cadenas is an app for obfuscated communication.</string>
+    <string name="add_model_text">To get started, we\'ll download some GPT-2 models to use for encoding.</string>
+    <string name="next">Next</string>
+    <string name="after_model_text">You can add and remove models later. Cadenas always needs at least one model, so you can\'t delete whichever is currently active.</string>
+    <string name="add_profile_text">To start encoding and decoding messages, let\'s add a communication profile.</string>
+    <string name="after_profile_text">Great! You can create as many profiles as you\'d like. Profile information can be shared to allow others to communicate with you.</string>
+    <string name="get_started_text">Tap \"Get Started\" to encode your first message!</string>
+    <string name="get_started">Get Started!</string>
 </resources>
