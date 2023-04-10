@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hashapps.cadenas.ui.processing.ProcessingDestination
 import com.hashapps.cadenas.ui.processing.ProcessingScreen
+import com.hashapps.cadenas.ui.welcome.IntroDestination
+import com.hashapps.cadenas.ui.welcome.IntroScreen
 
 @Composable
 fun CadenasRootNavHost(
@@ -15,7 +17,7 @@ fun CadenasRootNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ProcessingDestination.route,
+        startDestination = WelcomeNavDestination.route,
         modifier = modifier,
     ) {
         composable(route = ProcessingDestination.route) {
@@ -24,6 +26,10 @@ fun CadenasRootNavHost(
 
         composable(route = SettingsNavDestination.route) {
             SettingsNavHost(navigateToProcessing = { navController.navigate(ProcessingDestination.route) })
+        }
+
+        composable(route = WelcomeNavDestination.route) {
+            WelcomeNavHost(navigateToProcessing = { navController.navigate((ProcessingDestination.route)) })
         }
     }
 }
