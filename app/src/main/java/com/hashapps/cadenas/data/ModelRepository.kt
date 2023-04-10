@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.*
 import java.io.File
 
 class ModelRepository(
-    private val internalStorage: File,
+    private val modelsDir: File,
     private val workManager: WorkManager,
 ) {
     val modelDownloaderState = workManager
@@ -21,7 +21,7 @@ class ModelRepository(
 
         data.putString(ModelDownloadWorker.KEY_MODEL_URL, url)
 
-        val outDir = File(internalStorage, "models/$modelName")
+        val outDir = modelsDir.resolve(modelName)
         data.putString(ModelDownloadWorker.KEY_MODEL_DIR, outDir.path)
 
         val modelDownloadRequest = OneTimeWorkRequestBuilder<ModelDownloadWorker>()
@@ -38,8 +38,8 @@ class ModelRepository(
     }
 
     fun deleteFilesForModel(modelName: String) {
-        val toDeleteDir = File(internalStorage, "models/$modelName.temp")
-        File(internalStorage, "models/$modelName").renameTo(toDeleteDir)
+        val toDeleteDir = modelsDir.resolve("$modelName.temp")
+        modelsDir.resolve(modelName).renameTo(toDeleteDir)
 
 
         val modelDeleteWOrkRequest = OneTimeWorkRequestBuilder<ModelDeleteWorker>()
@@ -55,7 +55,7 @@ class ModelRepository(
         workManager.enqueue(modelDeleteWOrkRequest)
     }
 
-    fun downloadedModels() = File(internalStorage, "models")
+    fun downloadedModels() = modelsDir
         .listFiles()
         .orEmpty()
         .filter { it.isDirectory && !it.path.endsWith(".temp") }

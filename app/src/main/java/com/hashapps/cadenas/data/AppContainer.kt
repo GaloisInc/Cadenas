@@ -39,7 +39,7 @@ class AppDataContainer(
 
     override val modelRepository by lazy {
         ModelRepository(
-            internalStorage = context.filesDir,
+            modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
             workManager = WorkManager.getInstance(context),
         )
     }
