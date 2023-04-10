@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.model
+package com.hashapps.cadenas.ui.settings.model
 
 data class ModelUiState(
     val name: String = "",

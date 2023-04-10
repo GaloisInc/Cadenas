@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.model
+package com.hashapps.cadenas.ui.settings.model
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

@@ -9,13 +9,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.model.ManageModelsDestination
-import com.hashapps.cadenas.ui.model.ManageModelsScreen
-import com.hashapps.cadenas.ui.model.ModelAddDestination
-import com.hashapps.cadenas.ui.model.ModelAddScreen
-import com.hashapps.cadenas.ui.profile.*
 import com.hashapps.cadenas.ui.settings.SettingsDestination
 import com.hashapps.cadenas.ui.settings.SettingsScreen
+import com.hashapps.cadenas.ui.settings.model.ManageModelsDestination
+import com.hashapps.cadenas.ui.settings.model.ManageModelsScreen
+import com.hashapps.cadenas.ui.settings.model.ModelAddDestination
+import com.hashapps.cadenas.ui.settings.model.ModelAddScreen
+import com.hashapps.cadenas.ui.settings.profile.*
 
 object SettingsNavDestination : NavigationDestination {
     override val route = "settings_nav"

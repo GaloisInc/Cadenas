@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.model
+package com.hashapps.cadenas.ui.settings.model
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

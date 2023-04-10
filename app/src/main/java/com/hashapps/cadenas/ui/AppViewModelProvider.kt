@@ -7,12 +7,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hashapps.cadenas.CadenasApplication
 import com.hashapps.cadenas.domain.ManageModelsUseCase
-import com.hashapps.cadenas.ui.model.ManageModelsViewModel
-import com.hashapps.cadenas.ui.model.ModelAddViewModel
+import com.hashapps.cadenas.ui.settings.model.ManageModelsViewModel
+import com.hashapps.cadenas.ui.settings.model.ModelAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
-import com.hashapps.cadenas.ui.profile.ManageProfilesViewModel
-import com.hashapps.cadenas.ui.profile.ProfileAddViewModel
-import com.hashapps.cadenas.ui.profile.ProfileEditViewModel
+import com.hashapps.cadenas.ui.settings.profile.ManageProfilesViewModel
+import com.hashapps.cadenas.ui.settings.profile.ProfileAddViewModel
+import com.hashapps.cadenas.ui.settings.profile.ProfileEditViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
