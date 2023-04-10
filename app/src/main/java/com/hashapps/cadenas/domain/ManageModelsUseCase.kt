@@ -1,7 +1,7 @@
 package com.hashapps.cadenas.domain
 
 import com.hashapps.cadenas.data.ModelRepository
-import com.hashapps.cadenas.data.profile.ProfileRepository
+import com.hashapps.cadenas.data.ProfileRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

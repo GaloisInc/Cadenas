@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.profile.ProfileRepository
+import com.hashapps.cadenas.data.ProfileRepository
 import com.hashapps.cadenas.data.ModelRepository
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first

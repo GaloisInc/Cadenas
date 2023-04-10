@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data.profile
+package com.hashapps.cadenas.data
 
 import javax.crypto.KeyGenerator
 

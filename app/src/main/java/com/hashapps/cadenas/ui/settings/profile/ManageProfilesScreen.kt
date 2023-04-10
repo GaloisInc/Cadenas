@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.data.profile.Profile
+import com.hashapps.cadenas.data.Profile
 import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.navigation.NavigationDestination

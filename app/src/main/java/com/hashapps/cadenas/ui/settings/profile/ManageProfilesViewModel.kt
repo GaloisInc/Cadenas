@@ -2,9 +2,9 @@ package com.hashapps.cadenas.ui.settings.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.profile.ProfileRepository
+import com.hashapps.cadenas.data.ProfileRepository
 import com.hashapps.cadenas.data.SettingsRepository
-import com.hashapps.cadenas.data.profile.Profile
+import com.hashapps.cadenas.data.Profile
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch

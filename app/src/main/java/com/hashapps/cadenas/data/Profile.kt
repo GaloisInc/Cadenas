@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data.profile
+package com.hashapps.cadenas.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

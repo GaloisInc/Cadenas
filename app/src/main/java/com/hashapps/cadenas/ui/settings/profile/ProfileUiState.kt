@@ -1,6 +1,6 @@
 package com.hashapps.cadenas.ui.settings.profile
 
-import com.hashapps.cadenas.data.profile.Profile
+import com.hashapps.cadenas.data.Profile
 
 data class ProfileUiState(
     val id: Int = 0,
