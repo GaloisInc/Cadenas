@@ -28,6 +28,7 @@ object FinalDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FinalScreen(
+    completeFirstRun: () -> Unit,
     navigateToProcessing: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -40,6 +41,7 @@ fun FinalScreen(
         }
     ) { innerPadding ->
         FinalBody(
+            completeFirstRun = completeFirstRun,
             navigateToProcessing = navigateToProcessing,
             modifier = modifier.padding(innerPadding),
         )
@@ -48,6 +50,7 @@ fun FinalScreen(
 
 @Composable
 fun FinalBody(
+    completeFirstRun: () -> Unit,
     navigateToProcessing: () -> Unit,
     modifier: Modifier,
 ) {
@@ -84,9 +87,12 @@ fun FinalBody(
         buttonState.targetState = getStartedState.isIdle && getStartedState.currentState
 
         WelcomeButton(
-            visibleState = buttonState, onClick = navigateToProcessing, text = stringResource(
-                R.string.get_started
-            )
+            visibleState = buttonState,
+            onClick = {
+                completeFirstRun()
+                navigateToProcessing()
+            },
+            text = stringResource(R.string.get_started),
         )
     }
 }

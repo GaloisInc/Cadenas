@@ -12,12 +12,14 @@ import com.hashapps.cadenas.ui.welcome.IntroScreen
 
 @Composable
 fun CadenasRootNavHost(
+    firstTime: Boolean,
+    completeFirstRun: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
-        startDestination = WelcomeNavDestination.route,
+        startDestination = if (firstTime) WelcomeNavDestination.route else ProcessingDestination.route,
         modifier = modifier,
     ) {
         composable(route = ProcessingDestination.route) {
@@ -29,7 +31,7 @@ fun CadenasRootNavHost(
         }
 
         composable(route = WelcomeNavDestination.route) {
-            WelcomeNavHost(navigateToProcessing = { navController.navigate((ProcessingDestination.route)) })
+            WelcomeNavHost(completeFirstRun = completeFirstRun, navigateToProcessing = { navController.navigate((ProcessingDestination.route)) })
         }
     }
 }

@@ -20,6 +20,7 @@ object WelcomeNavDestination : NavigationDestination {
 
 @Composable
 fun WelcomeNavHost(
+    completeFirstRun: () -> Unit,
     navigateToProcessing: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -46,7 +47,7 @@ fun WelcomeNavHost(
         }
 
         composable(route = FinalDestination.route) {
-            FinalScreen(navigateToProcessing = navigateToProcessing)
+            FinalScreen(completeFirstRun = completeFirstRun, navigateToProcessing = navigateToProcessing)
         }
     }
 }

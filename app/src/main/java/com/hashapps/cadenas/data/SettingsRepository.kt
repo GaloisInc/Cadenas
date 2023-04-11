@@ -2,10 +2,7 @@ package com.hashapps.cadenas.data
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +20,25 @@ class SettingsRepository(
 ) {
     private companion object {
         val SELECTED_PROFILE = intPreferencesKey("selected_profile")
+        val RUN_ONCE = booleanPreferencesKey("run_once")
 
         const val TAG = "SettingsRepo"
+    }
+
+    val runOnce = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading settings.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }.map { it[RUN_ONCE] ?: false }
+
+    suspend fun completeFirstRun() {
+        dataStore.edit {
+            it[RUN_ONCE] = true
+        }
     }
 
     suspend fun saveSelectedProfile(selectedProfile: Int) {
