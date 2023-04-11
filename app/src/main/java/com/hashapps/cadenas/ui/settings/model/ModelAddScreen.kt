@@ -44,7 +44,6 @@ fun ModelAddScreen(
     var showProgressIndicator by rememberSaveable { mutableStateOf(false) }
 
     var modelDownloadTriggered by rememberSaveable { mutableStateOf(false) }
-    var modelDownloaded by rememberSaveable { mutableStateOf(false) }
     val workerState by viewModel.modelDownloaderState.collectAsState()
     workerState?.also {
         LaunchedEffect(it.state) {
@@ -61,7 +60,9 @@ fun ModelAddScreen(
                         }
 
                         if (it.state == WorkInfo.State.SUCCEEDED) {
-                            modelDownloaded = true
+                            if (firstTime) {
+                                navigateNext()
+                            }
                             viewModel.updateUiState(ModelUiState())
                         }
                     }
@@ -121,18 +122,18 @@ fun ModelAddScreen(
                 )
             }
 
-            if (firstTime) {
-                Button(
-                    onClick = navigateNext,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = modelDownloaded,
-                ) {
-                    Text(
-                        text = stringResource(R.string.next),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                }
-            }
+//            if (firstTime) {
+//                Button(
+//                    onClick = navigateNext,
+//                    modifier = Modifier.fillMaxWidth(),
+//                    enabled = modelDownloaded,
+//                ) {
+//                    Text(
+//                        text = stringResource(R.string.next),
+//                        style = MaterialTheme.typography.titleLarge,
+//                    )
+//                }
+//            }
         }
     }
 }
