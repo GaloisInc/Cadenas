@@ -139,8 +139,12 @@ fun ProfileInputForm(
                 imeAction = ImeAction.Next,
             ),
         )
+    }
 
-        if (!editing) {
+    if (!editing) {
+        ElevatedCard(
+            modifier = modifier.fillMaxWidth(),
+        ) {
             Row(
                 modifier = modifier
                     .padding(8.dp)
@@ -167,31 +171,29 @@ fun ProfileInputForm(
                     )
                 }
             }
-        }
 
-        OutlinedTextField(
-            modifier = modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            value = profileUiState.seed,
-            onValueChange = { onValueChange(profileUiState.copy(seed = it.take(MAX_LEN))) },
-            singleLine = true,
-            label = { Text(stringResource(R.string.seed_label)) },
-            supportingText = {
-                Text(
-                    LocalContext.current.getString(
-                        R.string.seed_support,
-                        profileUiState.seed.length,
-                        MAX_LEN,
+            OutlinedTextField(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                value = profileUiState.seed,
+                onValueChange = { onValueChange(profileUiState.copy(seed = it.take(MAX_LEN))) },
+                singleLine = true,
+                label = { Text(stringResource(R.string.seed_label)) },
+                supportingText = {
+                    Text(
+                        LocalContext.current.getString(
+                            R.string.seed_support,
+                            profileUiState.seed.length,
+                            MAX_LEN,
+                        )
                     )
-                )
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
-            ),
-        )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                ),
+            )
 
-        if (!editing) {
             var expanded by remember { mutableStateOf(false) }
             ExposedDropdownMenuBox(
                 modifier = modifier
@@ -204,14 +206,13 @@ fun ProfileInputForm(
                     }
                 },
             ) {
-                TextField(
+                OutlinedTextField(
                     modifier = Modifier.menuAnchor().fillMaxWidth(),
                     readOnly = true,
                     value = profileUiState.selectedModel,
                     onValueChange = {},
                     label = { Text(stringResource(R.string.model)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
                 )
 
                 ExposedDropdownMenu(
@@ -233,30 +234,34 @@ fun ProfileInputForm(
             }
         }
 
-        OutlinedTextField(
-            modifier = modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            value = profileUiState.tag,
-            onValueChange = { onValueChange(profileUiState.copy(tag = it)) },
-            singleLine = true,
-            label = { Text(stringResource(R.string.tag_label)) },
-            supportingText = {
-                if (profileUiState.isTagValid()) {
-                    Text(stringResource(R.string.tag_support))
-                } else {
-                    Text(stringResource(R.string.tag_error))
-                }
-            },
-            isError = !profileUiState.isTagValid(),
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                }
-            ),
-        )
+        ElevatedCard(
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            OutlinedTextField(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                value = profileUiState.tag,
+                onValueChange = { onValueChange(profileUiState.copy(tag = it)) },
+                singleLine = true,
+                label = { Text(stringResource(R.string.tag_label)) },
+                supportingText = {
+                    if (profileUiState.isTagValid()) {
+                        Text(stringResource(R.string.tag_support))
+                    } else {
+                        Text(stringResource(R.string.tag_error))
+                    }
+                },
+                isError = !profileUiState.isTagValid(),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
+            )
+        }
     }
 }

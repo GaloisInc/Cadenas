@@ -147,10 +147,10 @@ fun ModelInputForm(
 ) {
     val focusManager = LocalFocusManager.current
 
+    var displaySupportText = modelUiState.name == "" || modelUiState.isNameValid()
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
     ) {
-        var displaySupportText = modelUiState.name == "" || modelUiState.isNameValid()
         OutlinedTextField(
             modifier = modifier
                 .padding(8.dp)
@@ -172,7 +172,11 @@ fun ModelInputForm(
                 imeAction = ImeAction.Next,
             ),
         )
+    }
 
+    ElevatedCard(
+        modifier = modifier.fillMaxWidth(),
+    ) {
         displaySupportText = modelUiState.url == "" || modelUiState.isUrlValid()
         OutlinedTextField(
             modifier = modifier
