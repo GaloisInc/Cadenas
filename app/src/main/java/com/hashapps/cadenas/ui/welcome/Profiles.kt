@@ -69,6 +69,8 @@ fun ProfilesBody(
 
         WelcomeText(visibleState = addProfileState, text = stringResource(R.string.add_profile_text))
 
+        Spacer(modifier = modifier.weight(1f))
+
         val buttonState = remember {
             MutableTransitionState(false)
         }

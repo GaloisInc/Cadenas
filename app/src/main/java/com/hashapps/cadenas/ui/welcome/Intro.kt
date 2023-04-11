@@ -66,6 +66,8 @@ fun IntroBody(
 
         WelcomeText(visibleState = addModelState, text = stringResource(R.string.add_model_text))
 
+        Spacer(modifier = modifier.weight(1f))
+
         val buttonState = remember {
             MutableTransitionState(false)
         }

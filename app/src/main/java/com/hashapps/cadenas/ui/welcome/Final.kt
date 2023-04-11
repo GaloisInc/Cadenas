@@ -1,10 +1,7 @@
 package com.hashapps.cadenas.ui.welcome
 
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -80,6 +77,8 @@ fun FinalBody(
             visibleState = getStartedState,
             text = stringResource(R.string.get_started_text)
         )
+
+        Spacer(modifier = modifier.weight(1f))
 
         val buttonState = remember {
             MutableTransitionState(false)
