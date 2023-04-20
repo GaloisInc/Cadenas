@@ -2,6 +2,12 @@ package com.hashapps.cadenas.data
 
 import javax.crypto.KeyGenerator
 
+/**
+ * Repository class for Cadenas messaging profiles.
+ *
+ * Loosely wraps around the [ProfileDao] methods, and provides key-generation
+ * capabilities for profile creation.
+ */
 class ProfileRepository(private val profileDao: ProfileDao) {
     suspend fun insertProfile(profile: Profile) = profileDao.insert(profile)
     suspend fun updateProfile(profile: Profile) = profileDao.update(profile)
@@ -17,5 +23,9 @@ class ProfileRepository(private val profileDao: ProfileDao) {
     }
 
     private fun ByteArray.toHex(): String = joinToString(separator = "") { "%02x".format(it) }
+
+    /**
+     * Generate and return an AES-256 key as ASCII-Hex.
+     */
     fun genKey() = KEYGEN.generateKey().encoded.toHex()
 }
