@@ -60,4 +60,5 @@ class ModelRepository(
         .orEmpty()
         .filter { it.isDirectory && !it.path.endsWith(".temp") }
         .map { it.name }
+        .sorted()
 }
