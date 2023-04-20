@@ -11,6 +11,28 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 
+/**
+ * Repository class for Cadenas application settings.
+ *
+ * While there aren't exactly many personalization/customization options for
+ * Cadenas, there are a few persistent settings relevant to normal operation.
+ * More specifically, we must keep track of:
+ *
+ * - Whether or not the app's first-time setup has been completed
+ * - Which messaging profile is selected
+ *
+ * These settings are persisted using the [DataStore]<[Preferences]>, a
+ * file-based key-value store. On instantiation, this class launches an
+ * application-scoped background job that listens for changes to the
+ * selected profile, re-initializing Cadenas when a change occurs.
+ *
+ * @property[runOnce] Boolean preference indicating whether first-time setup
+ * has been completed
+ * @property[cadenasInitialized] A derived Boolean flag indicating whether or
+ * not the Cadenas backend has been initialized or not
+ * @property[selectedProfile] The [Profile] selected by the store integer
+ * preference ID
+ */
 class SettingsRepository(
     private val dataStore: DataStore<Preferences>,
     private val modelsDir: File,
@@ -35,12 +57,22 @@ class SettingsRepository(
             }
         }.map { it[RUN_ONCE] ?: false }
 
+    /**
+     * Indicate the first app run has been completed, so setup screens only
+     * show on first launch.
+     */
     suspend fun completeFirstRun() {
         dataStore.edit {
             it[RUN_ONCE] = true
         }
     }
 
+    /**
+     * Update which messaging profile is selected.
+     *
+     * @param[selectedProfile] The ID of the messaging profile that's been
+     * selected
+     */
     suspend fun saveSelectedProfile(selectedProfile: Int) {
         dataStore.edit {
             it[SELECTED_PROFILE] = selectedProfile
