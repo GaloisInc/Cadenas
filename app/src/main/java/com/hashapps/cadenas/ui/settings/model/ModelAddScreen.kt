@@ -26,11 +26,24 @@ import kotlinx.coroutines.launch
 
 private const val MAX_LEN = 128
 
+/**
+ * The [NavigationDestination] for the model-add screen.
+ */
 object ModelAddDestination : NavigationDestination {
     override val route = "model_add"
     override val titleRes = R.string.add_model
 }
 
+/**
+ * Cadenas model-add screen.
+ *
+ * To encode and decode messages, Cadenas needs access to one or more GPT-2
+ * language models. This screen provides the interface to fetch models from the
+ * Internet, specifically at HTTPS endpoints. Model downloading is performed as
+ * background work that _will not_ be cancelled, even if the application dies.
+ *
+ * Future versions may support other sources, such as IPFS.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModelAddScreen(
@@ -43,6 +56,20 @@ fun ModelAddScreen(
 
     var showProgressIndicator by rememberSaveable { mutableStateOf(false) }
 
+    /*
+     * This is a fun block. First, we need some state to track whether a
+     * model download has been started - we can't rely on the worker state,
+     * since this will still be `SUCCEEDED` if the application is restarted
+     * after a successful model download. The problem here is that we wish
+     * to show a Snackbar message upon download success and failure, and
+     * relying on the state alone would cause such a message to be shown
+     * regardless.
+     *
+     * Additionally, there is some special-case logic for when this screen is
+     * interacted with during the first-time setup sequence - rather than
+     * simply resetting the UI in that case, we must advance to the next
+     * screen.
+     */
     var modelDownloadTriggered by rememberSaveable { mutableStateOf(false) }
     val workerState by viewModel.modelDownloaderState.collectAsState()
     workerState?.also {
@@ -121,26 +148,13 @@ fun ModelAddScreen(
                         .fillMaxWidth()
                 )
             }
-
-//            if (firstTime) {
-//                Button(
-//                    onClick = navigateNext,
-//                    modifier = Modifier.fillMaxWidth(),
-//                    enabled = modelDownloaded,
-//                ) {
-//                    Text(
-//                        text = stringResource(R.string.next),
-//                        style = MaterialTheme.typography.titleLarge,
-//                    )
-//                }
-//            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModelInputForm(
+private fun ModelInputForm(
     modelUiState: ModelUiState,
     modifier: Modifier = Modifier,
     onValueChange: (ModelUiState) -> Unit = {},

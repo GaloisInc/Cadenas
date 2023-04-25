@@ -19,11 +19,28 @@ import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
+/**
+ * The [NavigationDestination] for the model-management screen.
+ */
 object ManageModelsDestination : NavigationDestination {
     override val route = "manage_models"
     override val titleRes = R.string.manage_models
 }
 
+/**
+ * Cadenas model-management screen.
+ *
+ * Cadenas provides a screen to manage all models currently available on the
+ * device, and navigation to the [ModelAddScreen] to fetch additional models.
+ *
+ * New models can be added at any time, but models cannot be _removed_ at any
+ * time - in particular, the model associated with the currently-selected
+ * messaging profile cannot be deleted. Everything else is fair game.
+ *
+ * Note that deleting a model also deletes any profiles associated with that
+ * model; they become meaningless without the model, after all. The user is
+ * informed of this via confirmation dialog.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageModelsScreen(
@@ -62,7 +79,7 @@ fun ManageModelsScreen(
 }
 
 @Composable
-fun ManageModelsBody(
+private fun ManageModelsBody(
     models: List<String>,
     selectedModel: String?,
     onModelDelete: (String) -> Unit,
@@ -84,7 +101,7 @@ fun ManageModelsBody(
 }
 
 @Composable
-fun ModelList(
+private fun ModelList(
     models: List<String>,
     selectedModel: String?,
     onModelDelete: (String) -> Unit,
@@ -102,7 +119,7 @@ fun ModelList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CadenasModel(
+private fun CadenasModel(
     model: String,
     selectedModel: String?,
     onModelDelete: (String) -> Unit,
