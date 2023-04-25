@@ -17,21 +17,17 @@ import androidx.room.PrimaryKey
  * @property[key] The secret key shared by communicating messengers
  * @property[seed] Seed text for the language model
  * @property[selectedModel] The model associated with the profile
+ * @property[tag] The hashtag (without '#') to append to messages encoded using
+ * this profile
  */
 @Entity(tableName = "profiles")
 data class Profile(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-
     val name: String,
-
     val description: String,
-
     val key: String,
-
     val seed: String,
-
     val selectedModel: String,
-
     val tag: String,
 )
