@@ -17,11 +17,21 @@ import com.hashapps.cadenas.ui.settings.model.ModelAddDestination
 import com.hashapps.cadenas.ui.settings.model.ModelAddScreen
 import com.hashapps.cadenas.ui.settings.profile.*
 
+/**
+ * The [NavigationDestination] for the settings navigation graph.
+ *
+ * This is a 'special' destination, in that it doesn't represent any specific
+ * screen - rather, it acts as a destination for settings _as a whole_ to be
+ * used in the root navigation graph.
+ */
 object SettingsNavDestination : NavigationDestination {
     override val route = "settings_nav"
     override val titleRes: Int = R.string.unused
 }
 
+/**
+ * Navigation host for Cadenas settings screens.
+ */
 @Composable
 fun SettingsNavHost(
     navigateToProcessing: () -> Unit,

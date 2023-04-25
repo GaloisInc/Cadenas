@@ -13,11 +13,21 @@ import com.hashapps.cadenas.ui.settings.profile.ProfileAddDestination
 import com.hashapps.cadenas.ui.settings.profile.ProfileAddScreen
 import com.hashapps.cadenas.ui.welcome.*
 
+/**
+ * The [NavigationDestination] for the first-time setup navigation graph.
+ *
+ * This is a 'special' destination, in that it doesn't represent any specific
+ * screen - rather, it acts as a destination for first-time setup _as a whole_
+ * to be used in the root navigation graph.
+ */
 object WelcomeNavDestination : NavigationDestination {
     override val route = "welcome_nav"
     override val titleRes = R.string.unused
 }
 
+/**
+ * Navigation host for Cadenas first-time setup screens.
+ */
 @Composable
 fun WelcomeNavHost(
     completeFirstRun: () -> Unit,
