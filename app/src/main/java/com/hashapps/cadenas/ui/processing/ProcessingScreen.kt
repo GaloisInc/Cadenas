@@ -35,29 +35,66 @@ import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsDestination
 
+/**
+ * The [NavigationDestination] for the processing navigation graph.
+ *
+ * This is a 'special' destination, in that it doesn't represent any specific
+ * screen - rather, it acts as a destination for processing _as a whole_ to be
+ * used in the root navigation graph.
+ */
 object ProcessingDestination : NavigationDestination {
     override val route = "processing"
     override val titleRes = R.string.unused
 }
 
+/**
+ * The [NavigationDestination] for the encoding screen.
+ */
 object EncodeDestination : NavigationDestination {
     override val route = "encode"
     override val titleRes = R.string.encode
     val icon = Icons.Filled.Lock
 }
 
+/**
+ * The [NavigationDestination] for the decoding screen.
+ */
 object DecodeDestination : NavigationDestination {
     override val route = "decode"
     override val titleRes = R.string.decode
     val icon = Icons.Filled.LockOpen
 }
 
+/**
+ * Plain state-holder for the processing screens.
+ *
+ * The processing screens are hosted within a single [Scaffold], so the title
+ * and any additional top bar behaviors must be defined such that there is no
+ * dependency on the individual screens themselves. `ProcessingViewState` is
+ * mutated once per navigation destination to adjust these properties as
+ * appropriate.
+ *
+ * Future versions may add to this state-holder to support additional actions
+ * on the processing screens.
+ */
 @Immutable
 data class ProcessingViewState(
     @StringRes val title: Int? = null,
     val onShare: () -> Unit = {},
 )
 
+/**
+ * Cadenas message-processing screens.
+ *
+ * The main point of interaction with the Cadenas application, this Composable
+ * defines the views for message encoding and decoding.
+ *
+ * The view is defined such that the user may simultaneously encode and decode
+ * messages, but all UI state is lost upon navigating to the application
+ * settings. This was originally an unintentional behavior, but makes sense as
+ * a quick failsafe: If the user needs to quickly clear sensitive information
+ * from their screen, it's as easy as navigating to the settings screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessingScreen(
@@ -179,7 +216,7 @@ fun ProcessingScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProcessingBody(
+private fun ProcessingBody(
     cadenasInitialized: Boolean,
     processingUiState: ProcessingUiState,
     onValueChange: (ProcessingUiState) -> Unit,
