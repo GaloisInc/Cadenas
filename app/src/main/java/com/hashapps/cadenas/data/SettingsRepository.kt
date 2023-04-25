@@ -30,7 +30,7 @@ import java.io.IOException
  * has been completed
  * @property[cadenasInitialized] A derived Boolean flag indicating whether or
  * not the Cadenas backend has been initialized or not
- * @property[selectedProfile] The [Profile] selected by the store integer
+ * @property[selectedProfile] The [Profile] selected by the stored integer
  * preference ID
  */
 class SettingsRepository(
@@ -86,6 +86,15 @@ class SettingsRepository(
     val selectedProfile: StateFlow<Profile?> = _selectedProfile.asStateFlow()
 
     init {
+        /*
+         * Worth exploring if there's a better way to do this. The idea is:
+         * For the duration of the application's lifetime, in the background,
+         * listen for changes to the selected profile.
+         *
+         * The questionable thing is the nested use of collectLatest; getting
+         * the second/inner flow depends on the first, so a simple combine
+         * won't suffice.
+         */
         externalScope.launch(ioDispatcher) {
             dataStore.data
                 .catch {
