@@ -23,11 +23,31 @@ import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
+/**
+ * The [NavigationDestination] for the profile-management screen.
+ */
 object ManageProfilesDestination : NavigationDestination {
     override val route = "manage_profiles"
     override val titleRes = R.string.manage_profiles
 }
 
+/**
+ * Cadenas profile-management screen.
+ *
+ * Cadenas allows the creation of any number of messaging profiles, as
+ * described in the documentation for [ProfileAddScreen] and
+ * [ProfileEditScreen]. These profiles determine how messages are to be encoded
+ * and decoded, and are intended to be shared exactly (other than cosmetic
+ * details such as name and description) between communicating parties.
+ *
+ * Profiles can be added at any time; the layout of this and the
+ * [com.hashapps.cadenas.ui.settings.model.ManageModelsScreen] are very much
+ * the same.
+ *
+ * Profiles can be edited at any time - this is purely cosmetic, so it can't
+ * have an effect on the business of Cadenas. Like models, though, only the
+ * profiles that are not currently selected may be deleted.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageProfilesScreen(
@@ -70,7 +90,7 @@ fun ManageProfilesScreen(
 }
 
 @Composable
-fun ManageProfilesBody(
+private fun ManageProfilesBody(
     profiles: List<Profile>,
     selectedProfileId: Int?,
     onProfileSelect: (Int) -> Unit,
@@ -96,7 +116,7 @@ fun ManageProfilesBody(
 }
 
 @Composable
-fun ProfileList(
+private fun ProfileList(
     profiles: List<Profile>,
     selectedProfileId: Int?,
     onProfileSelect: (Profile) -> Unit,
@@ -119,7 +139,7 @@ fun ProfileList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(
+private fun Profile(
     profile: Profile,
     selectedProfileId: Int?,
     onProfileSelect: (Profile) -> Unit,

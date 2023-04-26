@@ -9,12 +9,23 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/**
+ * View model for the profile-management screen.
+ *
+ * @property[selectedProfile] The currently-selected messaging profile
+ * @property[profiles] The list of all saved profiles
+ */
 class ManageProfilesViewModel(
     private val profileRepository: ProfileRepository,
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
     val selectedProfile = settingsRepository.selectedProfile
 
+    /**
+     * Select a messaging profile from the database.
+     *
+     * @param[id] The ID of the profile to select
+     */
     fun selectProfile(id: Int) {
         viewModelScope.launch {
             settingsRepository.saveSelectedProfile(id)
@@ -27,6 +38,11 @@ class ManageProfilesViewModel(
         initialValue = listOf(),
     )
 
+    /**
+     * Remove a profile from the database.
+     *
+     * @param[profile] The profile to delete from the database
+     */
     fun deleteProfile(profile: Profile) {
         viewModelScope.launch {
             profileRepository.deleteProfile(profile)

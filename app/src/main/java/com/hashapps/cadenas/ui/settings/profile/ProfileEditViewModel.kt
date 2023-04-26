@@ -12,18 +12,17 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/**
+ * View model for the profile-editing screen.
+ *
+ * @property[profileUiState] The UI state
+ * @property[availableModels] The list of all downloaded models
+ */
 class ProfileEditViewModel(
     savedStateHandle: SavedStateHandle,
     private val profileRepository: ProfileRepository,
     private val modelRepository: ModelRepository,
 ) : ViewModel() {
-//    private val modelId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.modelIdArg])
-//    val modelName = configRepository.getModelNameStream(modelId).stateIn(
-//        scope = viewModelScope,
-//        started = SharingStarted.WhileSubscribed(5_000L),
-//        initialValue = "",
-//    )
-
     private val itemId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.profileIdArg])
 
     var profileUiState by mutableStateOf(ProfileUiState())
@@ -38,21 +37,25 @@ class ProfileEditViewModel(
         }
     }
 
+    /**
+     * Update the profile-editing screen UI state, only enabling the save
+     * button if the new state is valid.
+     */
     fun updateUiState(newProfileUiState: ProfileUiState) {
         profileUiState = newProfileUiState.copy(actionEnabled = newProfileUiState.isValid())
     }
 
     val availableModels = modelRepository.downloadedModels()
 
+    /**
+     * If a valid name and description have been entered, save the changes to
+     * the profile to the database.
+     */
     fun updateProfile() {
         viewModelScope.launch {
             if (profileUiState.isValid()) {
                 profileRepository.updateProfile(profileUiState.toProfile())
             }
         }
-    }
-
-    fun genKey() {
-        profileUiState = profileUiState.copy(key = profileRepository.genKey())
     }
 }

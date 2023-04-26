@@ -24,11 +24,25 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 private const val MAX_LEN = 128
 
+/**
+ * The [NavigationDestination] for the profile-add screen.
+ */
 object ProfileAddDestination : NavigationDestination {
     override val route = "profile_entry"
     override val titleRes = R.string.profile_entry
 }
 
+/**
+ * Cadenas profile-add screen.
+ *
+ * Much of the detail about Cadenas profiles can be found in the documentation
+ * for [ProfileEditScreen]. A detail of note is that the secret key can
+ * currently only be added by direct generation - direct keyboard input is
+ * disabled. This implies that this method of adding profiles (i.e. via user
+ * form) is not equipped to directly input the details of a profile generated
+ * by another user. That should be done through the application's (currently
+ * not implemented) import/export functionality for profiles.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileAddScreen(
@@ -62,7 +76,7 @@ fun ProfileAddScreen(
 }
 
 @Composable
-fun ProfileAddBody(
+private fun ProfileAddBody(
     profileUiState: ProfileUiState,
     models: List<String>,
     onProfileValueChange: (ProfileUiState) -> Unit,

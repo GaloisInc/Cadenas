@@ -17,6 +17,9 @@ import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
+/**
+ * The [NavigationDestination] for the profile-editing screen.
+ */
 object ProfileEditDestination : NavigationDestination {
     override val route = "profile_edit"
     override val titleRes = R.string.edit_profile
@@ -24,6 +27,26 @@ object ProfileEditDestination : NavigationDestination {
     val routeWithArgs = "$route/{$profileIdArg}"
 }
 
+/**
+ * Cadenas profile-editing screen.
+ *
+ * Cadenas messaging profiles define the parameters with which messages are
+ * encoded and decoded. They are intended to be shared by communicating parties
+ * through either text-based formats or QR codes (features that, as of now, are
+ * not implemented.)
+ *
+ * It is crucial that communicating parties agree on all non-cosmetic parts of
+ * a messaging profile, namely the model to use, the secret key, and the seed
+ * text. The profile name and description, however, are fully cosmetic and for
+ * the benefit of the user - they do _not_ need to be consistent between
+ * communicating parties.
+ *
+ * For this reason, the profile-editing screen is fairly limited - only the
+ * name and description may be modified after the profile is created. This may
+ * change in the future (and in fact was the behavior in earlier versions), but
+ * for now it is easiest to prevent users from breaking the agreed-upon aspects
+ * of a communication channel.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileEditScreen(
@@ -45,7 +68,6 @@ fun ProfileEditScreen(
             profileUiState = viewModel.profileUiState,
             models = viewModel.availableModels,
             onProfileValueChange = viewModel::updateUiState,
-            onKeyGen = viewModel::genKey,
             onSaveClick = {
                 viewModel.updateProfile()
                 navigateBack()
@@ -55,11 +77,10 @@ fun ProfileEditScreen(
 }
 
 @Composable
-fun ProfileEditBody(
+private fun ProfileEditBody(
     profileUiState: ProfileUiState,
     models: List<String>,
     onProfileValueChange: (ProfileUiState) -> Unit,
-    onKeyGen: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -74,7 +95,6 @@ fun ProfileEditBody(
             profileUiState = profileUiState,
             models = models,
             onValueChange = onProfileValueChange,
-            onKeyGen = onKeyGen,
             editing = true,
         )
 
