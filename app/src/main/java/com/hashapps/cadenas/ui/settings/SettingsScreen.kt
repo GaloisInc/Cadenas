@@ -13,12 +13,25 @@ import androidx.compose.ui.unit.dp
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
 
+/**
+ * The [NavigationDestination] for the top-level settings screen.
+ */
 object SettingsDestination : NavigationDestination {
     override val route = "settings"
     override val titleRes = R.string.settings
     val icon = Icons.Filled.Settings
 }
 
+/**
+ * Cadenas main settings screen.
+ *
+ * This view provides navigation back to the
+ * [com.hashapps.cadenas.ui.processing.ProcessingScreen]s, as well as to the
+ * views for model/profile management.
+ *
+ * This is intended to be extensible with additional settings destinations;
+ * cosmetics of the app UI, import/export for profiles, etc.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -45,7 +58,7 @@ fun SettingsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsBody(
+private fun SettingsBody(
     navigateToManageModels: () -> Unit,
     navigateToManageProfiles: () -> Unit,
     modifier: Modifier = Modifier,
