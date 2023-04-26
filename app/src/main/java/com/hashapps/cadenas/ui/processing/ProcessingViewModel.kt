@@ -51,7 +51,8 @@ class ProcessingViewModel(
     }
 
     /**
-     * Attempt to encode the
+     * Attempt to encode the input message using the selected messaging
+     * profile, adding the profile's tag to the end (if any.)
      */
     fun encodeMessage(tag: String) {
         viewModelScope.launch {
@@ -61,6 +62,10 @@ class ProcessingViewModel(
         }
     }
 
+    /**
+     * Attempt to decode the input message using the selected messaging
+     * profile, first removing the profile's tag (if any.)
+     */
     fun decodeMessage(tag: String) {
         viewModelScope.launch {
             decodeUiState = decodeUiState.copy(inProgress = true, result = null)
