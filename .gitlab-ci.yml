@@ -1,5 +1,9 @@
 image: openjdk:11
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+
 stages:
   - build
 
@@ -42,7 +46,6 @@ build_debug:
     - main
 
   script:
-    - ./gradlew clean
     - ./gradlew assembleDebug
 
 build_release:
