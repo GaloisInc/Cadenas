@@ -65,6 +65,7 @@ unit_test:
   before_script:
     - export ANDROID_HOME=$PWD/.android
     - export PATH=$PATH:$PWD/.android/platform-tools/
+    - chmod +x ./gradlew
 
   script:
     - ./gradlew test
