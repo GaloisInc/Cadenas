@@ -13,7 +13,9 @@ stages:
       - .android/
 
   before_script:
-    # Extract SDK version
+    # Specify SDK tools version, extract compile SDK
+    # TODO: Can we get this more automatically somehow?
+    - export ANDROID_SDK_TOOLS=9477386
     - export ANDROID_COMPILE_SDK=`egrep '^[[:blank:]]+compileSdk' app/build.gradle | awk '{print $2}'`
 
     # Logging
@@ -21,7 +23,7 @@ stages:
     - echo $ANDROID_COMPILE_SDK
 
     # Fetch SDK tools
-    - wget --quiet --output-document=/tmp/sdk-tools-linux.zip https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
+    - wget --quiet --output-document=/tmp/sdk-tools-linux.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
     - unzip /tmp/sdk-tools-linux.zip -d .android
 
     # Env vars
