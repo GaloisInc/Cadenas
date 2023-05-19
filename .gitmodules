@@ -1,6 +1,6 @@
 [submodule "butkuscoremodels"]
 	path = butkuscoremodels
-	url = ../rocky/butkuscoremodels.git
+	url = ../butkuscoremodels.git
 [submodule "butkuscore"]
 	path = butkuscore
-	url = ../rocky/butkuscore.git
+	url = ../butkuscore.git
