@@ -1,0 +1,45 @@
+.build_template: &build_template_def
+  stage: build
+  artifacts:
+    expire_in: 4 hours
+    paths:
+      - app/build/outputs
+      - .android/
+
+  before_script:
+    # Extract SDK version
+    - export ANDROID_COMPILE_SDK=`egrep '^[[:blank:]]+compileSdk' app/build.gradle | awk '{print $2}'`
+
+    # Logging
+    - echo $ANDROID_SDK_TOOLS
+    - echo $ANDROID_COMPILE_SDK
+
+    # Fetch SDK tools
+    - wget --quiet --output-document=/tmp/sdk-tools-linux.zip https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
+    - unzip /tmp/sdk-tools-linux.zip -d .android
+
+    # Env vars
+    - export ANDROID_HOME=$PWD/.android
+    - export PATH=$PATH:$PWD/.android/platform-tools/
+
+    # Install platform tools & Android SDK
+    - echo y | .android/tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+
+    # Set perms
+    - chmod +x ./gradlew
+
+build_debug:
+  <<: *build_template_def
+  except:
+    - main
+
+  script:
+    - ./gradlew assembleDebug
+
+build_release:
+  <<: *build_template_def
+  only:
+    - main
+
+  script:
+    - ./gradlew assembleRelease
