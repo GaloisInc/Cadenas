@@ -66,8 +66,8 @@ unit_test:
     - export ANDROID_HOME=$PWD/.android
     - export PATH=$PATH:$PWD/.android/platform-tools/
 
-    script:
-      - ./gradlew test
+  script:
+    - ./gradlew test
 
 # PACKAGE
 .package_template: &package_template_def
