@@ -31,7 +31,7 @@ stages:
     - export PATH=$PATH:$PWD/.android/platform-tools/
 
     # Install platform tools & Android SDK
-    - echo y | .android/tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+    - echo y | .android/cmdline-tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
 
     # Set perms
     - chmod +x ./gradlew
