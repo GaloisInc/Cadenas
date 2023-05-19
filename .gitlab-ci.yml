@@ -1,3 +1,9 @@
+image: openjdk:8-jdk
+
+stages:
+  - build
+
+# BUILD
 .build_template: &build_template_def
   stage: build
   artifacts:
