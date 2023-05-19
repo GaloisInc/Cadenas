@@ -113,7 +113,7 @@ class SettingsRepository(
                         Cadenas.initialize(
                             CadenasConfig(
                                 modelDir = modelsDir.resolve(profile.selectedModel).path,
-                                key = profile.key,
+                                key = profile.key.encodeToByteArray(),
                                 seed = profile.seed,
                             )
                         )
