@@ -34,7 +34,7 @@ class ProcessingViewModel(
      * @param[newEncodeUiState] The new UI state
      */
     fun updateEncodeUiState(newEncodeUiState: ProcessingUiState) {
-        encodeUiState = newEncodeUiState.copy(actionEnabled = newEncodeUiState.isValid())
+        encodeUiState = newEncodeUiState.copy()
     }
 
     var decodeUiState by mutableStateOf(ProcessingUiState())
@@ -47,7 +47,7 @@ class ProcessingViewModel(
      * @param[newDecodeUiState] The new UI state
      */
     fun updateDecodeUiState(newDecodeUiState: ProcessingUiState) {
-        decodeUiState = newDecodeUiState.copy(actionEnabled = newDecodeUiState.isValid())
+        decodeUiState = newDecodeUiState.copy()
     }
 
     /**
