@@ -283,7 +283,7 @@ private fun ProcessingBody(
 
         Button(
             modifier = modifier.fillMaxWidth(),
-            enabled = cadenasInitialized && processingUiState.actionEnabled,
+            enabled = cadenasInitialized && !processingUiState.inProgress,
             onClick = action,
         ) {
             Text(
