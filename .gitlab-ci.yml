@@ -92,7 +92,7 @@ package_debug:
   except:
     - main
   script:
-    - mv app/build/outputs/apk/app-debug.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-debug.apk
+    - mv app/build/outputs/apk/debug/app-debug.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-debug.apk
   artifacts:
     expire_in: 3 days
     paths:
@@ -105,7 +105,7 @@ package_release:
   only:
     - main
   script:
-    - mv app/build/outputs/apk/app-release.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release.apk
+    - mv app/build/outputs/apk/release/app-release.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release.apk
   artifacts:
     expire_in: 4 weeks
     paths:
