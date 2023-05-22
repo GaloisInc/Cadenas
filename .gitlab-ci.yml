@@ -6,6 +6,7 @@ variables:
 
 stages:
   - build
+  - test
   - package
 
 # BUILD
@@ -58,16 +59,16 @@ build_release:
     - ./gradlew assembleRelease
 
 # TEST
-#unit_test:
-#  stage: test
-#
-#  before_script:
-#    - export ANDROID_HOME=$PWD/.android
-#    - export PATH=$PATH:$PWD/.android/platform-tools/
-#    - chmod +x ./gradlew
-#
-#  script:
-#    - ./gradlew test
+unit_test:
+  stage: test
+
+  before_script:
+    - export ANDROID_HOME=$PWD/.android
+    - export PATH=$PATH:$PWD/.android/platform-tools/
+    - chmod +x ./gradlew
+
+  script:
+    - ./gradlew test
 
 # PACKAGE
 .package_template: &package_template_def
