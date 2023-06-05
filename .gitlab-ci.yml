@@ -11,6 +11,8 @@ stages:
 
 # BUILD
 build_debug:
+  variables:
+    SECURE_FILES_DOWNLOAD_PATH: './app/'
   stage: build
 
   except:
@@ -21,6 +23,8 @@ build_debug:
     - ./gradlew --build-cache assembleDebug
 
 build_release:
+  variables:
+    SECURE_FILES_DOWNLOAD_PATH: './app/'
   stage: build
 
   only:
@@ -32,6 +36,8 @@ build_release:
 
 # TEST
 unit_test:
+  variables:
+    SECURE_FILES_DOWNLOAD_PATH: './app/'
   stage: test
 
   script:
