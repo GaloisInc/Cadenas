@@ -11,6 +11,10 @@ stages:
 
 # BUILD
 .build_template: &build_template_def
+  tags:
+    - stardust
+    - self-hosted
+    - Linux
   stage: build
   artifacts:
     expire_in: 4 hours
