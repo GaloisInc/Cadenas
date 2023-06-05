@@ -5,50 +5,22 @@ variables:
   GIT_SUBMODULE_FORCE_HTTPS: "true"
 
 stages:
+  - pre-build
   - build
   - test
   - package
 
-# BUILD
-#.build_template: &build_template_def
-#  tags:
-#    - stardust
-#    - self-hosted
-#    - Linux
-#  stage: build
-#  artifacts:
-#    expire_in: 4 hours
-#    paths:
-#      - app/build/outputs
-#      - .android/
-#
-#  before_script:
-#    # Specify SDK tools version, extract compile SDK
-#    # TODO: Can we get this more automatically somehow?
-#    - export ANDROID_SDK_TOOLS=9477386
-#    - export ANDROID_COMPILE_SDK=`egrep '^[[:blank:]]+compileSdk' app/build.gradle | awk '{print $2}'`
-#
-#    # Logging
-#    - echo $ANDROID_SDK_TOOLS
-#    - echo $ANDROID_COMPILE_SDK
-#
-#    # Fetch SDK tools
-#    - wget --quiet --output-document=/tmp/sdk-tools-linux.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
-#    - unzip /tmp/sdk-tools-linux.zip -d .android
-#
-#    # Env vars
-#    - export ANDROID_HOME=$PWD/.android
-#    - export PATH=$PATH:$PWD/.android/platform-tools/
-#
-#    # Install platform tools & Android SDK
-#    - echo y | .android/cmdline-tools/bin/sdkmanager --sdk_root=.android "platforms;android-${ANDROID_COMPILE_SDK}"
-#
-#    # Set perms
-#    - chmod +x ./gradlew
+# PRE-BUILD
+create_google_services_json:
+  stage: pre-build
 
+  script:
+    - echo $GOOGLE_SERVICES_JSON | base64 -di > ./app/google-services.json
+
+# BUILD
 build_debug:
-  # <<: *build_template_def
   stage: build
+
   except:
     - main
 
@@ -56,7 +28,8 @@ build_debug:
     - ./gradlew clean assembleDebug
 
 build_release:
-  # <<: *build_template_def
+  stage: build
+
   only:
     - main
 
@@ -66,11 +39,6 @@ build_release:
 # TEST
 unit_test:
   stage: test
-
-#  before_script:
-#    - export ANDROID_HOME=$PWD/.android
-#    - export PATH=$PATH:$PWD/.android/platform-tools/
-#    - chmod +x ./gradlew
 
   script:
     - ./gradlew test
