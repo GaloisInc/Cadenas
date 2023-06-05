@@ -5,17 +5,9 @@ variables:
   GIT_SUBMODULE_FORCE_HTTPS: "true"
 
 stages:
-  - pre-build
   - build
   - test
   - package
-
-# PRE-BUILD
-create_google_services_json:
-  stage: pre-build
-
-  script:
-    - echo $GOOGLE_SERVICES_JSON | base64 -di > ./app/google-services.json
 
 # BUILD
 build_debug:
@@ -25,6 +17,7 @@ build_debug:
     - main
 
   script:
+    - echo $GOOGLE_SERVICES_JSON | base64 -di > ./app/google-services.json
     - ./gradlew clean assembleDebug
 
 build_release:
@@ -34,6 +27,7 @@ build_release:
     - main
 
   script:
+    - echo $GOOGLE_SERVICES_JSON | base64 -di > ./app/google-services.json
     - ./gradlew clean assembleRelease
 
 # TEST
