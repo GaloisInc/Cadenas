@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.Cadenas
 import com.hashapps.cadenas.data.SettingsRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * View model for the processing screens.
@@ -57,8 +59,11 @@ class ProcessingViewModel(
     fun encodeMessage(tag: String) {
         viewModelScope.launch {
             encodeUiState = encodeUiState.copy(inProgress = true, result = null)
-            val encodedMessage = Cadenas.getInstance()?.encode(encodeUiState.toProcess)
-            encodeUiState = encodeUiState.copy(inProgress = false, result = encodedMessage?.plus(tag) )
+            val encodedMessage = withContext(Dispatchers.Default) {
+                Cadenas.getInstance()?.encode(encodeUiState.toProcess)
+            }
+            encodeUiState =
+                encodeUiState.copy(inProgress = false, result = encodedMessage?.plus(tag))
         }
     }
 
@@ -69,7 +74,9 @@ class ProcessingViewModel(
     fun decodeMessage(tag: String) {
         viewModelScope.launch {
             decodeUiState = decodeUiState.copy(inProgress = true, result = null)
-            val decodedMessage = Cadenas.getInstance()?.decode(decodeUiState.toProcess.removeSuffix(tag))
+            val decodedMessage = withContext(Dispatchers.Default) {
+                Cadenas.getInstance()?.decode(decodeUiState.toProcess.removeSuffix(tag))
+            }
             decodeUiState = decodeUiState.copy(inProgress = false, result = decodedMessage)
         }
     }

@@ -106,25 +106,17 @@ class Cadenas(config: CadenasConfig) {
         )
     }
 
-    suspend fun encode(text: String): String? {
-        return coroutineScope {
-            withContext(Dispatchers.Default) {
-                cover.encodeUntilDecodable(text)?.apply {
-                    decodeCache.add(this, text)
-                }
-            }
+    fun encode(text: String): String? {
+        return cover.encodeUntilDecodable(text)?.apply {
+            decodeCache.add(this, text)
         }
     }
 
-    suspend fun decode(msg: String): String? {
+    fun decode(msg: String): String? {
         decodeCache.get(msg)?.let { return it }
 
-        return coroutineScope {
-            withContext(Dispatchers.Default) {
-                cover.decode(msg)?.apply {
-                    decodeCache.add(msg, this)
-                }
-            }
+        return cover.decode(msg)?.apply {
+            decodeCache.add(msg, this)
         }
     }
 
