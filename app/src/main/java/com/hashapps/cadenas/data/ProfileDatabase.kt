@@ -25,9 +25,13 @@ abstract class ProfileDatabase : RoomDatabase() {
          */
         fun getDatabase(context: Context): ProfileDatabase {
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, ProfileDatabase::class.java, "cadenas_database")
-                    .build()
-                    .also { Instance = it }
+                if (Instance == null) {
+                    Room.databaseBuilder(context, ProfileDatabase::class.java, "cadenas_database")
+                        .build()
+                        .also { Instance = it }
+                } else {
+                    return Instance as ProfileDatabase
+                }
             }
         }
     }
