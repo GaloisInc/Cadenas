@@ -26,7 +26,7 @@ import java.io.IOException
  * application-scoped background job that listens for changes to the
  * selected profile, re-initializing Cadenas when a change occurs.
  *
- * @property[runOnce] Boolean preference indicating whether first-time setup
+ * @property[isNotFirstRun] Boolean preference indicating whether first-time setup
  * has been completed
  * @property[cadenasInitialized] A derived Boolean flag indicating whether or
  * not the Cadenas backend has been initialized or not
@@ -42,12 +42,12 @@ class SettingsRepository(
 ) {
     private companion object {
         val SELECTED_PROFILE = intPreferencesKey("selected_profile")
-        val RUN_ONCE = booleanPreferencesKey("run_once")
+        val IS_NOT_FIRST_RUN = booleanPreferencesKey("is_not_first_run")
 
         const val TAG = "SettingsRepo"
     }
 
-    val runOnce = dataStore.data
+    val isNotFirstRun = dataStore.data
         .catch {
             if (it is IOException) {
                 Log.e(TAG, "Error reading settings.", it)
@@ -55,7 +55,7 @@ class SettingsRepository(
             } else {
                 throw it
             }
-        }.map { it[RUN_ONCE] ?: false }
+        }.map { it[IS_NOT_FIRST_RUN] ?: false }
 
     /**
      * Indicate the first app run has been completed, so setup screens only
@@ -63,7 +63,7 @@ class SettingsRepository(
      */
     suspend fun completeFirstRun() {
         dataStore.edit {
-            it[RUN_ONCE] = true
+            it[IS_NOT_FIRST_RUN] = true
         }
     }
 

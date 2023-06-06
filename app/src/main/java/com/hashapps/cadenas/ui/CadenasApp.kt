@@ -13,7 +13,7 @@ fun CadenasApp(
     navController: NavHostController = rememberNavController(),
     viewModel: CadenasViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val runOnce by viewModel.runOnce.collectAsState()
+    val isNotFirstRun by viewModel.isNotFirstRun.collectAsState()
 
-    CadenasRootNavHost(navController = navController, firstTime = !runOnce, completeFirstRun = viewModel::completeFirstRun)
+    CadenasRootNavHost(navController = navController, firstTime = !isNotFirstRun, completeFirstRun = viewModel::completeFirstRun)
 }

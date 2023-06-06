@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class CadenasViewModel(
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
-    val runOnce = settingsRepository.runOnce.stateIn(
+    val isNotFirstRun = settingsRepository.isNotFirstRun.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = false,
