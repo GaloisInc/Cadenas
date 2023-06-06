@@ -1,5 +1,6 @@
 package com.hashapps.cadenas.data
 
+import kotlinx.coroutines.flow.Flow
 import javax.crypto.KeyGenerator
 
 /**
@@ -9,14 +10,14 @@ import javax.crypto.KeyGenerator
  * capabilities for profile creation.
  */
 class ProfileRepository(private val profileDao: ProfileDao) {
-    suspend fun insertProfile(profile: Profile) = profileDao.insert(profile)
-    suspend fun updateProfile(profile: Profile) = profileDao.update(profile)
-    suspend fun deleteProfile(profile: Profile) = profileDao.delete(profile)
+    suspend fun insertProfile(profile: Profile): Unit = profileDao.insert(profile)
+    suspend fun updateProfile(profile: Profile): Unit = profileDao.update(profile)
+    suspend fun deleteProfile(profile: Profile): Unit = profileDao.delete(profile)
 
-    suspend fun deleteProfilesForModel(model: String) = profileDao.deleteProfilesForModel(model)
+    suspend fun deleteProfilesForModel(model: String): Unit = profileDao.deleteProfilesForModel(model)
 
-    fun getProfileStream(id: Int) = profileDao.getProfile(id)
-    fun getAllProfilesStream() = profileDao.getAllProfiles()
+    fun getProfileStream(id: Int): Flow<Profile> = profileDao.getProfile(id)
+    fun getAllProfilesStream(): Flow<List<Profile>> = profileDao.getAllProfiles()
 
     private companion object {
         val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
@@ -27,5 +28,5 @@ class ProfileRepository(private val profileDao: ProfileDao) {
     /**
      * Generate and return an AES-256 key as ASCII-Hex.
      */
-    fun genKey() = KEYGEN.generateKey().encoded.toHex()
+    fun genKey(): String = KEYGEN.generateKey().encoded.toHex()
 }
