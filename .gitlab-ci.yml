@@ -14,9 +14,9 @@ stages:
     SECURE_FILES_DOWNLOAD_PATH: './app/'
   before_script:
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - echo $ARTIFACTORY_USER >> .gradle/gradle.properties
-    - echo $ARTIFACTORY_PASSWORD >> .gradle/gradle.properties
-    - echo $ARTIFACTORY_URL >> .gradle/gradle.properties
+    - echo $ARTIFACTORY_USER >> gradle.properties
+    - echo $ARTIFACTORY_PASSWORD >> gradle.properties
+    - echo $ARTIFACTORY_URL >> gradle.properties
 
 # BUILD
 build_debug:
