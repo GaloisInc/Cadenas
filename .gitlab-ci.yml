@@ -26,8 +26,10 @@ build_debug:
   except:
     - main
 
-  script:
+  before_script:
     - *setup-build
+
+  script:
     - ./gradlew assembleDebug -Pgradle.cache.push=true
 
 build_release:
@@ -38,8 +40,10 @@ build_release:
   only:
     - main
 
-  script:
+  before_script:
     - *setup-build
+
+  script:
     - ./gradlew assembleRelease -Pgradle.cache.push=true
 
 # TEST
@@ -48,8 +52,10 @@ unit_test:
     SECURE_FILES_DOWNLOAD_PATH: './app/'
   stage: test
 
-  script:
+  before_script:
     - *setup-build
+
+  script:
     - ./gradlew test
 
 # PACKAGE
