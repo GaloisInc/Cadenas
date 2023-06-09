@@ -9,9 +9,10 @@ stages:
   - test
   - package
 
-# Download secrets and set up Artifactory credentials
-.setup-build: &setup-build
-  script:
+.setup_common: &setup_common
+  variables:
+    SECURE_FILES_DOWNLOAD_PATH: './app/'
+  before_script:
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
     - echo $ARTIFACTORY_USER >> .gradle/gradle.properties
     - echo $ARTIFACTORY_PASSWORD >> .gradle/gradle.properties
@@ -19,42 +20,25 @@ stages:
 
 # BUILD
 build_debug:
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: './app/'
+  <<: *setup_common
   stage: build
-
   except:
     - main
-
-  before_script:
-    - *setup-build
-
   script:
     - ./gradlew assembleDebug -Pgradle.cache.push=true
 
 build_release:
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: './app/'
+  <<: *setup_common
   stage: build
-
   only:
     - main
-
-  before_script:
-    - *setup-build
-
   script:
     - ./gradlew assembleRelease -Pgradle.cache.push=true
 
 # TEST
 unit_test:
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: './app/'
+  <<: *setup_common
   stage: test
-
-  before_script:
-    - *setup-build
-
   script:
     - ./gradlew test
 
