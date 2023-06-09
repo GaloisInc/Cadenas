@@ -45,3 +45,21 @@ rootProject.name = "Cadenas"
 
 include ':app'
 include ':butkuscore'
+
+include "shared", "api", "services:webservice"
+
+ext.isPush = getProperty('gradle.cache.push')
+
+buildCache {
+    local {
+        enabled = false
+    }
+    remote(HttpBuildCache) {
+        url = "${artifactory_url}/cadenas_generic-local/"
+        credentials {
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+        push = isPush
+    }
+}
