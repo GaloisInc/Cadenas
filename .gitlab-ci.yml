@@ -9,6 +9,14 @@ stages:
   - test
   - package
 
+# Download secrets and set up Artifactory credentials
+.setup-build: &setup-build
+  script:
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+    - echo $ARTIFACTORY_USER >> .gradle/gradle.properties
+    - echo $ARTIFACTORY_PASSWORD >> .gradle/gradle.properties
+    - echo $ARTIFACTORY_URL >> .gradle/gradle.properties
+
 # BUILD
 build_debug:
   variables:
@@ -19,8 +27,8 @@ build_debug:
     - main
 
   script:
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ./gradlew --build-cache assembleDebug
+    - *setup-build
+    - ./gradlew assembleDebug -Pgradle.cache.push=true
 
 build_release:
   variables:
@@ -31,8 +39,8 @@ build_release:
     - main
 
   script:
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ./gradlew --build-cache assembleRelease
+    - *setup-build
+    - ./gradlew assembleRelease -Pgradle.cache.push=true
 
 # TEST
 unit_test:
@@ -41,8 +49,8 @@ unit_test:
   stage: test
 
   script:
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ./gradlew --build-cache test
+    - *setup-build
+    - ./gradlew test
 
 # PACKAGE
 .package_template: &package_template_def
