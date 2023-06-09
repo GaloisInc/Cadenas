@@ -17,7 +17,6 @@ stages:
     - echo $ARTIFACTORY_USER >> gradle.properties
     - echo $ARTIFACTORY_PASSWORD >> gradle.properties
     - echo $ARTIFACTORY_URL >> gradle.properties
-    - cat gradle.properties
 
 # BUILD
 build_debug:
