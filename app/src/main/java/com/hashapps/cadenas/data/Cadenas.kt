@@ -1,53 +1,10 @@
 package com.hashapps.cadenas.data
 
+import android.util.LruCache
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.galois.rocky.butkus.mbfte.Context
 import org.galois.rocky.butkus.mbfte.TextCover
-
-class DecodeCache {
-
-    private var cacheOrder: ArrayList<String> = ArrayList()
-
-    private var cache: MutableMap<String, String> = mutableMapOf()
-
-    fun add(decoded: String, encoded: String) {
-        if (decoded !in cache) {
-            evictIfRequired()
-            cache[decoded] = encoded
-            cacheOrder.add(0, decoded)
-        } else {
-            adjustLRU(decoded)
-        }
-    }
-
-    fun get(decoded: String): String? {
-        return if (decoded !in cache)
-            null
-        else {
-            val encoded = cache[decoded]
-            adjustLRU(decoded)
-            encoded
-        }
-    }
-
-    private fun adjustLRU(key: String) {
-        cacheOrder.remove(key)
-        cacheOrder.add(0, key)
-    }
-
-    private fun evictIfRequired() {
-        if (cache.size >= MAX_ELEMENTS) {
-            cache.remove(cacheOrder.last())
-            cacheOrder.removeLast()
-        }
-    }
-
-    companion object {
-        private const val MAX_ELEMENTS = 100
-    }
-}
 
 data class CadenasConfig(
     val modelDir: String,
@@ -91,7 +48,7 @@ class Cadenas(config: CadenasConfig) {
 
     private var cover: TextCover
 
-    private var decodeCache: DecodeCache = DecodeCache()
+    private var decodeCache: LruCache<String, String> = LruCache(CACHE_SIZE)
 
     init {
         cover = TextCover(
@@ -108,7 +65,7 @@ class Cadenas(config: CadenasConfig) {
 
     fun encode(text: String): String? {
         return cover.encodeUntilDecodable(text)?.apply {
-            decodeCache.add(this, text)
+            decodeCache.put(this, text)
         }
     }
 
@@ -116,11 +73,13 @@ class Cadenas(config: CadenasConfig) {
         decodeCache.get(msg)?.let { return it }
 
         return cover.decode(msg)?.apply {
-            decodeCache.add(msg, this)
+            decodeCache.put(msg, this)
         }
     }
 
     companion object {
+        private const val CACHE_SIZE = 100
+
         private var cadenas: Cadenas? = null
 
         suspend fun initialize(config: CadenasConfig) {
