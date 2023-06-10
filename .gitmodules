@@ -1,6 +1,3 @@
-[submodule "butkuscoremodels"]
-	path = butkuscoremodels
-	url = git@gitlab-ext.galois.com:rocky/butkuscoremodels.git
 [submodule "butkuscore"]
 	path = butkuscore
-	url = git@gitlab-ext.galois.com:rocky/butkuscore.git
+	url = ../butkuscore.git

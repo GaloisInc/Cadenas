@@ -1,0 +1,6 @@
+<resources>
+    <plurals name="result_length">
+        <item quantity="one">%1$d character</item>
+        <item quantity="other">%1$d characters</item>
+    </plurals>
+</resources>

@@ -1,0 +1,85 @@
+image: mobiledevops/android-sdk-image:latest
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+
+stages:
+  - build
+  - test
+  - package
+
+.setup_common: &setup_common
+  variables:
+    SECURE_FILES_DOWNLOAD_PATH: './app/'
+  before_script:
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+    - echo $ARTIFACTORY_USER >> gradle.properties
+    - echo $ARTIFACTORY_PASSWORD >> gradle.properties
+    - echo $ARTIFACTORY_URL >> gradle.properties
+
+# BUILD
+build_debug:
+  <<: *setup_common
+  stage: build
+  except:
+    - main
+  script:
+    - ./gradlew assembleDebug -Pgradle.cache.push=true
+
+build_release:
+  <<: *setup_common
+  stage: build
+  only:
+    - main
+  script:
+    - ./gradlew assembleRelease -Pgradle.cache.push=true
+
+# TEST
+unit_test:
+  <<: *setup_common
+  stage: test
+  script:
+    - ./gradlew test
+
+# PACKAGE
+.package_template: &package_template_def
+  before_script:
+    - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle | awk '{print $2}' | sed s/\"//g`
+    - export VERSION_CODE=`egrep '^[[:blank:]]+versionCode[[:blank:]]'  app/build.gradle | awk '{print $2}'`
+    - mkdir -p deliverables
+
+    # Log build info
+    - touch ./deliverables/info.txt
+    - echo "Build date          $(date)"                >> ./deliverables/info.txt
+    - echo "App version name    ${VERSION_NAME}"        >> ./deliverables/info.txt
+    - echo "App version code    ${VERSION_CODE}"        >> ./deliverables/info.txt
+    - echo "Git branch          ${CI_COMMIT_REF_NAME}"  >> ./deliverables/info.txt
+    - echo "Git commit          ${CI_COMMIT_SHA}"       >> ./deliverables/info.txt
+    - echo "Gitlab pipeline     ${CI_PIPELINE_ID}"      >> ./deliverables/info.txt
+
+package_debug:
+  <<: *package_template_def
+  stage: package
+  environment: Debug
+  except:
+    - main
+  script:
+    - mv app/build/outputs/apk/debug/app-debug.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-debug.apk
+  artifacts:
+    expire_in: 3 days
+    paths:
+      - deliverables
+
+package_release:
+  <<: *package_template_def
+  stage: package
+  environment: Release
+  only:
+    - main
+  script:
+    - mv app/build/outputs/apk/release/app-release.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release.apk
+  artifacts:
+    expire_in: 4 weeks
+    paths:
+      - deliverables

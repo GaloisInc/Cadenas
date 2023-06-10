@@ -10,8 +10,8 @@ pluginManagement {
     plugins {
         //id 'com.android.application' version '7.3.0' apply false
         //id 'com.android.library' version '7.3.0' apply false
-        id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
-        id 'org.jetbrains.kotlin.jvm' version '1.6.21' apply false
+        id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
+        id 'org.jetbrains.kotlin.jvm' version '1.8.10' apply false
     }
 }
 /*
@@ -34,14 +34,32 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.4.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21"
+        classpath "com.android.tools.build:gradle:7.4.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10"
     }
 }
 
 
 
-rootProject.name = "ButkusApp"
+rootProject.name = "Cadenas"
 
 include ':app'
 include ':butkuscore'
+
+include "shared", "api", "services:webservice"
+
+ext.isPush = getProperty('gradle.cache.push')
+
+buildCache {
+    local {
+        enabled = false
+    }
+    remote(HttpBuildCache) {
+        url = "${artifactory_url}/cadenas_generic-local/"
+        credentials {
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+        push = isPush
+    }
+}
