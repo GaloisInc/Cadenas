@@ -13,10 +13,15 @@ stages:
   variables:
     SECURE_FILES_DOWNLOAD_PATH: './app/'
   before_script:
+    # Get google-services.json
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+    # Write Artifactory details
     - echo $ARTIFACTORY_USER >> gradle.properties
     - echo $ARTIFACTORY_PASSWORD >> gradle.properties
     - echo $ARTIFACTORY_URL >> gradle.properties
+    # Fetch LibTorch
+    - curl --silent "https://download.pytorch.org/libtorch/cpu/lobtorch-shared-with-deps-2.0.1%2Bcpu.zip" | unzip
+    - export LD_LIBRARY_PATH=$(pwd)/libtorch:$LD_LIBRARY_PATH
 
 # BUILD
 build_debug:
