@@ -20,7 +20,8 @@ stages:
     - echo $ARTIFACTORY_PASSWORD >> gradle.properties
     - echo $ARTIFACTORY_URL >> gradle.properties
     # Fetch LibTorch
-    - curl --silent "https://download.pytorch.org/libtorch/cpu/lobtorch-shared-with-deps-2.0.1%2Bcpu.zip" | unzip
+    - curl --silent -o libtorch.zip "https://download.pytorch.org/libtorch/cpu/lobtorch-shared-with-deps-2.0.1%2Bcpu.zip"
+    - unzip libtorch.zip
     - export LD_LIBRARY_PATH=$(pwd)/libtorch:$LD_LIBRARY_PATH
 
 # BUILD
