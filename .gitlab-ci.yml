@@ -9,17 +9,6 @@ stages:
   - test
   - package
 
-# SETUP
-setup:
-  stage: .pre
-  script:
-    - curl --silent -o libtorch.zip "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.0.1%2Bcpu.zip"
-    - unzip -q libtorch.zip
-  cache:
-    paths:
-      - libtorch/
-    policy: push
-
 .setup_common: &setup_common
   variables:
     SECURE_FILES_DOWNLOAD_PATH: './app/'
@@ -30,7 +19,9 @@ setup:
     - echo $ARTIFACTORY_USER >> gradle.properties
     - echo $ARTIFACTORY_PASSWORD >> gradle.properties
     - echo $ARTIFACTORY_URL >> gradle.properties
-    # Export libtorch path
+    # Get libtorch
+    - curl --silent -o libtorch.zip "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.0.1%2Bcpu.zip"
+    - unzip -q libtorch.zip
     - export LD_LIBRARY_PATH=$(pwd)/libtorch/lib:$LD_LIBRARY_PATH
     - echo $LD_LIBRARY_PATH
 
@@ -55,10 +46,6 @@ build_release:
 unit_test:
   <<: *setup_common
   stage: test
-  cache:
-    paths:
-      - libtorch/
-    policy: pull
   script:
     - ./gradlew test
 
