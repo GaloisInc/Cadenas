@@ -53,7 +53,7 @@ unit_test:
     name:
       "test-failure-report"
     paths:
-      - builds/rocky/cadenas/butkuscore/build/reports/tests/testDebugUnitTest/
+      - butkuscore/build/reports/tests/testDebugUnitTest/
     when: on_failure
 
 # PACKAGE
