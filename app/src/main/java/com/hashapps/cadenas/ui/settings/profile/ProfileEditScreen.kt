@@ -47,7 +47,6 @@ object ProfileEditDestination : NavigationDestination {
  * for now it is easiest to prevent users from breaking the agreed-upon aspects
  * of a communication channel.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileEditScreen(
     navigateBack: () -> Unit,

@@ -48,7 +48,6 @@ object ManageProfilesDestination : NavigationDestination {
  * have an effect on the business of Cadenas. Like models, though, only the
  * profiles that are not currently selected may be deleted.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageProfilesScreen(
     navigateUp: () -> Unit,
@@ -137,7 +136,6 @@ private fun ProfileList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Profile(
     profile: Profile,
@@ -155,8 +153,8 @@ private fun Profile(
         var expanded by remember { mutableStateOf(false) }
 
         ListItem(
-            headlineText = { Text(profile.name) },
-            supportingText = { Text(profile.description) },
+            headlineContent = { Text(profile.name) },
+            supportingContent = { Text(profile.description) },
             leadingContent = {
                 RadioButton(
                     selected = profile.id == selectedProfileId,
