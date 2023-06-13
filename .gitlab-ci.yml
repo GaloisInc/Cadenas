@@ -43,7 +43,7 @@ unit_test:
   stage: test
   script:
     # Get libtorch
-    - curl --silent -o libtorch.zip "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.0.1%2Bcpu.zip"
+    - curl --silent -o libtorch.zip "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-1.12.1%2Bcpu.zip"
     - unzip -q libtorch.zip
     - ls
     - export LD_LIBRARY_PATH=$(pwd)/libtorch/lib
