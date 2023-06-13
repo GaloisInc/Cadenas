@@ -48,7 +48,7 @@ unit_test:
     - ls
     - export LD_LIBRARY_PATH=$(pwd)/libtorch/lib
     # Run unit tests
-    - ./gradlew test --scan
+    - ./gradlew test --stacktrace
 
 # PACKAGE
 .package_template: &package_template_def
