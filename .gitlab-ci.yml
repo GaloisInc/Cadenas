@@ -49,6 +49,12 @@ unit_test:
     - export LD_LIBRARY_PATH=$(pwd)/libtorch/lib
     # Run unit tests
     - ./gradlew test --stacktrace
+  artifacts:
+    name:
+      "test-failure-report"
+    paths:
+      - builds/rocky/cadenas/butkuscore/build/reports/tests/testDebugUnitTest/
+    when: on_failure
 
 # PACKAGE
 .package_template: &package_template_def
