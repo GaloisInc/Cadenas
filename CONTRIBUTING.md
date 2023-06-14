@@ -48,9 +48,8 @@ git checkout -b my-feature develop
 ```
 
 When your work is completed, open a merge request (make sure the target branch
-is `develop`), and provide all information requested in the feature template.
-The request  must be approved by at least one Cadenas core team member - this
-will typically involve some amount of code review.
+is `develop`). The request  must be approved by at least one Cadenas core team
+member - this will typically involve some amount of code review.
 
 Feature branches are merged such that a new commit object is always created.
 Though this results in many empty commit objects, the history of `develop` will
@@ -103,12 +102,11 @@ git checkout -b release-1.2 develop
 ```
 
 Once you've committed new versioning information and any final small changes,
-open a merge request and set the target branch to `main`. Fill out the template
-for releases, and await approval from at least one other core team member.
+open a merge request and set the target branch to `main`.
 
 Once merged, you should then create a new tag in the GitLab UI. Following this
 example, the tag should be named `v1.2`, and be based off of `main`. Provide a
-summary of the release changes in the optional notes.
+summary of the release changes in the message.
 
 The release branch must also be merged into `develop`; this should be done once
 the tag is created, and does not require a merge request (since the changes
@@ -132,6 +130,6 @@ Hotfix branches are just like release branches, except:
    _hurt_ to merge to `develop` as well, but you **must** merge to the active
    `release-*` branch!
 
-If a hotfix is necessary, please start by opening an incident ticket, following
+If a hotfix is necessary, please start by opening a bug report ticket, following
 the template. This will help other core team members reproduce the bug / better
 contribute to a fix.
