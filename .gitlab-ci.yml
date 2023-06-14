@@ -38,26 +38,24 @@ build_release:
     - ./gradlew assembleRelease -Pgradle.cache.push=true
 
 # TEST
-unit_test:
+unit_test_debug:
   <<: *setup_common
   stage: test
+  except:
+    - main
   script:
-    # Get libtorch
-#    - curl --silent -o libtorch.zip "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-1.12.1%2Bcpu.zip"
-#    - unzip -q libtorch.zip
-#    - ls
-#    - export LD_LIBRARY_PATH=$(pwd)/libtorch/lib
-    # Run unit tests
-    - ./gradlew test --stacktrace
-  artifacts:
-    name:
-      "test-failure-report"
-    paths:
-      - butkuscore/build/reports/tests/testDebugUnitTest/
-    when: on_failure
+    - ./gradlew testDebugUnitTest
+
+unit_test_release:
+  <<: *setup_common
+  stage: test
+  only:
+    - main
+  script:
+    - ./gradlew testReleaseUnitTest
 
 # PACKAGE
-.package_template: &package_template_def
+package:
   before_script:
     - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle | awk '{print $2}' | sed s/\"//g`
     - export VERSION_CODE=`egrep '^[[:blank:]]+versionCode[[:blank:]]'  app/build.gradle | awk '{print $2}'`
@@ -71,22 +69,6 @@ unit_test:
     - echo "Git branch          ${CI_COMMIT_REF_NAME}"  >> ./deliverables/info.txt
     - echo "Git commit          ${CI_COMMIT_SHA}"       >> ./deliverables/info.txt
     - echo "Gitlab pipeline     ${CI_PIPELINE_ID}"      >> ./deliverables/info.txt
-
-package_debug:
-  <<: *package_template_def
-  stage: package
-  environment: Debug
-  except:
-    - main
-  script:
-    - mv app/build/outputs/apk/debug/app-debug.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-debug.apk
-  artifacts:
-    expire_in: 3 days
-    paths:
-      - deliverables
-
-package_release:
-  <<: *package_template_def
   stage: package
   environment: Release
   only:
