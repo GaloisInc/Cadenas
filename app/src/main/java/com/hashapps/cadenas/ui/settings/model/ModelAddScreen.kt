@@ -44,7 +44,6 @@ object ModelAddDestination : NavigationDestination {
  *
  * Future versions may support other sources, such as IPFS.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModelAddScreen(
     navigateNext: () -> Unit,
@@ -152,7 +151,6 @@ fun ModelAddScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ModelInputForm(
     modelUiState: ModelUiState,

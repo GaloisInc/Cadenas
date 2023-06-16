@@ -7,8 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hashapps.cadenas.ui.processing.ProcessingDestination
 import com.hashapps.cadenas.ui.processing.ProcessingScreen
-import com.hashapps.cadenas.ui.welcome.IntroDestination
-import com.hashapps.cadenas.ui.welcome.IntroScreen
 
 /**
  * Top-level navigation host for Cadenas.

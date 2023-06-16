@@ -43,7 +43,6 @@ object ProfileAddDestination : NavigationDestination {
  * by another user. That should be done through the application's (currently
  * not implemented) import/export functionality for profiles.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileAddScreen(
     navigateNext: () -> Unit,

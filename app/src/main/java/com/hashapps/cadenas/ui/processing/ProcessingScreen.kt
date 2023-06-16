@@ -214,7 +214,6 @@ fun ProcessingScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProcessingBody(
     cadenasInitialized: Boolean,
