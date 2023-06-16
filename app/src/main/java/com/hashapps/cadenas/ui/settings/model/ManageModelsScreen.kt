@@ -41,7 +41,6 @@ object ManageModelsDestination : NavigationDestination {
  * model; they become meaningless without the model, after all. The user is
  * informed of this via confirmation dialog.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageModelsScreen(
     navigateUp: () -> Unit,
@@ -117,7 +116,6 @@ private fun ModelList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CadenasModel(
     model: String,
@@ -131,7 +129,7 @@ private fun CadenasModel(
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
         ListItem(
-            headlineText = { Text(model) },
+            headlineContent = { Text(model) },
             leadingContent = {
                 if (model == selectedModel) {
                     Icon(

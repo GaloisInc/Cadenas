@@ -32,7 +32,6 @@ object SettingsDestination : NavigationDestination {
  * This is intended to be extensible with additional settings destinations;
  * cosmetics of the app UI, import/export for profiles, etc.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navigateUp: () -> Unit,
@@ -56,7 +55,6 @@ fun SettingsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsBody(
     navigateToManageModels: () -> Unit,
@@ -74,9 +72,9 @@ private fun SettingsBody(
             modifier = Modifier.fillMaxWidth(),
         ) {
             ListItem(
-                headlineText = { Text(stringResource(R.string.manage_models)) },
+                headlineContent = { Text(stringResource(R.string.manage_models)) },
                 modifier = Modifier.clickable(onClick = navigateToManageModels),
-                supportingText = { Text(stringResource(R.string.manage_models_support)) },
+                supportingContent = { Text(stringResource(R.string.manage_models_support)) },
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Filled.Tune,
@@ -94,9 +92,9 @@ private fun SettingsBody(
             Divider(thickness = 1.dp)
 
             ListItem(
-                headlineText = { Text(stringResource(R.string.profiles)) },
+                headlineContent = { Text(stringResource(R.string.profiles)) },
                 modifier = Modifier.clickable(onClick = navigateToManageProfiles),
-                supportingText = { Text(stringResource(R.string.manage_profiles_support)) },
+                supportingContent = { Text(stringResource(R.string.manage_profiles_support)) },
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Filled.SwitchAccount,
