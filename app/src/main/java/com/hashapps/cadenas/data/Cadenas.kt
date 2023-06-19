@@ -3,8 +3,7 @@ package com.hashapps.cadenas.data
 import android.util.LruCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.galois.rocky.butkus.mbfte.Context
-import org.galois.rocky.butkus.mbfte.TextCover
+import org.galois.cadenas.mbfte.TextCover
 
 data class CadenasConfig(
     val modelDir: String,
@@ -52,7 +51,6 @@ class Cadenas(config: CadenasConfig) {
 
     init {
         cover = TextCover(
-            context = Context(),
             dataDirectory = config.modelDir,
             key = config.key,
             seed = config.seed,
