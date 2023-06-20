@@ -44,7 +44,7 @@ buildscript {
 rootProject.name = "Cadenas"
 
 include ':app'
-include ':butkuscore'
+include ':cadenas-core:core'
 
 include "shared", "api", "services:webservice"
 
