@@ -28,6 +28,9 @@ build_debug:
     - main
   script:
     - ./gradlew assembleDebug -Pgradle.cache.push=true
+  artifacts:
+    paths:
+      - app/build/outputs/apk/debug/app-debug.apk
 
 build_release:
   <<: *setup_common
@@ -36,6 +39,9 @@ build_release:
     - main
   script:
     - ./gradlew assembleRelease -Pgradle.cache.push=true
+  artifacts:
+    paths:
+      - app/build/outputs/apk/release/app-release.apk
 
 # TEST
 unit_test_debug:
@@ -74,8 +80,8 @@ package_nightly:
   <<: *package_template
   stage: package
   environment: Development
-  only:
-    - develop
+  except:
+    - main
   script:
     - mv app/build/outputs/apk/debug/app-debug.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-debug.apk
   artifacts:
