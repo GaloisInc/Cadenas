@@ -80,8 +80,8 @@ package_nightly:
   <<: *package_template
   stage: package
   environment: Development
-  except:
-    - main
+  only:
+    - develop
   script:
     - mv app/build/outputs/apk/debug/app-debug.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-debug.apk
   artifacts:
