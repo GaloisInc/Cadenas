@@ -17,10 +17,10 @@
     <string name="key_placeholder">Generate or import a key</string>
     <string name="generate_key">Generate key</string>
     <string name="seed_label">Seed Text</string>
-    <string name="seed_support">Text to seed the model (%1d / %2d)</string>
+    <string name="seed_support">Text to seed the model (%1$d / %2$d)</string>
     <string name="url_label">Model URL</string>
     <string name="add_url">Add model URL</string>
-    <string name="url_support">Add URLs to fetch models (%1d / %2d)</string>
+    <string name="url_support">Add URLs to fetch models (%1$d / %2$d)</string>
     <string name="url_error">Must be a valid https URL</string>
     <string name="selected_url_label">Selected Model URL</string>
     <string name="save">Save</string>
