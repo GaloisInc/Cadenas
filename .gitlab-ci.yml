@@ -27,7 +27,7 @@ build_debug:
   except:
     - main
   script:
-    - ./gradlew assembleDebug -Pgradle.cache.push=true
+    - ./gradlew assembleDebug -PcachePush=true
   artifacts:
     paths:
       - app/build/outputs/apk/debug/app-debug.apk
@@ -38,10 +38,10 @@ build_release:
   only:
     - main
   script:
-    - ./gradlew assembleRelease -Pgradle.cache.push=true
+    - ./gradlew assembleRelease -PcachePush=true
   artifacts:
     paths:
-      - app/build/outputs/apk/release/app-release.apk
+      - app/build/outputs/apk/release/app-release-unsigned.apk
 
 # TEST
 unit_test_debug:
@@ -63,8 +63,8 @@ unit_test_release:
 # PACKAGE
 .package_template: &package_template
   before_script:
-    - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle | awk '{print $2}' | sed s/\"//g`
-    - export VERSION_CODE=`egrep '^[[:blank:]]+versionCode[[:blank:]]'  app/build.gradle | awk '{print $2}'`
+    - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle.kts | awk '{print $3}' | sed s/\"//g`
+    - export VERSION_CODE=`egrep '^[[:blank:]]+versionCode[[:blank:]]'  app/build.gradle.kts | awk '{print $3}'`
     - mkdir -p deliverables
 
     # Log build info
