@@ -29,8 +29,6 @@ rootProject.name = "Cadenas"
 include(":app")
 include(":cadenas-core")
 
-include("shared", "api", "services:webservice")
-
 val artifactoryUrl: String by settings
 val artifactoryUser: String by settings
 val artifactoryPassword: String by settings
