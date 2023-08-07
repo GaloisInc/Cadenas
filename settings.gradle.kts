@@ -27,7 +27,7 @@ buildscript {
 rootProject.name = "Cadenas"
 
 include(":app")
-include(":cadenas-core")
+includeBuild("cadenas-core")
 
 val artifactoryUrl: String by settings
 val artifactoryUser: String by settings
