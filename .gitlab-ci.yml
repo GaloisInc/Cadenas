@@ -11,6 +11,8 @@ stages:
 
 .setup_common: &setup_common
   before_script:
+    # Install Java 17
+    - sudo apt install openjdk-17-jdk
     # Write Artifactory details
     - echo $ARTIFACTORY_USER >> gradle.properties
     - echo $ARTIFACTORY_PASSWORD >> gradle.properties
