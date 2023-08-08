@@ -1,12 +1,5 @@
 pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
-    }
     plugins {
-        id("org.jetbrains.kotlin.android") version "1.9.0" apply false
         id("com.google.devtools.ksp") version "1.9.0-1.0.11" apply false
     }
 }
@@ -15,8 +8,6 @@ buildscript {
     repositories {
         gradlePluginPortal()
         google()
-        mavenCentral()
-        maven("https://jitpack.io")
     }
     dependencies {
         classpath("com.android.tools.build:gradle:8.1.0")
@@ -26,7 +17,7 @@ buildscript {
 
 rootProject.name = "Cadenas"
 
-include(":app")
+include("app")
 includeBuild("cadenas-core")
 
 val artifactoryUrl: String by settings
