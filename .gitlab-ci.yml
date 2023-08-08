@@ -10,11 +10,7 @@ stages:
   - package
 
 .setup_common: &setup_common
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: './app/'
   before_script:
-    # Get google-services.json
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
     # Write Artifactory details
     - echo $ARTIFACTORY_USER >> gradle.properties
     - echo $ARTIFACTORY_PASSWORD >> gradle.properties
