@@ -18,8 +18,8 @@ stages:
     - yum install -y wget tar unzip lib32stdc++6 lib32z1
     - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
     - unzip -d android-sdk-linux android-sdk.zip
-    - echo y | android-sdk-linux/cmdline-tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}" > /dev/null
-    - echo y | android-sdk-linux/cmdline-tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}" > /dev/null
+    - echo y | android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=android-sdk-linux "platforms;android-${ANDROID_COMPILE_SDK}" > /dev/null
+    - echo y | android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=android-sdk-linux "build-tools;${ANDROID_BUILD_TOOLS}" > /dev/null
     - export ANDROID_HOME=$PWD/android-sdk-linux
     - export PATH=$PATH:$ANDROID_HOME/platform-tools
     - set +o pipefail
