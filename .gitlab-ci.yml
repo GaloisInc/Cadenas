@@ -23,7 +23,7 @@ stages:
     - echo y | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "platforms;android-${ANDROID_COMPILE_SDK}" > /dev/null
     - echo y | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "build-tools;${ANDROID_BUILD_TOOLS}" > /dev/null
     - set +o pipefail
-    - yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --licenses
+    - yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
     - set -o pipefail
     # Write Artifactory details
     - echo $ARTIFACTORY_USER >> gradle.properties
