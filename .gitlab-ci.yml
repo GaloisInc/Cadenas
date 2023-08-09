@@ -4,6 +4,7 @@ variables:
   ANDROID_COMPILE_SDK: "33"
   ANDROID_BUILD_TOOLS: "33.0.1"
   ANDROID_SDK_TOOLS:   "9477386"
+
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_SUBMODULE_FORCE_HTTPS: "true"
 
@@ -15,7 +16,7 @@ stages:
 .setup_common: &setup_common
   before_script:
     # Install / configure Android SDK
-    - yum install -y wget tar unzip lib32stdc++6 lib32z1
+    - yum install -y wget tar unzip
     - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
     - unzip -d android-sdk-linux android-sdk.zip
     - export ANDROID_HOME=$PWD/android-sdk-linux
