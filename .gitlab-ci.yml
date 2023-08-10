@@ -24,9 +24,15 @@ stages:
   - yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
   - set -o pipefail
 
+.configure_artifactory: &configure_artifactory
+  - echo $ARTIFACTORY_USER >> gradle.properties
+  - echo $ARTIFACTORY_PASSWORD >> gradle.properties
+  - echo $ARTIFACTORY_URL >> gradle.properties
+
 # BUILD
 build_debug:
   before_script:
+    - *configure_artifactory
     - *install_android_sdk
   stage: build
   except:
@@ -39,6 +45,7 @@ build_debug:
 
 build_release:
   before_script:
+    - *configure_artifactory
     - *install_android_sdk
   stage: build
   only:
@@ -52,6 +59,7 @@ build_release:
 # TEST
 unit_test_debug:
   before_script:
+    - *configure_artifactory
     - *install_android_sdk
   stage: test
   except:
@@ -61,6 +69,7 @@ unit_test_debug:
 
 unit_test_release:
   before_script:
+    - *configure_artifactory
     - *install_android_sdk
   stage: test
   only:
