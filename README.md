@@ -8,18 +8,17 @@ The obfuscation is provided by _model-based format-transforming encryption
 
 This repository hosts the source for the Cadenas Android application, which
 provides a user-friendly interface to MB-FTE, and is not tied to any specific
-social media platform. For an introduction to the app and its use, see
-`USER-GUIDE.md`. The remainder of this README gives a high-level overview of
-the app features and briefly discusses how to get started developing on this
+social media platform. The remainder of this README gives a high-level overview
+of the app features and briefly discusses how to get started developing on this
 work.
 
 ## Features
 
-- Material Design
-- Independence from social media - no account(s) needed for use
+- Material3 Design
+- Independence from social media - no data shared with other platforms
 - Dark and light themes based on system settings
-- Configurable (language model, seed text)
-- Simple text/QR configuration sharing
+- Highly configurable
+- TODO: Simple text/QR configuration sharing
 
 ## Building
 
@@ -53,7 +52,7 @@ organization may use a different naming scheme.
 
 ### `cadenas-core`
 
-The implementation of MB-FTE, `cadenas-core`, and be built outside of an Android
+The implementation of MB-FTE, `cadenas-core`, can be built outside of an Android
 context for use in your own Kotlin applications. Please see the README for that
 repository for build/installation instructions.
 
