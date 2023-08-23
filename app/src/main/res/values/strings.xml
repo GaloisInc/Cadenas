@@ -59,4 +59,8 @@
     <string name="after_profile_text">Great! You can create as many profiles as you\'d like. Profile information can be shared to allow others to communicate with you.</string>
     <string name="get_started_text">Tap \"Get Started\" to encode your first message.</string>
     <string name="get_started">Get Started</string>
+    <string name="download_title">Downloading model…</string>
+    <string name="channel_name">Model Management</string>
+    <string name="channel_description">Notification channel for model-management tasks, such as downloading and deleting.</string>
+    <string name="delete_title">Deleting model…</string>
 </resources>
