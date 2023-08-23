@@ -3,6 +3,7 @@ package com.hashapps.cadenas.data
 import android.util.LruCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.galois.cadenas.crypto.RandomPaddedAes
 import org.galois.cadenas.mbfte.TextCover
 
 data class CadenasConfig(
@@ -52,7 +53,7 @@ class Cadenas(config: CadenasConfig) {
     init {
         cover = TextCover(
             dataDirectory = config.modelDir,
-            key = config.key,
+            cryptoSystem = RandomPaddedAes(config.key),
             seed = config.seed,
             temperature = config.temperature,
             topK = config.topK,
