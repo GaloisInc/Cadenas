@@ -29,6 +29,12 @@ stages:
   - echo $ARTIFACTORY_PASSWORD >> gradle.properties
   - echo $ARTIFACTORY_URL >> gradle.properties
 
+.configure_release: &configure_release
+  - echo $RELEASE_STORE_FILE >> gradle.properties
+  - echo $RELEASE_STORE_PASSWORD >> gradle.properties
+  - echo $RELEASE_KEY_ALIAS >> gradle.properties
+  - echo $RELEASE_KEY_PASSWORD >> gradle.properties
+
 # BUILD
 build_debug:
   before_script:
@@ -46,6 +52,7 @@ build_debug:
 build_release:
   before_script:
     - *configure_artifactory
+    - *configure_release
     - *install_android_sdk
   stage: build
   only:
@@ -54,7 +61,7 @@ build_release:
     - ./gradlew assembleRelease -PcachePush=true
   artifacts:
     paths:
-      - app/build/outputs/apk/release/app-release-unsigned.apk
+      - app/build/outputs/apk/release/app-release.apk
 
 # TEST
 unit_test_debug:
@@ -70,6 +77,7 @@ unit_test_debug:
 unit_test_release:
   before_script:
     - *configure_artifactory
+    - *configure_release
     - *install_android_sdk
   stage: test
   only:
@@ -113,7 +121,7 @@ package_release:
   only:
     - main
   script:
-    - mv app/build/outputs/apk/release/app-release-unsigned.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release-unsigned.apk
+    - mv app/build/outputs/apk/release/app-release-unsigned.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release.apk
   artifacts:
     expire_in: 4 weeks
     paths:
