@@ -35,4 +35,4 @@ _Developers should populate this section with expected concrete activities. Use 
 * 
 * 
 
-/label ~enhancement
+/label ~feature

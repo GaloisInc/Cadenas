@@ -1,6 +1,10 @@
-image: mobiledevops/android-sdk-image:latest
+image: gradle:jdk17
 
 variables:
+  ANDROID_COMPILE_SDK: "34"
+  ANDROID_BUILD_TOOLS: "34.0.0"
+  ANDROID_SDK_TOOLS: "10406996"
+
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_SUBMODULE_FORCE_HTTPS: "true"
 
@@ -9,43 +13,54 @@ stages:
   - test
   - package
 
-.setup_common: &setup_common
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: './app/'
-  before_script:
-    # Get google-services.json
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    # Write Artifactory details
-    - echo $ARTIFACTORY_USER >> gradle.properties
-    - echo $ARTIFACTORY_PASSWORD >> gradle.properties
-    - echo $ARTIFACTORY_URL >> gradle.properties
+.install_android_sdk: &install_android_sdk
+  - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
+  - unzip -q -d android-sdk-linux android-sdk.zip
+  - export ANDROID_HOME=$PWD/android-sdk-linux
+  - export PATH=$PATH:$ANDROID_HOME/platform-tools
+  - echo y | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "platforms;android-${ANDROID_COMPILE_SDK}" > /dev/null
+  - echo y | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "build-tools;${ANDROID_BUILD_TOOLS}" > /dev/null
+  - set +o pipefail
+  - yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
+  - set -o pipefail
+
+.configure_artifactory: &configure_artifactory
+  - echo $ARTIFACTORY_USER >> gradle.properties
+  - echo $ARTIFACTORY_PASSWORD >> gradle.properties
+  - echo $ARTIFACTORY_URL >> gradle.properties
 
 # BUILD
 build_debug:
-  <<: *setup_common
+  before_script:
+    - *configure_artifactory
+    - *install_android_sdk
   stage: build
   except:
     - main
   script:
-    - ./gradlew assembleDebug -Pgradle.cache.push=true
+    - ./gradlew assembleDebug -PcachePush=true
   artifacts:
     paths:
       - app/build/outputs/apk/debug/app-debug.apk
 
 build_release:
-  <<: *setup_common
+  before_script:
+    - *configure_artifactory
+    - *install_android_sdk
   stage: build
   only:
     - main
   script:
-    - ./gradlew assembleRelease -Pgradle.cache.push=true
+    - ./gradlew assembleRelease -PcachePush=true
   artifacts:
     paths:
-      - app/build/outputs/apk/release/app-release.apk
+      - app/build/outputs/apk/release/app-release-unsigned.apk
 
 # TEST
 unit_test_debug:
-  <<: *setup_common
+  before_script:
+    - *configure_artifactory
+    - *install_android_sdk
   stage: test
   except:
     - main
@@ -53,7 +68,9 @@ unit_test_debug:
     - ./gradlew testDebugUnitTest
 
 unit_test_release:
-  <<: *setup_common
+  before_script:
+    - *configure_artifactory
+    - *install_android_sdk
   stage: test
   only:
     - main
@@ -63,8 +80,8 @@ unit_test_release:
 # PACKAGE
 .package_template: &package_template
   before_script:
-    - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle | awk '{print $2}' | sed s/\"//g`
-    - export VERSION_CODE=`egrep '^[[:blank:]]+versionCode[[:blank:]]'  app/build.gradle | awk '{print $2}'`
+    - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle.kts | awk '{print $3}' | sed s/\"//g`
+    - export VERSION_CODE=`egrep '^[[:blank:]]+versionCode[[:blank:]]'  app/build.gradle.kts | awk '{print $3}'`
     - mkdir -p deliverables
 
     # Log build info
@@ -96,7 +113,7 @@ package_release:
   only:
     - main
   script:
-    -mv app/build/outputs/apk/release/app-release.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release.apk
+    - mv app/build/outputs/apk/release/app-release-unsigned.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release-unsigned.apk
   artifacts:
     expire_in: 4 weeks
     paths:
