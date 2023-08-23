@@ -81,10 +81,8 @@ class Cadenas(config: CadenasConfig) {
 
         private var cadenas: Cadenas? = null
 
-        suspend fun initialize(config: CadenasConfig) {
-            withContext(Dispatchers.IO) {
-                cadenas = Cadenas(config)
-            }
+        fun initialize(config: CadenasConfig) {
+            cadenas = Cadenas(config)
         }
 
         fun getInstance(): Cadenas? = cadenas
