@@ -36,7 +36,21 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
+val releaseStoreFile: String by project
+val releaseStorePassword: String by project
+val releaseKeyAlias: String by project
+val releaseKeyPassword: String by project
+
 android {
+    signingConfigs {
+        create("release") {
+            keyAlias = releaseKeyAlias
+            keyPassword = releaseKeyPassword
+            storeFile = file(releaseStoreFile)
+            storePassword = releaseStorePassword
+        }
+    }
+
     namespace = "com.hashapps.cadenas"
     compileSdk = 34
 
@@ -58,6 +72,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
