@@ -1,8 +1,8 @@
 package com.hashapps.cadenas.data
 
 import android.util.LruCache
-import com.galois.cadenas.crypto.RandomPaddedAes
-import com.galois.cadenas.mbfte.TextCover
+import com.galois.crypto.RandomPaddedAes
+import com.galois.mbfte.TextCover
 
 data class CadenasConfig(
     val modelDir: String,
