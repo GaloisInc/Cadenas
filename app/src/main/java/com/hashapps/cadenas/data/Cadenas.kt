@@ -1,7 +1,8 @@
 package com.hashapps.cadenas.data
 
 import android.util.LruCache
-import com.galois.crypto.RandomPaddedAes
+import com.galois.crypto.RandomPadding
+import com.galois.crypto.SentinelAes
 import com.galois.mbfte.TextCover
 
 data class CadenasConfig(
@@ -51,7 +52,7 @@ class Cadenas(config: CadenasConfig) {
     init {
         cover = TextCover(
             dataDirectory = config.modelDir,
-            cryptoSystem = RandomPaddedAes(config.key),
+            cryptoSystem = RandomPadding(SentinelAes(config.key)),
             seed = config.seed,
             temperature = config.temperature,
             topK = config.topK,
