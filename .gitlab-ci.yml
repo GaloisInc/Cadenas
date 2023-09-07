@@ -39,6 +39,7 @@ stages:
 build_debug:
   before_script:
     - *configure_artifactory
+    - *configure_release
     - *install_android_sdk
   stage: build
   except:
@@ -67,6 +68,7 @@ build_release:
 unit_test_debug:
   before_script:
     - *configure_artifactory
+    - *configure_release
     - *install_android_sdk
   stage: test
   except:
