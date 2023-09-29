@@ -29,11 +29,15 @@ yourself, though:
 ### `gradle.properties`
 
 The Gradle properties file in this repository is incomplete - To speed up CI,
-we provide credentials for an Artifactory instance for build caching.
+we provide credentials for an Artifactory instance for build caching. We also
+provide signed APK artifacts from CI on the `main` branch, which requires the
+configuration of a signing key.
+
+#### Artifactory caching
 
 You will need to do one of two things:
 
-1. Modify `settings.gradle` to disable build caching/use local rather than
+1. Modify `settings.gradle.kts` to disable build caching/use local rather than
    remote, or:
 2. Provide your own Artifactory credentials in `gradle.properties`.
 
@@ -49,6 +53,24 @@ project. The variables you must provide are:
 You may also need to change the repository name in `settings.gradle`; we assume
 a generic Artifactory repo named `cadenas_generic-local`, but you/your
 organization may use a different naming scheme.
+
+#### Release builds
+
+You will need to do one of two things:
+
+1. Modify `app/build.gradle.kts` to disable signing for the `release` build, or:
+2. Configure a keystore and provide the appropriate details in
+   `gradle.properties`
+
+Note that you should _never_ commit credentials to a public repository, so it
+is recommended that if you take option (2), you place the `release*` variables
+in your user-level `gradle.properties` file, rather than that of the project.
+The variables you must provide are:
+
+- `releaseStoreFile`: The path to the keystore file
+- `releaseStorePassword`: The passphrase needed to use the keystore
+- `releaseKeyAlias`: The key alias configured
+- `releaseKeyPassword`: The passphrase needed to use the key
 
 ### `cadenas-core`
 

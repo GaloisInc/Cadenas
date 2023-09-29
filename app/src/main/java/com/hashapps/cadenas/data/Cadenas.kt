@@ -1,9 +1,9 @@
 package com.hashapps.cadenas.data
 
 import android.util.LruCache
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.galois.cadenas.mbfte.TextCover
+import com.galois.cadenas.crypto.RandomPadding
+import com.galois.cadenas.crypto.SivAesWithSentinel
+import com.galois.cadenas.mbfte.TextCover
 
 data class CadenasConfig(
     val modelDir: String,
@@ -52,7 +52,7 @@ class Cadenas(config: CadenasConfig) {
     init {
         cover = TextCover(
             dataDirectory = config.modelDir,
-            key = config.key,
+            cryptoSystem = RandomPadding(SivAesWithSentinel(config.key)),
             seed = config.seed,
             temperature = config.temperature,
             topK = config.topK,
@@ -80,10 +80,8 @@ class Cadenas(config: CadenasConfig) {
 
         private var cadenas: Cadenas? = null
 
-        suspend fun initialize(config: CadenasConfig) {
-            withContext(Dispatchers.IO) {
-                cadenas = Cadenas(config)
-            }
+        fun initialize(config: CadenasConfig) {
+            cadenas = Cadenas(config)
         }
 
         fun getInstance(): Cadenas? = cadenas
