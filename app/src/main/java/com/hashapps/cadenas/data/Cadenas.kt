@@ -4,6 +4,7 @@ import android.util.LruCache
 import com.galois.cadenas.crypto.RandomPadding
 import com.galois.cadenas.crypto.SivAesWithSentinel
 import com.galois.cadenas.mbfte.TextCover
+import com.galois.cadenas.model.PyTorchGPT2LanguageModel
 
 data class CadenasConfig(
     val modelDir: String,
@@ -51,13 +52,9 @@ class Cadenas(config: CadenasConfig) {
 
     init {
         cover = TextCover(
-            dataDirectory = config.modelDir,
             cryptoSystem = RandomPadding(SivAesWithSentinel(config.key)),
+            languageModel = PyTorchGPT2LanguageModel(config.modelDir),
             seed = config.seed,
-            temperature = config.temperature,
-            topK = config.topK,
-            topP = config.topP,
-            indexMax = config.indexMax
         )
     }
 
