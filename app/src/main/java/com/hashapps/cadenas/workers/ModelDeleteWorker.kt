@@ -1,7 +1,7 @@
 package com.hashapps.cadenas.workers
 
-import android.app.Notification
 import android.content.Context
+import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
@@ -16,7 +16,7 @@ class ModelDeleteWorker(
     params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
     override suspend fun getForegroundInfo(): ForegroundInfo {
-        val notification = Notification.Builder(context, CadenasApplication.CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, CadenasApplication.CHANNEL_ID)
             .setContentTitle(context.getString(R.string.delete_title))
             .setSmallIcon(R.drawable.baseline_delete_forever_24)
             .build()
