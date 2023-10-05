@@ -1,63 +1,42 @@
 package com.hashapps.cadenas.ui.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.navigation
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.settings.model.ModelAddDestination
-import com.hashapps.cadenas.ui.settings.model.ModelAddScreen
-import com.hashapps.cadenas.ui.settings.profile.ProfileAddDestination
-import com.hashapps.cadenas.ui.settings.profile.ProfileAddScreen
-import com.hashapps.cadenas.ui.welcome.*
+import com.hashapps.cadenas.ui.settings.model.modelAddScreen
+import com.hashapps.cadenas.ui.settings.model.navigateToModelAdd
+import com.hashapps.cadenas.ui.settings.profile.navigateToProfileAdd
+import com.hashapps.cadenas.ui.settings.profile.profileAddScreen
+import com.hashapps.cadenas.ui.welcome.INTRO_ROUTE
+import com.hashapps.cadenas.ui.welcome.finalScreen
+import com.hashapps.cadenas.ui.welcome.introScreen
+import com.hashapps.cadenas.ui.welcome.navigateToFinal
+import com.hashapps.cadenas.ui.welcome.navigateToProfiles
+import com.hashapps.cadenas.ui.welcome.profilesScreen
+
+const val SETUP_GRAPH_ROUTE = "setup"
 
 /**
- * The [NavigationDestination] for the first-time setup navigation graph.
- *
- * This is a 'special' destination, in that it doesn't represent any specific
- * screen - rather, it acts as a destination for first-time setup _as a whole_
- * to be used in the root navigation graph.
+ * Navigation graph for the first-time setup screens.
  */
-object WelcomeNavDestination : NavigationDestination {
-    override val route = "welcome_nav"
-    override val titleRes = R.string.unused
-}
-
-/**
- * Navigation host for Cadenas first-time setup screens.
- */
-@Composable
-fun WelcomeNavHost(
+fun NavGraphBuilder.firstTimeSetupGraph(
     completeFirstRun: () -> Unit,
-    navigateToProcessing: () -> Unit,
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    onNavigateToProcessing: () -> Unit,
+    navController: NavController,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = IntroDestination.route,
-        modifier = modifier,
+    navigation(
+        startDestination = INTRO_ROUTE,
+        route = SETUP_GRAPH_ROUTE,
     ) {
-        composable(route = IntroDestination.route) {
-            IntroScreen(onNavigateToAddModel = { navController.navigate(ModelAddDestination.route) })
-        }
-
-        composable(route = ModelAddDestination.route) {
-            ModelAddScreen(onNavigateNext = { navController.navigate(ProfilesDestination.route) }, firstTime = true)
-        }
-
-        composable(route = ProfilesDestination.route) {
-            ProfilesScreen(onNavigateToAddProfile = { navController.navigate(ProfileAddDestination.route) })
-        }
-
-        composable(route = ProfileAddDestination.route) {
-            ProfileAddScreen(navigateNext = { navController.navigate(FinalDestination.route) }, navigateUp = {}, firstTime = true)
-        }
-
-        composable(route = FinalDestination.route) {
-            FinalScreen(completeFirstRun = completeFirstRun, navigateToProcessing = navigateToProcessing)
-        }
+        introScreen { navController.navigateToModelAdd() }
+        modelAddScreen(onNavigateNext = { navController.navigateToProfiles() }, firstTime = true)
+        profilesScreen { navController.navigateToProfileAdd() }
+        profileAddScreen(
+            onNavigateNext = { navController.navigateToFinal() },
+            onNavigateUp = {},
+            firstTime = true
+        )
+        finalScreen(completeFirstRun, onNavigateToProcessing)
     }
 }

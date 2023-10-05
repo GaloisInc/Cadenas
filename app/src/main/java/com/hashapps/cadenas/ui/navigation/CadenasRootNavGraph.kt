@@ -20,7 +20,7 @@ fun CadenasRootNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (firstTime) WelcomeNavDestination.route else ProcessingDestination.route,
+        startDestination = if (firstTime) SETUP_GRAPH_ROUTE else ProcessingDestination.route,
         modifier = modifier,
     ) {
         composable(route = ProcessingDestination.route) {
@@ -31,8 +31,6 @@ fun CadenasRootNavHost(
             SettingsNavHost(navigateToProcessing = { navController.navigate(ProcessingDestination.route) })
         }
 
-        composable(route = WelcomeNavDestination.route) {
-            WelcomeNavHost(completeFirstRun = completeFirstRun, navigateToProcessing = { navController.navigate((ProcessingDestination.route)) })
-        }
+        firstTimeSetupGraph(completeFirstRun, onNavigateToProcessing = { navController.navigate(ProcessingDestination.route) }, navController)
     }
 }
