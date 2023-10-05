@@ -1,9 +1,9 @@
 package com.hashapps.cadenas.ui.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navigation
-import com.hashapps.cadenas.R
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import com.hashapps.cadenas.ui.settings.model.modelAddScreen
 import com.hashapps.cadenas.ui.settings.model.navigateToModelAdd
 import com.hashapps.cadenas.ui.settings.profile.navigateToProfileAdd
@@ -15,18 +15,16 @@ import com.hashapps.cadenas.ui.welcome.navigateToFinal
 import com.hashapps.cadenas.ui.welcome.navigateToProfiles
 import com.hashapps.cadenas.ui.welcome.profilesScreen
 
-const val SETUP_GRAPH_ROUTE = "setup"
-
-/**
- * Navigation graph for the first-time setup screens.
- */
-fun NavGraphBuilder.firstTimeSetupGraph(
+@Composable
+fun FirstTimeSetup(
     completeFirstRun: () -> Unit,
-    navController: NavController,
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
-    navigation(
+    NavHost(
+        navController = navController,
         startDestination = INTRO_ROUTE,
-        route = SETUP_GRAPH_ROUTE,
+        modifier = modifier,
     ) {
         introScreen { navController.navigateToModelAdd() }
         modelAddScreen(onNavigateNext = { navController.navigateToProfiles() }, firstTime = true)

@@ -9,24 +9,19 @@ import com.hashapps.cadenas.ui.processing.navigateToProcessing
 import com.hashapps.cadenas.ui.processing.processingScreen
 
 /**
- * Top-level navigation host for Cadenas.
+ * Top-level navigation host for Cadenas (post setup).
  */
 @Composable
 fun CadenasRootNavHost(
-    firstTime: Boolean,
-    completeFirstRun: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (firstTime) SETUP_GRAPH_ROUTE else PROCESSING_ROUTE,
+        startDestination = PROCESSING_ROUTE,
         modifier = modifier,
     ) {
         processingScreen { navController.navigateToSettingsGraph() }
-
         settingsGraph(onNavigateToProcessing = { navController.navigateToProcessing() }, navController)
-
-        firstTimeSetupGraph(completeFirstRun, onNavigateToProcessing = { navController.navigateToProcessing() }, navController)
     }
 }

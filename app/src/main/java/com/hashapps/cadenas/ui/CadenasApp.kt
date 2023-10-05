@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.cadenas.ui.navigation.CadenasRootNavHost
+import com.hashapps.cadenas.ui.navigation.FirstTimeSetup
 
 @Composable
 fun CadenasApp(
@@ -15,5 +16,9 @@ fun CadenasApp(
 ) {
     val isNotFirstRun by viewModel.isNotFirstRun.collectAsState()
 
-    CadenasRootNavHost(navController = navController, firstTime = !isNotFirstRun, completeFirstRun = viewModel::completeFirstRun)
+    if (isNotFirstRun) {
+        CadenasRootNavHost(navController = navController)
+    } else {
+        FirstTimeSetup(completeFirstRun = viewModel::completeFirstRun, navController = navController)
+    }
 }
