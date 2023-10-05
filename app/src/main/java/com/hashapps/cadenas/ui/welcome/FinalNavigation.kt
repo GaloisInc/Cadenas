@@ -9,13 +9,12 @@ const val FINAL_ROUTE = "final"
 
 fun NavGraphBuilder.finalScreen(
     completeFirstRun: () -> Unit,
-    onNavigateToProcessing: () -> Unit,
 ) {
     composable(FINAL_ROUTE) {
-        FinalScreen(completeFirstRun = completeFirstRun, navigateToProcessing = onNavigateToProcessing)
+        FinalScreen(completeFirstRun = completeFirstRun)
     }
 }
 
 fun NavController.navigateToFinal(navOptions: NavOptions? = null) {
-    this.navigate(FINAL_ROUTE)
+    this.navigate(FINAL_ROUTE, navOptions)
 }

@@ -22,7 +22,6 @@ const val SETUP_GRAPH_ROUTE = "setup"
  */
 fun NavGraphBuilder.firstTimeSetupGraph(
     completeFirstRun: () -> Unit,
-    onNavigateToProcessing: () -> Unit,
     navController: NavController,
 ) {
     navigation(
@@ -37,6 +36,6 @@ fun NavGraphBuilder.firstTimeSetupGraph(
             onNavigateUp = {},
             firstTime = true
         )
-        finalScreen(completeFirstRun, onNavigateToProcessing)
+        finalScreen(completeFirstRun)
     }
 }

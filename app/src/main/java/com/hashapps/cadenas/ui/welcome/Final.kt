@@ -20,7 +20,6 @@ import com.hashapps.cadenas.ui.components.WelcomeText
 @Composable
 fun FinalScreen(
     completeFirstRun: () -> Unit,
-    navigateToProcessing: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -33,7 +32,6 @@ fun FinalScreen(
     ) { innerPadding ->
         FinalBody(
             completeFirstRun = completeFirstRun,
-            navigateToProcessing = navigateToProcessing,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -42,7 +40,6 @@ fun FinalScreen(
 @Composable
 fun FinalBody(
     completeFirstRun: () -> Unit,
-    navigateToProcessing: () -> Unit,
     modifier: Modifier,
 ) {
     Column(
@@ -83,7 +80,6 @@ fun FinalBody(
             visibleState = buttonState,
             onClick = {
                 completeFirstRun()
-                navigateToProcessing()
             },
             text = stringResource(R.string.get_started),
         )
