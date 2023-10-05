@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.hashapps.cadenas.ui.processing.ProcessingDestination
-import com.hashapps.cadenas.ui.processing.ProcessingScreen
+import com.hashapps.cadenas.ui.processing.PROCESSING_ROUTE
+import com.hashapps.cadenas.ui.processing.navigateToProcessing
+import com.hashapps.cadenas.ui.processing.processingScreen
 
 /**
  * Top-level navigation host for Cadenas.
@@ -20,15 +20,13 @@ fun CadenasRootNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (firstTime) SETUP_GRAPH_ROUTE else ProcessingDestination.route,
+        startDestination = if (firstTime) SETUP_GRAPH_ROUTE else PROCESSING_ROUTE,
         modifier = modifier,
     ) {
-        composable(route = ProcessingDestination.route) {
-            ProcessingScreen(navigateToSettings = { navController.navigateToSettingsGraph() })
-        }
+        processingScreen { navController.navigateToSettingsGraph() }
 
-        settingsGraph(onNavigateToProcessing = { navController.navigate(ProcessingDestination.route) }, navController)
+        settingsGraph(onNavigateToProcessing = { navController.navigateToProcessing() }, navController)
 
-        firstTimeSetupGraph(completeFirstRun, onNavigateToProcessing = { navController.navigate(ProcessingDestination.route) }, navController)
+        firstTimeSetupGraph(completeFirstRun, onNavigateToProcessing = { navController.navigateToProcessing() }, navController)
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalTextInputService
@@ -27,43 +28,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
 
-/**
- * The [NavigationDestination] for the processing navigation graph.
- *
- * This is a 'special' destination, in that it doesn't represent any specific
- * screen - rather, it acts as a destination for processing _as a whole_ to be
- * used in the root navigation graph.
- */
-object ProcessingDestination : NavigationDestination {
-    override val route = "processing"
-    override val titleRes = R.string.unused
+sealed class Screen(val route: String, @StringRes val titleId: Int, val icon: ImageVector) {
+    data object Encode : Screen("encode", R.string.encode, Icons.Filled.Lock)
+    data object Decode : Screen("decode", R.string.decode, Icons.Filled.LockOpen)
 }
 
-/**
- * The [NavigationDestination] for the encoding screen.
- */
-object EncodeDestination : NavigationDestination {
-    override val route = "encode"
-    override val titleRes = R.string.encode
-    val icon = Icons.Filled.Lock
-}
-
-/**
- * The [NavigationDestination] for the decoding screen.
- */
-object DecodeDestination : NavigationDestination {
-    override val route = "decode"
-    override val titleRes = R.string.decode
-    val icon = Icons.Filled.LockOpen
-}
+val processingScreens = listOf(
+    Screen.Encode,
+    Screen.Decode,
+)
 
 /**
  * Plain state-holder for the processing screens.
@@ -98,16 +80,12 @@ data class ProcessingViewState(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessingScreen(
-    navigateToSettings: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProcessingViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val navController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route ?: EncodeDestination.route
-
     var processingViewState by remember { mutableStateOf(ProcessingViewState()) }
-
+    val navController = rememberNavController()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -120,7 +98,7 @@ fun ProcessingScreen(
                 navigationIcon = {
                     IconButton(
                         enabled = !(viewModel.encodeUiState.inProgress || viewModel.decodeUiState.inProgress),
-                        onClick = navigateToSettings,
+                        onClick = onNavigateToSettings,
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
@@ -129,7 +107,7 @@ fun ProcessingScreen(
                     }
                 },
                 actions = {
-                    if (processingViewState.title == EncodeDestination.titleRes) {
+                    if (processingViewState.title == Screen.Encode.titleId) {
                         IconButton(
                             enabled = viewModel.encodeUiState.result != null,
                             onClick = processingViewState.onShare,
@@ -145,18 +123,23 @@ fun ProcessingScreen(
         },
         bottomBar = {
             NavigationBar {
-                val processingScreens = listOf(EncodeDestination, DecodeDestination).zip(
-                    listOf(
-                        EncodeDestination.icon, DecodeDestination.icon
-                    )
-                )
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
 
-                processingScreens.forEach { (nd, icon) ->
+                processingScreens.forEach { screen ->
                     NavigationBarItem(
-                        selected = currentRoute == nd.route,
-                        onClick = { navController.navigate(nd.route) },
-                        icon = { Icon(imageVector = icon, contentDescription = null) },
-                        label = { Text(stringResource(nd.titleRes)) }
+                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        onClick = {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                        label = { Text(stringResource(screen.titleId)) }
                     )
                 }
             }
@@ -173,13 +156,13 @@ fun ProcessingScreen(
 
         NavHost(
             navController = navController,
-            startDestination = EncodeDestination.route,
+            startDestination = Screen.Encode.route,
             modifier = modifier.padding(innerPadding),
         ) {
-            composable(route = EncodeDestination.route) {
+            composable(route = Screen.Encode.route) {
                 val context = LocalContext.current
                 processingViewState = ProcessingViewState(
-                    title = EncodeDestination.titleRes,
+                    title = Screen.Encode.titleId,
                     onShare = { shareMessage(context, viewModel.encodeUiState.result) }
                 )
 
@@ -194,9 +177,9 @@ fun ProcessingScreen(
                 )
             }
 
-            composable(route = DecodeDestination.route) {
+            composable(route = Screen.Decode.route) {
                 processingViewState = ProcessingViewState(
-                    title = DecodeDestination.titleRes,
+                    title = Screen.Decode.titleId,
                 )
 
                 ProcessingBody(
