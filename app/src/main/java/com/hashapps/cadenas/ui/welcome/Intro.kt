@@ -12,12 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.components.WelcomeButton
 import com.hashapps.cadenas.ui.components.WelcomeText
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
-
-object IntroDestination : NavigationDestination {
-    override val route = "intro"
-    override val titleRes = R.string.intro
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +22,7 @@ fun IntroScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(stringResource(IntroDestination.titleRes)) },
+                title = { Text(stringResource(R.string.intro)) },
                 modifier = modifier,
             )
         }
