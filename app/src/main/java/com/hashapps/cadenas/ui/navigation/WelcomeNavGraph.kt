@@ -49,7 +49,7 @@ fun WelcomeNavHost(
         }
 
         composable(route = ProfilesDestination.route) {
-            ProfilesScreen(navigateToAddProfile = { navController.navigate(ProfileAddDestination.route) })
+            ProfilesScreen(onNavigateToAddProfile = { navController.navigate(ProfileAddDestination.route) })
         }
 
         composable(route = ProfileAddDestination.route) {

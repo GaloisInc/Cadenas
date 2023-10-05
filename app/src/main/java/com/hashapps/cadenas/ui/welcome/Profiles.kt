@@ -25,7 +25,7 @@ object ProfilesDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilesScreen(
-    navigateToAddProfile: () -> Unit,
+    onNavigateToAddProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -37,7 +37,7 @@ fun ProfilesScreen(
         }
     ) { innerPadding ->
         ProfilesBody(
-            navigateToAddProfile = navigateToAddProfile,
+            onNavigateToAddProfile = onNavigateToAddProfile,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -45,7 +45,7 @@ fun ProfilesScreen(
 
 @Composable
 fun ProfilesBody(
-    navigateToAddProfile: () -> Unit,
+    onNavigateToAddProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -77,7 +77,7 @@ fun ProfilesBody(
         buttonState.targetState = addProfileState.isIdle && addProfileState.currentState
 
         WelcomeButton(
-            visibleState = buttonState, onClick = navigateToAddProfile, text = stringResource(
+            visibleState = buttonState, onClick = onNavigateToAddProfile, text = stringResource(
                 R.string.profile_entry
             )
         )
