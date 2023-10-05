@@ -41,7 +41,7 @@ fun WelcomeNavHost(
         modifier = modifier,
     ) {
         composable(route = IntroDestination.route) {
-            IntroScreen(navigateToAddModel = { navController.navigate(ModelAddDestination.route) })
+            IntroScreen(onNavigateToAddModel = { navController.navigate(ModelAddDestination.route) })
         }
 
         composable(route = ModelAddDestination.route) {

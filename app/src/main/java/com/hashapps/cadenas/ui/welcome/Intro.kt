@@ -22,7 +22,7 @@ object IntroDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IntroScreen(
-    navigateToAddModel: () -> Unit,
+    onNavigateToAddModel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -34,7 +34,7 @@ fun IntroScreen(
         }
     ) { innerPadding ->
         IntroBody(
-            navigateToAddModel = navigateToAddModel,
+            onNavigateToAddModel = onNavigateToAddModel,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -42,7 +42,7 @@ fun IntroScreen(
 
 @Composable
 fun IntroBody(
-    navigateToAddModel: () -> Unit,
+    onNavigateToAddModel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -74,7 +74,7 @@ fun IntroBody(
         buttonState.targetState = addModelState.isIdle && addModelState.currentState
 
         WelcomeButton(
-            visibleState = buttonState, onClick = navigateToAddModel, text = stringResource(
+            visibleState = buttonState, onClick = onNavigateToAddModel, text = stringResource(
                 R.string.add_model
             )
         )
