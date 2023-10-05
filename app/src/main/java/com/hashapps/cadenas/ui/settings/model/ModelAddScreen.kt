@@ -46,7 +46,7 @@ object ModelAddDestination : NavigationDestination {
  */
 @Composable
 fun ModelAddScreen(
-    navigateNext: () -> Unit,
+    onNavigateNext: () -> Unit,
     modifier: Modifier = Modifier,
     firstTime: Boolean = false,
     viewModel: ModelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -87,7 +87,7 @@ fun ModelAddScreen(
 
                         if (it.state == WorkInfo.State.SUCCEEDED) {
                             if (firstTime) {
-                                navigateNext()
+                                onNavigateNext()
                             }
                             viewModel.updateUiState(ModelUiState())
                         }
@@ -107,7 +107,7 @@ fun ModelAddScreen(
                 title = stringResource(ModelAddDestination.titleRes),
                 navigationNeeded = !firstTime,
                 canNavigateUp = !showProgressIndicator,
-                navigateUp = navigateNext,
+                navigateUp = onNavigateNext,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

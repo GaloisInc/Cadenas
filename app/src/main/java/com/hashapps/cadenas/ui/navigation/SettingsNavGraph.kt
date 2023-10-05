@@ -60,7 +60,7 @@ fun SettingsNavHost(
 
         composable(route = ModelAddDestination.route) {
             ModelAddScreen(
-                navigateNext = { navController.navigate(ManageModelsDestination.route) },
+                onNavigateNext = { navController.navigate(ManageModelsDestination.route) },
             )
         }
 

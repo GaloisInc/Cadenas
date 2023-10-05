@@ -45,7 +45,7 @@ fun WelcomeNavHost(
         }
 
         composable(route = ModelAddDestination.route) {
-            ModelAddScreen(navigateNext = { navController.navigate(ProfilesDestination.route) }, firstTime = true)
+            ModelAddScreen(onNavigateNext = { navController.navigate(ProfilesDestination.route) }, firstTime = true)
         }
 
         composable(route = ProfilesDestination.route) {
