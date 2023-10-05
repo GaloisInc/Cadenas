@@ -19,20 +19,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.WorkInfo
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import com.hashapps.cadenas.workers.ModelDownloadWorker
 import kotlinx.coroutines.launch
 
 private const val MAX_LEN = 128
-
-/**
- * The [NavigationDestination] for the model-add screen.
- */
-object ModelAddDestination : NavigationDestination {
-    override val route = "model_add"
-    override val titleRes = R.string.add_model
-}
 
 /**
  * Cadenas model-add screen.
@@ -104,7 +95,7 @@ fun ModelAddScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(ModelAddDestination.titleRes),
+                title = stringResource(R.string.add_model),
                 navigationNeeded = !firstTime,
                 canNavigateUp = !showProgressIndicator,
                 navigateUp = onNavigateNext,

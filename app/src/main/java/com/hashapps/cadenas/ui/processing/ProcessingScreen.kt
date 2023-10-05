@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.navigation.NavigationDestination
-import com.hashapps.cadenas.ui.settings.SettingsDestination
 
 /**
  * The [NavigationDestination] for the processing navigation graph.
@@ -123,8 +123,8 @@ fun ProcessingScreen(
                         onClick = navigateToSettings,
                     ) {
                         Icon(
-                            imageVector = SettingsDestination.icon,
-                            contentDescription = stringResource(SettingsDestination.titleRes),
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = stringResource(R.string.settings),
                         )
                     }
                 },

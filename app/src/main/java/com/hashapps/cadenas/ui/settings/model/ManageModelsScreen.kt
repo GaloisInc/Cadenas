@@ -16,16 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
-
-/**
- * The [NavigationDestination] for the model-management screen.
- */
-object ManageModelsDestination : NavigationDestination {
-    override val route = "manage_models"
-    override val titleRes = R.string.manage_models
-}
 
 /**
  * Cadenas model-management screen.
@@ -53,7 +44,7 @@ fun ManageModelsScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(ManageModelsDestination.titleRes),
+                title = stringResource(R.string.manage_models),
                 navigateUp = navigateUp,
             )
         },

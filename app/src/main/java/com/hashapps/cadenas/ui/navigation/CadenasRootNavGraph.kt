@@ -24,12 +24,10 @@ fun CadenasRootNavHost(
         modifier = modifier,
     ) {
         composable(route = ProcessingDestination.route) {
-            ProcessingScreen(navigateToSettings = { navController.navigate(SettingsNavDestination.route) })
+            ProcessingScreen(navigateToSettings = { navController.navigateToSettingsGraph() })
         }
 
-        composable(route = SettingsNavDestination.route) {
-            SettingsNavHost(navigateToProcessing = { navController.navigate(ProcessingDestination.route) })
-        }
+        settingsGraph(onNavigateToProcessing = { navController.navigate(ProcessingDestination.route) }, navController)
 
         firstTimeSetupGraph(completeFirstRun, onNavigateToProcessing = { navController.navigate(ProcessingDestination.route) }, navController)
     }

@@ -11,16 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
-
-/**
- * The [NavigationDestination] for the top-level settings screen.
- */
-object SettingsDestination : NavigationDestination {
-    override val route = "settings"
-    override val titleRes = R.string.settings
-    val icon = Icons.Filled.Settings
-}
 
 /**
  * Cadenas main settings screen.
@@ -42,7 +32,7 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(SettingsDestination.titleRes),
+                title = stringResource(R.string.settings),
                 navigateUp = navigateUp,
             )
         }
