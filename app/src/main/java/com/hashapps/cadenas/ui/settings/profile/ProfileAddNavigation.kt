@@ -10,10 +10,9 @@ const val PROFILE_ADD_ROUTE = "profile_entry"
 fun NavGraphBuilder.profileAddScreen(
     onNavigateNext: () -> Unit,
     onNavigateUp: () -> Unit,
-    firstTime: Boolean = false,
 ) {
     composable(PROFILE_ADD_ROUTE) {
-        ProfileAddScreen(navigateNext = onNavigateNext, navigateUp = onNavigateUp, firstTime = firstTime)
+        ProfileAddScreen(navigateNext = onNavigateNext, navigateUp = onNavigateUp)
     }
 }
 

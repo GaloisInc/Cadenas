@@ -39,7 +39,6 @@ private const val MAX_LEN = 128
 fun ModelAddScreen(
     onNavigateNext: () -> Unit,
     modifier: Modifier = Modifier,
-    firstTime: Boolean = false,
     viewModel: ModelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -77,9 +76,6 @@ fun ModelAddScreen(
                         }
 
                         if (it.state == WorkInfo.State.SUCCEEDED) {
-                            if (firstTime) {
-                                onNavigateNext()
-                            }
                             viewModel.updateUiState(ModelUiState())
                         }
                     }
@@ -96,7 +92,6 @@ fun ModelAddScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.add_model),
-                navigationNeeded = !firstTime,
                 canNavigateUp = !showProgressIndicator,
                 navigateUp = onNavigateNext,
             )

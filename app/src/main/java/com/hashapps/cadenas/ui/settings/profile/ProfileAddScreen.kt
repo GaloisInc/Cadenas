@@ -39,14 +39,12 @@ fun ProfileAddScreen(
     navigateNext: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    firstTime: Boolean = false,
     viewModel: ProfileAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.profile_entry),
-                navigationNeeded = !firstTime,
                 navigateUp = navigateUp,
             )
         }
