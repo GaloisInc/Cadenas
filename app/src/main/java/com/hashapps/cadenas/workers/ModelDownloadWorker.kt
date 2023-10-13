@@ -1,7 +1,7 @@
 package com.hashapps.cadenas.workers
 
-import android.app.Notification
 import android.content.Context
+import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -23,7 +23,7 @@ class ModelDownloadWorker(
     params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
     override suspend fun getForegroundInfo(): ForegroundInfo {
-        val notification = Notification.Builder(context, CadenasApplication.CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, CadenasApplication.CHANNEL_ID)
             .setContentTitle(context.getString(R.string.download_title))
             .setSmallIcon(R.drawable.baseline_downloading_24)
             .build()
