@@ -311,7 +311,7 @@ private fun ProcessingBody(
                     }
                 }
 
-                Divider(thickness = 1.dp)
+                HorizontalDivider(thickness = 1.dp)
 
                 SelectionContainer {
                     Text(
