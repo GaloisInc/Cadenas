@@ -18,6 +18,7 @@ object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             ProcessingViewModel(
+                createSavedStateHandle(),
                 cadenasApplication().container.settingsRepository,
             )
         }
@@ -31,7 +32,7 @@ object AppViewModelProvider {
 
         initializer {
             ProfileEditViewModel(
-                this.createSavedStateHandle(),
+                createSavedStateHandle(),
                 cadenasApplication().container.profileRepository,
                 cadenasApplication().container.modelRepository,
             )
