@@ -34,6 +34,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.3")
 }
 
 val releaseStoreFile: String by project
@@ -56,12 +57,14 @@ android {
 
     defaultConfig {
         applicationId = "com.hashapps.cadenas"
-        minSdk = 26
+        minSdk = 21
         targetSdk = 34
         versionCode = 2
         versionName = "0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -77,6 +80,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility(JavaVersion.VERSION_17)
         targetCompatibility(JavaVersion.VERSION_17)
     }
