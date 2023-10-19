@@ -19,18 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 private const val MAX_LEN = 128
-
-/**
- * The [NavigationDestination] for the profile-add screen.
- */
-object ProfileAddDestination : NavigationDestination {
-    override val route = "profile_entry"
-    override val titleRes = R.string.profile_entry
-}
 
 /**
  * Cadenas profile-add screen.
@@ -48,14 +39,12 @@ fun ProfileAddScreen(
     navigateNext: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    firstTime: Boolean = false,
     viewModel: ProfileAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(ProfileAddDestination.titleRes),
-                navigationNeeded = !firstTime,
+                title = stringResource(R.string.profile_entry),
                 navigateUp = navigateUp,
             )
         }

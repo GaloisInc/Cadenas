@@ -23,14 +23,14 @@ class ProfileEditViewModel(
     private val profileRepository: ProfileRepository,
     private val modelRepository: ModelRepository,
 ) : ViewModel() {
-    private val itemId: Int = checkNotNull(savedStateHandle[ProfileEditDestination.profileIdArg])
+    private val profileEditArgs = ProfileEditArgs(savedStateHandle)
 
     var profileUiState by mutableStateOf(ProfileUiState())
         private set
 
     init {
         viewModelScope.launch {
-            val profile = profileRepository.getProfileStream(itemId)
+            val profile = profileRepository.getProfileStream(profileEditArgs.profileId)
                 .filterNotNull()
                 .first()
             profileUiState = profile.toProfileUiState(actionEnabled = true)

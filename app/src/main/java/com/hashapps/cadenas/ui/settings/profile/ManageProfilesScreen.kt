@@ -20,16 +20,7 @@ import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.Profile
 import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
-
-/**
- * The [NavigationDestination] for the profile-management screen.
- */
-object ManageProfilesDestination : NavigationDestination {
-    override val route = "manage_profiles"
-    override val titleRes = R.string.manage_profiles
-}
 
 /**
  * Cadenas profile-management screen.
@@ -50,9 +41,9 @@ object ManageProfilesDestination : NavigationDestination {
  */
 @Composable
 fun ManageProfilesScreen(
-    navigateUp: () -> Unit,
-    navigateToProfileEntry: () -> Unit,
-    navigateToProfileEdit: (Int) -> Unit,
+    onNavigateUp: () -> Unit,
+    onNavigateToProfileEntry: () -> Unit,
+    onNavigateToProfileEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageProfilesViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -62,13 +53,13 @@ fun ManageProfilesScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(ManageProfilesDestination.titleRes),
-                navigateUp = navigateUp,
+                title = stringResource(R.string.manage_profiles),
+                navigateUp = onNavigateUp,
             )
         },
         floatingActionButton = {
             LargeFloatingActionButton(
-                onClick = { navigateToProfileEntry() },
+                onClick = { onNavigateToProfileEntry() },
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
@@ -82,7 +73,7 @@ fun ManageProfilesScreen(
             profiles = profiles,
             selectedProfileId = selectedProfile?.id,
             onProfileSelect = { viewModel.selectProfile(it) },
-            onProfileEdit = { navigateToProfileEdit(it) },
+            onProfileEdit = { onNavigateToProfileEdit(it) },
             onProfileDelete = { viewModel.deleteProfile(it) },
         )
     }

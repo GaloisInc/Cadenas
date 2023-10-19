@@ -14,18 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
-
-/**
- * The [NavigationDestination] for the profile-editing screen.
- */
-object ProfileEditDestination : NavigationDestination {
-    override val route = "profile_edit"
-    override val titleRes = R.string.edit_profile
-    const val profileIdArg = "profileId"
-    val routeWithArgs = "$route/{$profileIdArg}"
-}
 
 /**
  * Cadenas profile-editing screen.
@@ -49,16 +38,16 @@ object ProfileEditDestination : NavigationDestination {
  */
 @Composable
 fun ProfileEditScreen(
-    navigateBack: () -> Unit,
-    navigateUp: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProfileEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(ProfileEditDestination.titleRes),
-                navigateUp = navigateUp,
+                title = stringResource(R.string.edit_profile),
+                navigateUp = onNavigateUp,
             )
         }
     ) { innerPadding ->
@@ -69,7 +58,7 @@ fun ProfileEditScreen(
             onProfileValueChange = viewModel::updateUiState,
             onSaveClick = {
                 viewModel.updateProfile()
-                navigateBack()
+                onNavigateBack()
             },
         )
     }

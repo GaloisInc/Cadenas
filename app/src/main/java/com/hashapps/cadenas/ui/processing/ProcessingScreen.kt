@@ -2,7 +2,6 @@ package com.hashapps.cadenas.ui.processing
 
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -11,8 +10,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,67 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.AppViewModelProvider
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
-import com.hashapps.cadenas.ui.settings.SettingsDestination
-
-/**
- * The [NavigationDestination] for the processing navigation graph.
- *
- * This is a 'special' destination, in that it doesn't represent any specific
- * screen - rather, it acts as a destination for processing _as a whole_ to be
- * used in the root navigation graph.
- */
-object ProcessingDestination : NavigationDestination {
-    override val route = "processing"
-    override val titleRes = R.string.unused
-}
-
-/**
- * The [NavigationDestination] for the encoding screen.
- */
-object EncodeDestination : NavigationDestination {
-    override val route = "encode"
-    override val titleRes = R.string.encode
-    val icon = Icons.Filled.Lock
-}
-
-/**
- * The [NavigationDestination] for the decoding screen.
- */
-object DecodeDestination : NavigationDestination {
-    override val route = "decode"
-    override val titleRes = R.string.decode
-    val icon = Icons.Filled.LockOpen
-}
-
-/**
- * Plain state-holder for the processing screens.
- *
- * The processing screens are hosted within a single [Scaffold], so the title
- * and any additional top bar behaviors must be defined such that there is no
- * dependency on the individual screens themselves. `ProcessingViewState` is
- * mutated once per navigation destination to adjust these properties as
- * appropriate.
- *
- * Future versions may add to this state-holder to support additional actions
- * on the processing screens.
- */
-@Immutable
-data class ProcessingViewState(
-    @StringRes val title: Int? = null,
-    val onShare: () -> Unit = {},
-)
 
 /**
  * Cadenas message-processing screens.
@@ -98,41 +41,34 @@ data class ProcessingViewState(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessingScreen(
-    navigateToSettings: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProcessingViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val navController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route ?: EncodeDestination.route
-
-    var processingViewState by remember { mutableStateOf(ProcessingViewState()) }
-
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    processingViewState.title?.let {
-                        Text(text = stringResource(it))
-                    }
+                    Text(text = stringResource(R.string.app_name))
                 },
                 modifier = modifier,
                 navigationIcon = {
                     IconButton(
-                        enabled = !(viewModel.encodeUiState.inProgress || viewModel.decodeUiState.inProgress),
-                        onClick = navigateToSettings,
+                        enabled = !(viewModel.processingUiState.inProgress),
+                        onClick = onNavigateToSettings,
                     ) {
                         Icon(
-                            imageVector = SettingsDestination.icon,
-                            contentDescription = stringResource(SettingsDestination.titleRes),
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = stringResource(R.string.settings),
                         )
                     }
                 },
                 actions = {
-                    if (processingViewState.title == EncodeDestination.titleRes) {
+                    if (viewModel.processingUiState.processingMode == ProcessingMode.Encode) {
                         IconButton(
-                            enabled = viewModel.encodeUiState.result != null,
-                            onClick = processingViewState.onShare,
+                            enabled = viewModel.processingUiState.result != null,
+                            onClick = { shareMessage(context, viewModel.processingUiState.result) },
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Share,
@@ -143,24 +79,6 @@ fun ProcessingScreen(
                 },
             )
         },
-        bottomBar = {
-            NavigationBar {
-                val processingScreens = listOf(EncodeDestination, DecodeDestination).zip(
-                    listOf(
-                        EncodeDestination.icon, DecodeDestination.icon
-                    )
-                )
-
-                processingScreens.forEach { (nd, icon) ->
-                    NavigationBarItem(
-                        selected = currentRoute == nd.route,
-                        onClick = { navController.navigate(nd.route) },
-                        icon = { Icon(imageVector = icon, contentDescription = null) },
-                        label = { Text(stringResource(nd.titleRes)) }
-                    )
-                }
-            }
-        }
     ) { innerPadding ->
         val cadenasInitialized by viewModel.cadenasInitialized.collectAsState()
 
@@ -171,63 +89,41 @@ fun ProcessingScreen(
             ""
         }
 
-        NavHost(
-            navController = navController,
-            startDestination = EncodeDestination.route,
+        ProcessingBody(
+            cadenasInitialized = cadenasInitialized,
+            processingUiState = viewModel.processingUiState,
+            onValueChange = viewModel::updateProcessingUiState,
+            enterEncodeMode = viewModel::encodingMode,
+            enterDecodeMode = viewModel::decodingMode,
+            toProcessLabel = when (viewModel.processingUiState.processingMode) {
+                ProcessingMode.Encode -> stringResource(R.string.plaintext_message_label)
+                ProcessingMode.Decode -> stringResource(R.string.encoded_message_label)
+            },
+            toProcessSupport = when(viewModel.processingUiState.processingMode) {
+                ProcessingMode.Encode -> stringResource(R.string.plaintext_message_support)
+                ProcessingMode.Decode -> stringResource(R.string.encoded_message_support)
+            },
+            action = { viewModel.processMessage(formattedTag) },
             modifier = modifier.padding(innerPadding),
-        ) {
-            composable(route = EncodeDestination.route) {
-                val context = LocalContext.current
-                processingViewState = ProcessingViewState(
-                    title = EncodeDestination.titleRes,
-                    onShare = { shareMessage(context, viewModel.encodeUiState.result) }
-                )
-
-                ProcessingBody(
-                    cadenasInitialized = cadenasInitialized,
-                    processingUiState = viewModel.encodeUiState,
-                    onValueChange = viewModel::updateEncodeUiState,
-                    toProcessLabel = stringResource(R.string.plaintext_message_label),
-                    toProcessSupport = stringResource(R.string.plaintext_message_support),
-                    action = { viewModel.encodeMessage(formattedTag) },
-                    actionLabel = stringResource(R.string.encode),
-                )
-            }
-
-            composable(route = DecodeDestination.route) {
-                processingViewState = ProcessingViewState(
-                    title = DecodeDestination.titleRes,
-                )
-
-                ProcessingBody(
-                    cadenasInitialized = cadenasInitialized,
-                    processingUiState = viewModel.decodeUiState,
-                    onValueChange = viewModel::updateDecodeUiState,
-                    toProcessLabel = stringResource(R.string.encoded_message_label),
-                    toProcessSupport = stringResource(R.string.encoded_message_support),
-                    action = { viewModel.decodeMessage(formattedTag) },
-                    actionLabel = stringResource(R.string.decode),
-                    preventKeyboardInput = true,
-                )
-            }
-        }
+        )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProcessingBody(
     cadenasInitialized: Boolean,
     processingUiState: ProcessingUiState,
     onValueChange: (ProcessingUiState) -> Unit,
+    enterEncodeMode: () -> Unit,
+    enterDecodeMode: () -> Unit,
     toProcessLabel: String,
     toProcessSupport: String,
     action: () -> Unit,
-    actionLabel: String,
     modifier: Modifier = Modifier,
-    preventKeyboardInput: Boolean = false,
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
@@ -236,67 +132,74 @@ private fun ProcessingBody(
     ) {
         val focusManager = LocalFocusManager.current
 
-        ElevatedCard(
+        SingleChoiceSegmentedButtonRow (
             modifier = modifier.fillMaxWidth(),
         ) {
-            val processInputField = @Composable {
-                OutlinedTextField(
-                    modifier = modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
+            ProcessingMode.entries.forEachIndexed { index, mode ->
+                SegmentedButton(
                     enabled = !processingUiState.inProgress,
-                    value = processingUiState.toProcess,
-                    onValueChange = { onValueChange(processingUiState.copy(toProcess = it)) },
-                    singleLine = false,
-                    label = { Text(toProcessLabel) },
-                    trailingIcon = {
-                        IconButton(
-                            enabled = processingUiState.toProcess.isNotEmpty(),
-                            onClick = { onValueChange(processingUiState.copy(toProcess = "")) },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = stringResource(R.string.clear),
-                            )
-                        }
+                    selected = mode == processingUiState.processingMode,
+                    onClick = when (mode) {
+                        ProcessingMode.Encode -> enterEncodeMode
+                        ProcessingMode.Decode -> enterDecodeMode
                     },
-                    supportingText = { Text(toProcessSupport) },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Next) },
-                    ),
-                )
-            }
-            if (preventKeyboardInput) {
-                CompositionLocalProvider(
-                    LocalTextInputService provides null
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = ProcessingMode.entries.size),
                 ) {
-                    processInputField()
+                    Text(mode.toString())
                 }
-            } else {
-                processInputField()
             }
         }
 
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                enabled = !processingUiState.inProgress,
+                value = processingUiState.toProcess,
+                onValueChange = { onValueChange(processingUiState.copy(toProcess = it)) },
+                singleLine = false,
+                label = { Text(toProcessLabel) },
+                trailingIcon = {
+                    IconButton(
+                        enabled = processingUiState.toProcess.isNotEmpty(),
+                        onClick = { onValueChange(processingUiState.copy(toProcess = "")) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(R.string.clear),
+                        )
+                    }
+                },
+                supportingText = { Text(toProcessSupport) },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.clearFocus() },
+                ),
+            )
+        }
+
         Button(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             enabled = cadenasInitialized && processingUiState.toProcess.isNotEmpty() && !processingUiState.inProgress,
             onClick = action,
         ) {
             Text(
-                text = actionLabel,
+                text = stringResource(R.string.go),
                 style = MaterialTheme.typography.titleLarge,
             )
         }
 
         ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             if (processingUiState.inProgress) {
                 LinearProgressIndicator(
-                    modifier = modifier
+                    modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth()
                 )
@@ -304,7 +207,7 @@ private fun ProcessingBody(
 
             if (processingUiState.result != null) {
                 Row(
-                    modifier = modifier
+                    modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -328,11 +231,11 @@ private fun ProcessingBody(
                     }
                 }
 
-                Divider(thickness = 1.dp)
+                HorizontalDivider(thickness = 1.dp)
 
                 SelectionContainer {
                     Text(
-                        modifier = modifier.padding(8.dp),
+                        modifier = Modifier.padding(8.dp),
                         text = processingUiState.result,
                     )
                 }

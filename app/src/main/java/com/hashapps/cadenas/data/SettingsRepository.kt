@@ -3,19 +3,20 @@ package com.hashapps.cadenas.data
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,13 +38,12 @@ import java.io.IOException
  * application-scoped background job that listens for changes to the
  * selected profile, re-initializing Cadenas when a change occurs.
  *
- * @property[isNotFirstRun] Boolean preference indicating whether first-time setup
- * has been completed
  * @property[cadenasInitialized] A derived Boolean flag indicating whether or
  * not the Cadenas backend has been initialized or not
  * @property[selectedProfile] The [Profile] selected by the stored integer
  * preference ID
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class SettingsRepository(
     private val dataStore: DataStore<Preferences>,
     private val modelsDir: File,
@@ -53,29 +53,8 @@ class SettingsRepository(
 ) {
     private companion object {
         val SELECTED_PROFILE = intPreferencesKey("selected_profile")
-        val IS_NOT_FIRST_RUN = booleanPreferencesKey("is_not_first_run")
 
         const val TAG = "SettingsRepo"
-    }
-
-    val isNotFirstRun = dataStore.data
-        .catch {
-            if (it is IOException) {
-                Log.e(TAG, "Error reading settings.", it)
-                emit(emptyPreferences())
-            } else {
-                throw it
-            }
-        }.map { it[IS_NOT_FIRST_RUN] ?: false }
-
-    /**
-     * Indicate the first app run has been completed, so setup screens only
-     * show on first launch.
-     */
-    suspend fun completeFirstRun() {
-        dataStore.edit {
-            it[IS_NOT_FIRST_RUN] = true
-        }
     }
 
     /**
@@ -97,15 +76,6 @@ class SettingsRepository(
     val selectedProfile: StateFlow<Profile?> = _selectedProfile.asStateFlow()
 
     init {
-        /*
-         * Worth exploring if there's a better way to do this. The idea is:
-         * For the duration of the application's lifetime, in the background,
-         * listen for changes to the selected profile.
-         *
-         * The questionable thing is the nested use of collectLatest; getting
-         * the second/inner flow depends on the first, so a simple combine
-         * won't suffice.
-         */
         externalScope.launch(ioDispatcher) {
             dataStore.data
                 .catch {
@@ -117,22 +87,22 @@ class SettingsRepository(
                     }
                 }.map { preferences ->
                     preferences[SELECTED_PROFILE]
-                }.filterNotNull().collectLatest {
-                    profileDao.getProfile(it).collectLatest { profile ->
-                        _selectedProfile.update { profile }
+                }.filterNotNull()
+                .flatMapLatest { profileDao.getProfile(it) }
+                .collectLatest { profile ->
+                    _selectedProfile.update { profile }
 
-                        Cadenas.initialize(
-                            CadenasConfig(
-                                modelDir = modelsDir.resolve(profile.selectedModel).path,
-                                key = profile.key.chunked(2).map { b -> b.toInt(16).toByte() }
-                                    .toByteArray(),
-                                seed = profile.seed,
-                            )
+                    Cadenas.initialize(
+                        CadenasConfig(
+                            modelDir = modelsDir.resolve(profile.selectedModel).path,
+                            key = profile.key.chunked(2).map { b -> b.toInt(16).toByte() }
+                                .toByteArray(),
+                            seed = profile.seed,
                         )
+                    )
 
-                        if (Cadenas.getInstance() != null) {
-                            _cadenasInitialized.update { true }
-                        }
+                    if (Cadenas.getInstance() != null) {
+                        _cadenasInitialized.update { true }
                     }
                 }
         }
