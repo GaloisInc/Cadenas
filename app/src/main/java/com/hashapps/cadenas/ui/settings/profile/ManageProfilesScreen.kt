@@ -179,7 +179,10 @@ private fun Profile(
                     ) {
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.export)) },
-                            onClick = { onProfileExport(profile.id) },
+                            onClick = {
+                                expanded = false
+                                onProfileExport(profile.id)
+                            },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Filled.FileUpload,
@@ -190,7 +193,10 @@ private fun Profile(
 
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.edit)) },
-                            onClick = { onProfileEdit(profile.id) },
+                            onClick = {
+                                expanded = false
+                                onProfileEdit(profile.id)
+                            },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Filled.Edit,
@@ -201,7 +207,10 @@ private fun Profile(
 
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.delete)) },
-                            onClick = { deleteConfirmationRequired = true },
+                            onClick = {
+                                expanded = false
+                                deleteConfirmationRequired = true
+                            },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Filled.DeleteForever,
