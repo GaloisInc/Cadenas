@@ -43,6 +43,7 @@ fun NavGraphBuilder.settingsGraph(
         manageProfilesScreen(
             onNavigateUp = { navController.navigateUp() },
             onNavigateToProfileEntry = { navController.navigateToProfileAdd() },
+            onNavigateToProfileExport = {},
             onNavigateToProfileEdit = { navController.navigateToProfileEdit(it) })
         profileAddScreen(
             onNavigateNext = { navController.popBackStack() },

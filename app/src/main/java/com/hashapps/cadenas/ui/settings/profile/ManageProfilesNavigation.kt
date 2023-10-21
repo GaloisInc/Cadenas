@@ -10,12 +10,14 @@ const val MANAGE_PROFILES_ROUTE = "manage_profiles"
 fun NavGraphBuilder.manageProfilesScreen(
     onNavigateUp: () -> Unit,
     onNavigateToProfileEntry: () -> Unit,
+    onNavigateToProfileExport: (Int) -> Unit,
     onNavigateToProfileEdit: (Int) -> Unit,
 ) {
     composable(MANAGE_PROFILES_ROUTE) {
         ManageProfilesScreen(
             onNavigateUp = onNavigateUp,
             onNavigateToProfileEntry = onNavigateToProfileEntry,
+            onNavigateToProfileExport = onNavigateToProfileExport,
             onNavigateToProfileEdit = onNavigateToProfileEdit,
         )
     }

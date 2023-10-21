@@ -44,6 +44,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 fun ManageProfilesScreen(
     onNavigateUp: () -> Unit,
     onNavigateToProfileEntry: () -> Unit,
+    onNavigateToProfileExport: (Int) -> Unit,
     onNavigateToProfileEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageProfilesViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -74,7 +75,8 @@ fun ManageProfilesScreen(
             profiles = profiles,
             selectedProfileId = selectedProfile?.id,
             onProfileSelect = { viewModel.selectProfile(it) },
-            onProfileEdit = { onNavigateToProfileEdit(it) },
+            onProfileExport = onNavigateToProfileExport,
+            onProfileEdit = onNavigateToProfileEdit,
             onProfileDelete = { viewModel.deleteProfile(it) },
         )
     }
@@ -85,6 +87,7 @@ private fun ManageProfilesBody(
     profiles: List<Profile>,
     selectedProfileId: Int?,
     onProfileSelect: (Int) -> Unit,
+    onProfileExport: (Int) -> Unit,
     onProfileEdit: (Int) -> Unit,
     onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
@@ -100,6 +103,7 @@ private fun ManageProfilesBody(
             profiles = profiles,
             selectedProfileId = selectedProfileId,
             onProfileSelect = { onProfileSelect(it.id) },
+            onProfileExport = onProfileExport,
             onProfileEdit = onProfileEdit,
             onProfileDelete = { onProfileDelete(it) },
         )
@@ -111,6 +115,7 @@ private fun ProfileList(
     profiles: List<Profile>,
     selectedProfileId: Int?,
     onProfileSelect: (Profile) -> Unit,
+    onProfileExport: (Int) -> Unit,
     onProfileEdit: (Int) -> Unit,
     onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
@@ -121,6 +126,7 @@ private fun ProfileList(
                 profile = it,
                 selectedProfileId = selectedProfileId,
                 onProfileSelect = onProfileSelect,
+                onProfileExport = onProfileExport,
                 onProfileEdit = onProfileEdit,
                 onProfileDelete = onProfileDelete,
             )
@@ -133,6 +139,7 @@ private fun Profile(
     profile: Profile,
     selectedProfileId: Int?,
     onProfileSelect: (Profile) -> Unit,
+    onProfileExport: (Int) -> Unit,
     onProfileEdit: (Int) -> Unit,
     onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
@@ -172,7 +179,7 @@ private fun Profile(
                     ) {
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.export)) },
-                            onClick = { },
+                            onClick = { onProfileExport(profile.id) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Filled.FileUpload,
