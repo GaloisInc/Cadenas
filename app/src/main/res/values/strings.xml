@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Cadenas</string>
-    <string name="encode">Encode</string>
-    <string name="decode">Decode</string>
     <string name="settings">Settings</string>
     <string name="share_button">Share encoded message</string>
     <string name="cadenas_message">Encoded Message</string>
@@ -30,7 +28,6 @@
     <string name="add_item">Add item</string>
     <string name="manage_models">Models</string>
     <string name="manage_models_support">Download/manage models</string>
-    <string name="unused" />
     <string name="clear">Clear item</string>
     <string name="profile_description_label">Profile Description</string>
     <string name="profile_description_support">And a brief description</string>
@@ -51,14 +48,6 @@
     <string name="name_error">Model names must be alphanumeric</string>
     <string name="manage_profiles_support">Manage messaging profiles</string>
     <string name="model">Model</string>
-    <string name="intro">Welcome</string>
-    <string name="intro_text">Welcome! Cadenas is an app for obfuscated communication.</string>
-    <string name="add_model_text">To get started, we\'ll download a GPT-2 model to use for encoding.</string>
-    <string name="after_model_text">You can add more models later. Cadenas always needs at least one model, so you can\'t delete whichever is currently active.</string>
-    <string name="add_profile_text">Speaking of active models, to start encoding and decoding messages, let\'s add a communication profile.</string>
-    <string name="after_profile_text">Great! You can create as many profiles as you\'d like. Profile information can be shared to allow others to communicate with you.</string>
-    <string name="get_started_text">Tap \"Get Started\" to encode your first message.</string>
-    <string name="get_started">Get Started</string>
     <string name="download_title">Downloading model…</string>
     <string name="channel_name">Model Management</string>
     <string name="channel_description">Notification channel for model-management tasks, such as downloading and deleting.</string>
