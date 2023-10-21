@@ -13,6 +13,7 @@ import com.hashapps.cadenas.ui.processing.ProcessingViewModel
 import com.hashapps.cadenas.ui.settings.profile.ManageProfilesViewModel
 import com.hashapps.cadenas.ui.settings.profile.ProfileAddViewModel
 import com.hashapps.cadenas.ui.settings.profile.ProfileEditViewModel
+import com.hashapps.cadenas.ui.settings.profile.ProfileExportViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -27,6 +28,13 @@ object AppViewModelProvider {
             ProfileAddViewModel(
                 cadenasApplication().container.profileRepository,
                 cadenasApplication().container.modelRepository,
+            )
+        }
+
+        initializer {
+            ProfileExportViewModel(
+                createSavedStateHandle(),
+                cadenasApplication().container.profileRepository,
             )
         }
 
