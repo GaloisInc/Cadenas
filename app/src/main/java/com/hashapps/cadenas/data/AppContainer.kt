@@ -46,6 +46,7 @@ class AppDataContainer(
 ) : AppContainer {
     override val profileRepository by lazy {
         ProfileRepository(
+            contentResolver = context.contentResolver,
             profileDao = ProfileDatabase.getDatabase(context).profileDao(),
         )
     }

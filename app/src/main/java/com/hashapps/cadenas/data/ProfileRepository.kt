@@ -1,6 +1,11 @@
 package com.hashapps.cadenas.data
 
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.os.Build
+import android.provider.MediaStore
 import kotlinx.coroutines.flow.Flow
+import java.io.ByteArrayOutputStream
 import javax.crypto.KeyGenerator
 
 /**
@@ -9,7 +14,10 @@ import javax.crypto.KeyGenerator
  * Loosely wraps around the [ProfileDao] methods, and provides key-generation
  * capabilities for profile creation.
  */
-class ProfileRepository(private val profileDao: ProfileDao) {
+class ProfileRepository(
+    private val contentResolver: ContentResolver,
+    private val profileDao: ProfileDao
+) {
     suspend fun insertProfile(profile: Profile): Unit = profileDao.insert(profile)
     suspend fun updateProfile(profile: Profile): Unit = profileDao.update(profile)
     suspend fun deleteProfile(profile: Profile): Unit = profileDao.delete(profile)
@@ -29,4 +37,30 @@ class ProfileRepository(private val profileDao: ProfileDao) {
      * Generate and return an AES-256 key as ASCII-Hex.
      */
     fun genKey(): String = KEYGEN.generateKey().encoded.toHex()
+
+    /**
+     * Save a profile's QR code to disk.
+     */
+    fun saveQRForProfile(profile: Profile) {
+        val qrCodeBytes = ByteArrayOutputStream()
+            .also { profile.toQRCode().render().writeImage(it) }
+            .toByteArray()
+
+        val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Images.Media.getContentUri(
+                MediaStore.VOLUME_EXTERNAL_PRIMARY
+            )
+        } else {
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        }
+
+        val qrDetails = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-${profile.id}.png")
+        }
+        val qrUri = contentResolver.insert(imageCollection, qrDetails)!!
+
+        contentResolver.openOutputStream(qrUri).use {
+            it?.write(qrCodeBytes)
+        }
+    }
 }
