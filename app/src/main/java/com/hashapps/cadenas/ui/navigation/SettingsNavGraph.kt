@@ -14,8 +14,10 @@ import com.hashapps.cadenas.ui.settings.profile.manageProfilesScreen
 import com.hashapps.cadenas.ui.settings.profile.navigateToManageProfiles
 import com.hashapps.cadenas.ui.settings.profile.navigateToProfileAdd
 import com.hashapps.cadenas.ui.settings.profile.navigateToProfileEdit
+import com.hashapps.cadenas.ui.settings.profile.navigateToProfileExport
 import com.hashapps.cadenas.ui.settings.profile.profileAddScreen
 import com.hashapps.cadenas.ui.settings.profile.profileEditScreen
+import com.hashapps.cadenas.ui.settings.profile.profileExportScreen
 import com.hashapps.cadenas.ui.settings.settingsScreen
 
 const val SETTINGS_GRAPH_ROUTE = "settings"
@@ -43,10 +45,13 @@ fun NavGraphBuilder.settingsGraph(
         manageProfilesScreen(
             onNavigateUp = { navController.navigateUp() },
             onNavigateToProfileEntry = { navController.navigateToProfileAdd() },
-            onNavigateToProfileExport = {},
+            onNavigateToProfileExport = { navController.navigateToProfileExport(it) },
             onNavigateToProfileEdit = { navController.navigateToProfileEdit(it) })
         profileAddScreen(
             onNavigateNext = { navController.popBackStack() },
+            onNavigateUp = { navController.navigateUp() })
+        profileExportScreen(
+            onNavigateBack = { navController.popBackStack() },
             onNavigateUp = { navController.navigateUp() })
         profileEditScreen(
             onNavigateBack = { navController.popBackStack() },
