@@ -109,7 +109,6 @@ private fun SettingsBody(
 fun SettingsTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
-    navigationNeeded: Boolean = true,
     canNavigateUp: Boolean = true,
     navigateUp: () -> Unit = {},
 ) {
@@ -117,16 +116,14 @@ fun SettingsTopAppBar(
         title = { Text(title) },
         modifier = modifier,
         navigationIcon = {
-            if (navigationNeeded) {
-                IconButton(
-                    enabled = canNavigateUp,
-                    onClick = navigateUp,
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                    )
-                }
+            IconButton(
+                enabled = canNavigateUp,
+                onClick = navigateUp,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back),
+                )
             }
         },
     )
