@@ -10,6 +10,7 @@ const val MANAGE_PROFILES_ROUTE = "manage_profiles"
 fun NavGraphBuilder.manageProfilesScreen(
     onNavigateUp: () -> Unit,
     onNavigateToProfileEntry: () -> Unit,
+    onNavigateToProfileImport: () -> Unit,
     onNavigateToProfileExport: (Int) -> Unit,
     onNavigateToProfileEdit: (Int) -> Unit,
 ) {
@@ -17,6 +18,7 @@ fun NavGraphBuilder.manageProfilesScreen(
         ManageProfilesScreen(
             onNavigateUp = onNavigateUp,
             onNavigateToProfileEntry = onNavigateToProfileEntry,
+            onNavigateToProfileImport = onNavigateToProfileImport,
             onNavigateToProfileExport = onNavigateToProfileExport,
             onNavigateToProfileEdit = onNavigateToProfileEdit,
         )

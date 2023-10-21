@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.*
@@ -44,6 +46,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 fun ManageProfilesScreen(
     onNavigateUp: () -> Unit,
     onNavigateToProfileEntry: () -> Unit,
+    onNavigateToProfileImport: () -> Unit,
     onNavigateToProfileExport: (Int) -> Unit,
     onNavigateToProfileEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -60,13 +63,51 @@ fun ManageProfilesScreen(
             )
         },
         floatingActionButton = {
-            LargeFloatingActionButton(
-                onClick = { onNavigateToProfileEntry() },
+            var expanded by remember { mutableStateOf(false) }
+            Box(
+                modifier = Modifier
+                    .wrapContentSize(Alignment.TopStart),
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.add_item)
-                )
+                LargeFloatingActionButton(
+                    onClick = { expanded = true },
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Message,
+                        contentDescription = stringResource(R.string.add_item)
+                    )
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.new_label)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToProfileEntry()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = null,
+                            )
+                        },
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.import_label)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToProfileImport()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.FileDownload,
+                                contentDescription = null,
+                            )
+                        }
+                    )
+                }
             }
         },
     ) { innerPadding ->

@@ -45,6 +45,7 @@ fun NavGraphBuilder.settingsGraph(
         manageProfilesScreen(
             onNavigateUp = { navController.navigateUp() },
             onNavigateToProfileEntry = { navController.navigateToProfileAdd() },
+            onNavigateToProfileImport = {},
             onNavigateToProfileExport = { navController.navigateToProfileExport(it) },
             onNavigateToProfileEdit = { navController.navigateToProfileEdit(it) })
         profileAddScreen(

@@ -59,4 +59,6 @@
     <string name="storage_permission_error">The QR code cannot be saved unless you give Cadenas storage access!</string>
     <string name="oops">Oops!</string>
     <string name="dismiss">Dismiss</string>
+    <string name="new_label">New</string>
+    <string name="import_label">Import</string>
 </resources>
