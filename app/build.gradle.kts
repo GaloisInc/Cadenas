@@ -34,6 +34,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
+    implementation("io.github.g0dkar:qrcode-kotlin-android:3.3.0")
     implementation("com.galois:cadenas-core")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
