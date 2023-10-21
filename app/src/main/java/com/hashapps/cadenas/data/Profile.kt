@@ -2,6 +2,8 @@ package com.hashapps.cadenas.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import io.github.g0dkar.qrcode.ErrorCorrectionLevel
+import io.github.g0dkar.qrcode.QRCode
 
 /**
  * A Cadenas messaging profile.
@@ -31,3 +33,13 @@ data class Profile(
     val selectedModel: String,
     val tag: String,
 )
+
+/**
+ * Convert a [Profile] to a [QRCode].
+ */
+fun Profile.toQRCode(): QRCode {
+    return QRCode(
+        data = listOf(key, seed, selectedModel).joinToString(separator = "-"),
+        errorCorrectionLevel = ErrorCorrectionLevel.Q,
+    )
+}
