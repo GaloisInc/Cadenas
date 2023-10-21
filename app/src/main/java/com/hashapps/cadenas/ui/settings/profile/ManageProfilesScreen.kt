@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -169,6 +170,17 @@ private fun Profile(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                     ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.export)) },
+                            onClick = { },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.FileUpload,
+                                    contentDescription = null
+                                )
+                            },
+                        )
+
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.edit)) },
                             onClick = { onProfileEdit(profile.id) },
