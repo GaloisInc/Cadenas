@@ -2,10 +2,16 @@ package com.hashapps.cadenas.data
 
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.graphics.Bitmap
 import android.os.Build
 import android.provider.MediaStore
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import java.io.ByteArrayOutputStream
+import kotlinx.coroutines.withContext
+import java.util.UUID
 import javax.crypto.KeyGenerator
 
 /**
@@ -16,7 +22,8 @@ import javax.crypto.KeyGenerator
  */
 class ProfileRepository(
     private val contentResolver: ContentResolver,
-    private val profileDao: ProfileDao
+    private val profileDao: ProfileDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun insertProfile(profile: Profile): Unit = profileDao.insert(profile)
     suspend fun updateProfile(profile: Profile): Unit = profileDao.update(profile)
@@ -40,16 +47,9 @@ class ProfileRepository(
     fun genKey(): String = KEYGEN.generateKey().encoded.toHex()
 
     /**
-     * Save a profile's QR code to disk.
+     * Save a profile's QR bitmap to disk.
      */
-    fun saveQRForProfile(profile: Profile) {
-        val qrCodeBytes = ByteArrayOutputStream()
-            .also {
-                profile.toQRCode().render()
-                    .writeImage(destination = it, format = "WEBP", quality = 50)
-            }
-            .toByteArray()
-
+    suspend fun saveQRBitmap(qrBitmap: ImageBitmap?) = withContext(ioDispatcher) {
         val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(
                 MediaStore.VOLUME_EXTERNAL_PRIMARY
@@ -59,12 +59,11 @@ class ProfileRepository(
         }
 
         val qrDetails = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-${profile.id}.webp")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-${UUID.randomUUID()}.png")
         }
         val qrUri = contentResolver.insert(imageCollection, qrDetails)!!
-
         contentResolver.openOutputStream(qrUri).use {
-            it?.write(qrCodeBytes)
+            it?.also { qrBitmap?.asAndroidBitmap()?.compress(Bitmap.CompressFormat.PNG, 0, it) }
         }
     }
 }
