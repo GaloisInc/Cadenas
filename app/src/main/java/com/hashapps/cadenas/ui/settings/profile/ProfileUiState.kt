@@ -75,5 +75,3 @@ fun ProfileUiState.isTagValid() = tag == "" || tagRegex.matches(tag)
  */
 fun ProfileUiState.isValid() =
     name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && seed.isNotBlank() && selectedModel.isNotBlank() && isTagValid()
-
-
