@@ -21,8 +21,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
  *
  * Cadenas messaging profiles define the parameters with which messages are
  * encoded and decoded. They are intended to be shared by communicating parties
- * through either text-based formats or QR codes (features that, as of now, are
- * not implemented.)
+ * through either text-based formats or QR codes.
  *
  * It is crucial that communicating parties agree on all non-cosmetic parts of
  * a messaging profile, namely the model to use, the secret key, and the seed
