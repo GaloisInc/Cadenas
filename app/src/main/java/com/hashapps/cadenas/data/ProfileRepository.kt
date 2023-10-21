@@ -22,7 +22,8 @@ class ProfileRepository(
     suspend fun updateProfile(profile: Profile): Unit = profileDao.update(profile)
     suspend fun deleteProfile(profile: Profile): Unit = profileDao.delete(profile)
 
-    suspend fun deleteProfilesForModel(model: String): Unit = profileDao.deleteProfilesForModel(model)
+    suspend fun deleteProfilesForModel(model: String): Unit =
+        profileDao.deleteProfilesForModel(model)
 
     fun getProfileStream(id: Int): Flow<Profile> = profileDao.getProfile(id)
     fun getAllProfilesStream(): Flow<List<Profile>> = profileDao.getAllProfiles()
@@ -43,7 +44,10 @@ class ProfileRepository(
      */
     fun saveQRForProfile(profile: Profile) {
         val qrCodeBytes = ByteArrayOutputStream()
-            .also { profile.toQRCode().render().writeImage(it) }
+            .also {
+                profile.toQRCode().render()
+                    .writeImage(destination = it, format = "WEBP", quality = 50)
+            }
             .toByteArray()
 
         val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -55,7 +59,7 @@ class ProfileRepository(
         }
 
         val qrDetails = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-${profile.id}.png")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-${profile.id}.webp")
         }
         val qrUri = contentResolver.insert(imageCollection, qrDetails)!!
 
