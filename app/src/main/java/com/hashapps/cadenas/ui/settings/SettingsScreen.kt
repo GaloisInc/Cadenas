@@ -3,6 +3,8 @@ package com.hashapps.cadenas.ui.settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -73,13 +75,13 @@ private fun SettingsBody(
                 },
                 trailingContent = {
                     Icon(
-                        imageVector = Icons.Filled.NavigateNext,
+                        imageVector = Icons.AutoMirrored.Filled.NavigateNext,
                         contentDescription = null,
                     )
                 }
             )
 
-            Divider(thickness = 1.dp)
+            HorizontalDivider(thickness = 1.dp)
 
             ListItem(
                 headlineContent = { Text(stringResource(R.string.profiles)) },
@@ -93,7 +95,7 @@ private fun SettingsBody(
                 },
                 trailingContent = {
                     Icon(
-                        imageVector = Icons.Filled.NavigateNext,
+                        imageVector = Icons.AutoMirrored.Filled.NavigateNext,
                         contentDescription = null,
                     )
                 },
@@ -121,7 +123,7 @@ fun SettingsTopAppBar(
                     onClick = navigateUp,
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back),
                     )
                 }
