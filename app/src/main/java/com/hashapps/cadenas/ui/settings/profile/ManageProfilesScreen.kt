@@ -1,8 +1,8 @@
 package com.hashapps.cadenas.ui.settings.profile
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Add
@@ -133,8 +133,14 @@ private fun ProfileList(
     onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier = modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(profiles, key = { it.id }) {
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        profiles.forEach {
             Profile(
                 profile = it,
                 selectedProfileId = selectedProfileId,

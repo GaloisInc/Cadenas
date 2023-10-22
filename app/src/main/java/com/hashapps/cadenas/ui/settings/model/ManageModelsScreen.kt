@@ -1,8 +1,8 @@
 package com.hashapps.cadenas.ui.settings.model
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -59,33 +59,11 @@ fun ManageModelsScreen(
             }
         },
     ) { innerPadding ->
-        ManageModelsBody(
+        ModelList(
             modifier = modifier.padding(innerPadding),
             models = viewModel.availableModels,
             selectedModel = selectedProfile?.selectedModel,
             onModelDelete = viewModel::deleteModel,
-        )
-    }
-}
-
-@Composable
-private fun ManageModelsBody(
-    models: List<String>,
-    selectedModel: String?,
-    onModelDelete: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        ModelList(
-            models = models,
-            selectedModel = selectedModel,
-            onModelDelete = onModelDelete,
         )
     }
 }
@@ -96,8 +74,15 @@ private fun ModelList(
     selectedModel: String?,
     onModelDelete: (String) -> Unit,
     modifier: Modifier = Modifier
-) {LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = models) {
+) {
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        models.forEach {
             CadenasModel(
                 model = it,
                 selectedModel = selectedModel,
