@@ -1,6 +1,7 @@
 package com.hashapps.cadenas.ui.settings.profile
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,8 +10,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hashapps.cadenas.data.Profile
 import com.hashapps.cadenas.data.ProfileRepository
-import com.hashapps.cadenas.data.toQRCode
+import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +21,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+
+fun Profile.toQRCode(): QRCode {
+    Log.d("TAG", "key:$key;prompt:$seed;model:$selectedModel")
+    return QRCode(
+        data = "key:$key;prompt:$seed;model:$selectedModel",
+        errorCorrectionLevel = ErrorCorrectionLevel.Q,
+    )
+}
 
 suspend fun QRCode.toByteArray(defaultDispatcher: CoroutineDispatcher = Dispatchers.Default): ByteArray =
     withContext(defaultDispatcher) {

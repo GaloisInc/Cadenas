@@ -1,10 +1,7 @@
 package com.hashapps.cadenas.data
 
-import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import io.github.g0dkar.qrcode.ErrorCorrectionLevel
-import io.github.g0dkar.qrcode.QRCode
 
 /**
  * A Cadenas messaging profile.
@@ -37,15 +34,4 @@ data class Profile(
 
 fun Profile.isValid(): Boolean {
     return name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && seed.isNotBlank() && selectedModel.isNotBlank()
-}
-
-/**
- * Convert a [Profile] to a [QRCode].
- */
-fun Profile.toQRCode(): QRCode {
-    Log.d("TAG", "key:$key;prompt:$seed;model:$selectedModel")
-    return QRCode(
-        data = "key:$key;prompt:$seed;model:$selectedModel",
-        errorCorrectionLevel = ErrorCorrectionLevel.Q,
-    )
 }
