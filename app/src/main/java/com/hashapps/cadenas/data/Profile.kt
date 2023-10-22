@@ -34,6 +34,10 @@ data class Profile(
     val tag: String,
 )
 
+fun Profile.isValid(): Boolean {
+    return name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && seed.isNotBlank() && selectedModel.isNotBlank()
+}
+
 /**
  * Convert a [Profile] to a [QRCode].
  */

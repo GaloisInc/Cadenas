@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ProfileRepository
 import com.hashapps.cadenas.data.ModelRepository
+import com.hashapps.cadenas.data.isValid
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -33,7 +34,7 @@ class ProfileEditViewModel(
             val profile = profileRepository.getProfileStream(profileEditArgs.profileId)
                 .filterNotNull()
                 .first()
-            profileUiState = profile.toProfileUiState(actionEnabled = true)
+            profileUiState = profile.toProfileUiState(actionEnabled = profile.isValid())
         }
     }
 
