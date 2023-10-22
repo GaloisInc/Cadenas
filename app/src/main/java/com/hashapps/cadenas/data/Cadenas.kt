@@ -9,7 +9,7 @@ import com.galois.cadenas.model.PyTorchGPT2LanguageModel
 data class CadenasConfig(
     val modelDir: String,
     val key: ByteArray,
-    val seed: String,
+    val prompt: String,
     val temperature: Float = 1.0f,
     val topK: Int = 100,
     val topP: Float = 0.0f,
@@ -23,7 +23,7 @@ data class CadenasConfig(
 
         if (modelDir != other.modelDir) return false
         if (!key.contentEquals(other.key)) return false
-        if (seed != other.seed) return false
+        if (prompt != other.prompt) return false
         if (temperature != other.temperature) return false
         if (topK != other.topK) return false
         if (topP != other.topP) return false
@@ -35,7 +35,7 @@ data class CadenasConfig(
     override fun hashCode(): Int {
         var result = modelDir.hashCode()
         result = 31 * result + key.contentHashCode()
-        result = 31 * result + seed.hashCode()
+        result = 31 * result + prompt.hashCode()
         result = 31 * result + temperature.hashCode()
         result = 31 * result + topK
         result = 31 * result + topP.hashCode()
@@ -54,7 +54,7 @@ class Cadenas(config: CadenasConfig) {
         cover = TextCover(
             cryptoSystem = RandomPadding(SivAesWithSentinel(config.key)),
             languageModel = PyTorchGPT2LanguageModel(config.modelDir),
-            seed = config.seed,
+            seed = config.prompt,
         )
     }
 

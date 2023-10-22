@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profiles.exporting
+package com.hashapps.cadenas.ui.settings.channels.exporting
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -36,20 +36,20 @@ import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 /**
- * Cadenas profile-exporting screen.
+ * Cadenas channel-exporting screen.
  *
- * Cadenas messaging profiles may be exported in the form of a QR code,
- * enabling others to import the profile, enabling communication.
+ * Cadenas messaging channels may be exported in the form of a QR code,
+ * enabling others to import the channel, enabling communication.
  *
  * QR codes are shown for other devices to scan immediately, and can be
  * saved to the device to be shared by other means.
  */
 @Composable
-fun ProfileExportScreen(
+fun ChannelExportScreen(
     onNavigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProfileExportViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ChannelExportViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     var showPermissionError by rememberSaveable { mutableStateOf(false) }
 
@@ -67,13 +67,13 @@ fun ProfileExportScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(R.string.export_profile),
+                title = stringResource(R.string.export_channel),
                 navigateUp = onNavigateUp,
             )
         },
     ) { innerPadding ->
         val context = LocalContext.current
-        ProfileExportBody(
+        ChannelExportBody(
             modifier = modifier.padding(innerPadding),
             qrBitmap = viewModel.qrBitmap,
             onSaveClick = {
@@ -115,7 +115,7 @@ fun ProfileExportScreen(
 }
 
 @Composable
-private fun ProfileExportBody(
+private fun ChannelExportBody(
     qrBitmap: ImageBitmap?,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,

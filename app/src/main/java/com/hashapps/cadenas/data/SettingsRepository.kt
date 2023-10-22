@@ -30,50 +30,49 @@ import java.io.IOException
  * Cadenas, there are a few persistent settings relevant to normal operation.
  * More specifically, we must keep track of:
  *
- * - Whether or not the app's first-time setup has been completed
- * - Which messaging profile is selected
+ * - Which messaging channel is selected
  *
  * These settings are persisted using the [DataStore]<[Preferences]>, a
  * file-based key-value store. On instantiation, this class launches an
  * application-scoped background job that listens for changes to the
- * selected profile, re-initializing Cadenas when a change occurs.
+ * selected channel, re-initializing Cadenas when a change occurs.
  *
  * @property[cadenasInitialized] A derived Boolean flag indicating whether or
  * not the Cadenas backend has been initialized or not
- * @property[selectedProfile] The [Profile] selected by the stored integer
+ * @property[selectedChannel] The [Channel] selected by the stored integer
  * preference ID
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsRepository(
     private val dataStore: DataStore<Preferences>,
     private val modelsDir: File,
-    private val profileDao: ProfileDao,
+    private val channelDao: ChannelDao,
     externalScope: CoroutineScope,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private companion object {
-        val SELECTED_PROFILE = intPreferencesKey("selected_profile")
+        val SELECTED_CHANNEL = intPreferencesKey("selected_channel")
 
         const val TAG = "SettingsRepo"
     }
 
     /**
-     * Update which messaging profile is selected.
+     * Update which messaging channel is selected.
      *
-     * @param[selectedProfile] The ID of the messaging profile that's been
+     * @param[selectedChannel] The ID of the messaging channel that's been
      * selected
      */
-    suspend fun saveSelectedProfile(selectedProfile: Int) {
+    suspend fun saveSelectedChannel(selectedChannel: Int) {
         dataStore.edit {
-            it[SELECTED_PROFILE] = selectedProfile
+            it[SELECTED_CHANNEL] = selectedChannel
         }
     }
 
     private var _cadenasInitialized: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val cadenasInitialized: StateFlow<Boolean> = _cadenasInitialized.asStateFlow()
 
-    private var _selectedProfile: MutableStateFlow<Profile?> = MutableStateFlow(null)
-    val selectedProfile: StateFlow<Profile?> = _selectedProfile.asStateFlow()
+    private var _selectedChannel: MutableStateFlow<Channel?> = MutableStateFlow(null)
+    val selectedChannel: StateFlow<Channel?> = _selectedChannel.asStateFlow()
 
     init {
         externalScope.launch(ioDispatcher) {
@@ -86,18 +85,18 @@ class SettingsRepository(
                         throw it
                     }
                 }.map { preferences ->
-                    preferences[SELECTED_PROFILE]
+                    preferences[SELECTED_CHANNEL]
                 }.filterNotNull()
-                .flatMapLatest { profileDao.getProfile(it) }
-                .collectLatest { profile ->
-                    _selectedProfile.update { profile }
+                .flatMapLatest { channelDao.getChannel(it) }
+                .collectLatest { channel ->
+                    _selectedChannel.update { channel }
 
                     Cadenas.initialize(
                         CadenasConfig(
-                            modelDir = modelsDir.resolve(profile.selectedModel).path,
-                            key = profile.key.chunked(2).map { b -> b.toInt(16).toByte() }
+                            modelDir = modelsDir.resolve(channel.selectedModel).path,
+                            key = channel.key.chunked(2).map { b -> b.toInt(16).toByte() }
                                 .toByteArray(),
-                            seed = profile.seed,
+                            prompt = channel.prompt,
                         )
                     )
 

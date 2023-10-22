@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profiles.manage
+package com.hashapps.cadenas.ui.settings.channels.manage
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,45 +20,40 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.data.Profile
+import com.hashapps.cadenas.data.Channel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 /**
- * Cadenas profile-management screen.
+ * Cadenas channel-management screen.
  *
- * Cadenas allows the creation of any number of messaging profiles, as
- * described in the documentation for [ProfileAddScreen] and
- * [ProfileEditScreen]. These profiles determine how messages are to be encoded
- * and decoded, and are intended to be shared exactly (other than cosmetic
- * details such as name and description) between communicating parties.
+ * Cadenas allows the creation of any number of messaging channels. These
+ * channels determine how messages are to be encoded and decoded, and are
+ * intended to be shared between communicating parties.
  *
- * Profiles can be added at any time; the layout of this and the
- * [com.hashapps.cadenas.ui.settings.models.ManageModelsScreen] are very much
- * the same.
+ * Channels can be added at any time, from scratch or by importing from QR.
  *
- * Profiles can be edited at any time - this is purely cosmetic, so it can't
- * have an effect on the business of Cadenas. Like models, though, only the
- * profiles that are not currently selected may be deleted.
+ * Channels can be edited at any time - this is purely cosmetic, so it can't
+ * have an effect on the business of Cadenas.
  */
 @Composable
-fun ManageProfilesScreen(
+fun ManageChannelsScreen(
     onNavigateUp: () -> Unit,
-    onNavigateToProfileEntry: () -> Unit,
-    onNavigateToProfileImport: () -> Unit,
-    onNavigateToProfileExport: (Int) -> Unit,
-    onNavigateToProfileEdit: (Int) -> Unit,
+    onNavigateToChannelEntry: () -> Unit,
+    onNavigateToChannelImport: () -> Unit,
+    onNavigateToChannelExport: (Int) -> Unit,
+    onNavigateToChannelEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ManageProfilesViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ManageChannelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedProfile by viewModel.selectedProfile.collectAsState()
-    val profiles by viewModel.profiles.collectAsState()
+    val selectedChannel by viewModel.selectedChannel.collectAsState()
+    val channels by viewModel.channels.collectAsState()
 
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(R.string.manage_profiles),
+                title = stringResource(R.string.manage_channels),
                 navigateUp = onNavigateUp,
             )
         },
@@ -84,7 +79,7 @@ fun ManageProfilesScreen(
                         text = { Text(stringResource(R.string.new_label)) },
                         onClick = {
                             expanded = false
-                            onNavigateToProfileEntry()
+                            onNavigateToChannelEntry()
                         },
                         leadingIcon = {
                             Icon(
@@ -98,7 +93,7 @@ fun ManageProfilesScreen(
                         text = { Text(stringResource(R.string.import_label)) },
                         onClick = {
                             expanded = false
-                            onNavigateToProfileImport()
+                            onNavigateToChannelImport()
                         },
                         leadingIcon = {
                             Icon(
@@ -111,26 +106,26 @@ fun ManageProfilesScreen(
             }
         },
     ) { innerPadding ->
-        ProfileList(
+        ChannelList(
             modifier = modifier.padding(innerPadding),
-            profiles = profiles,
-            selectedProfileId = selectedProfile?.id,
-            onProfileSelect = { viewModel.selectProfile(it.id) },
-            onProfileExport = onNavigateToProfileExport,
-            onProfileEdit = onNavigateToProfileEdit,
-            onProfileDelete = viewModel::deleteProfile,
+            channels = channels,
+            selectedChannelId = selectedChannel?.id,
+            onChannelSelect = { viewModel.selectChannel(it.id) },
+            onChannelExport = onNavigateToChannelExport,
+            onChannelEdit = onNavigateToChannelEdit,
+            onChannelDelete = viewModel::deleteChannel,
         )
     }
 }
 
 @Composable
-private fun ProfileList(
-    profiles: List<Profile>,
-    selectedProfileId: Int?,
-    onProfileSelect: (Profile) -> Unit,
-    onProfileExport: (Int) -> Unit,
-    onProfileEdit: (Int) -> Unit,
-    onProfileDelete: (Profile) -> Unit,
+private fun ChannelList(
+    channels: List<Channel>,
+    selectedChannelId: Int?,
+    onChannelSelect: (Channel) -> Unit,
+    onChannelExport: (Int) -> Unit,
+    onChannelEdit: (Int) -> Unit,
+    onChannelDelete: (Channel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -140,27 +135,27 @@ private fun ProfileList(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        profiles.forEach {
-            Profile(
-                profile = it,
-                selectedProfileId = selectedProfileId,
-                onProfileSelect = onProfileSelect,
-                onProfileExport = onProfileExport,
-                onProfileEdit = onProfileEdit,
-                onProfileDelete = onProfileDelete,
+        channels.forEach {
+            Channel(
+                channel = it,
+                selectedChannelId = selectedChannelId,
+                onChannelSelect = onChannelSelect,
+                onChannelExport = onChannelExport,
+                onChannelEdit = onChannelEdit,
+                onChannelDelete = onChannelDelete,
             )
         }
     }
 }
 
 @Composable
-private fun Profile(
-    profile: Profile,
-    selectedProfileId: Int?,
-    onProfileSelect: (Profile) -> Unit,
-    onProfileExport: (Int) -> Unit,
-    onProfileEdit: (Int) -> Unit,
-    onProfileDelete: (Profile) -> Unit,
+private fun Channel(
+    channel: Channel,
+    selectedChannelId: Int?,
+    onChannelSelect: (Channel) -> Unit,
+    onChannelExport: (Int) -> Unit,
+    onChannelEdit: (Int) -> Unit,
+    onChannelDelete: (Channel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
@@ -171,12 +166,12 @@ private fun Profile(
         var expanded by remember { mutableStateOf(false) }
 
         ListItem(
-            headlineContent = { Text(profile.name) },
-            supportingContent = { Text(profile.description) },
+            headlineContent = { Text(channel.name) },
+            supportingContent = { Text(channel.description) },
             leadingContent = {
                 RadioButton(
-                    selected = profile.id == selectedProfileId,
-                    onClick = { onProfileSelect(profile) },
+                    selected = channel.id == selectedChannelId,
+                    onClick = { onChannelSelect(channel) },
                 )
             },
             trailingContent = {
@@ -189,7 +184,7 @@ private fun Profile(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.MoreHoriz,
-                            contentDescription = stringResource(R.string.profile_menu),
+                            contentDescription = stringResource(R.string.channel_menu),
                         )
                     }
                     DropdownMenu(
@@ -200,7 +195,7 @@ private fun Profile(
                             text = { Text(stringResource(R.string.export)) },
                             onClick = {
                                 expanded = false
-                                onProfileExport(profile.id)
+                                onChannelExport(channel.id)
                             },
                             leadingIcon = {
                                 Icon(
@@ -214,7 +209,7 @@ private fun Profile(
                             text = { Text(stringResource(R.string.edit)) },
                             onClick = {
                                 expanded = false
-                                onProfileEdit(profile.id)
+                                onChannelEdit(channel.id)
                             },
                             leadingIcon = {
                                 Icon(
@@ -236,7 +231,7 @@ private fun Profile(
                                     contentDescription = null
                                 )
                             },
-                            enabled = profile.id != selectedProfileId,
+                            enabled = channel.id != selectedChannelId,
                         )
                     }
                 }
@@ -245,10 +240,10 @@ private fun Profile(
 
         if (deleteConfirmationRequired) {
             DeleteConfirmationDialog(
-                confirmationQuestion = stringResource(R.string.delete_profile_question),
+                confirmationQuestion = stringResource(R.string.delete_channel_question),
                 onDeleteConfirm = {
                     deleteConfirmationRequired = false
-                    onProfileDelete(profile)
+                    onChannelDelete(channel)
                 },
                 onDeleteCancel = { deleteConfirmationRequired = false },
             )

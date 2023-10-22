@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profiles.exporting
+package com.hashapps.cadenas.ui.settings.channels.exporting
 
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -10,8 +10,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.Profile
-import com.hashapps.cadenas.data.ProfileRepository
+import com.hashapps.cadenas.data.Channel
+import com.hashapps.cadenas.data.ChannelRepository
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,10 +22,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-fun Profile.toQRCode(): QRCode {
-    Log.d("TAG", "key:$key;prompt:$seed;model:$selectedModel")
+fun Channel.toQRCode(): QRCode {
+    Log.d("TAG", "key:$key;prompt:$prompt;model:$selectedModel")
     return QRCode(
-        data = "key:$key;prompt:$seed;model:$selectedModel",
+        data = "key:$key;prompt:$prompt;model:$selectedModel",
         errorCorrectionLevel = ErrorCorrectionLevel.Q,
     )
 }
@@ -47,30 +47,30 @@ suspend fun QRCode.toImageBitmap(defaultDispatcher: CoroutineDispatcher = Dispat
     }
 
 /**
- * View model for the profile-exporting screen.
+ * View model for the channel-exporting screen.
  */
-class ProfileExportViewModel(
+class ChannelExportViewModel(
     savedStateHandle: SavedStateHandle,
-    private val profileRepository: ProfileRepository,
+    private val channelRepository: ChannelRepository,
 ) : ViewModel() {
-    private val profileExportArgs = ProfileExportArgs(savedStateHandle)
+    private val channelExportArgs = ChannelExportArgs(savedStateHandle)
 
     var qrBitmap: ImageBitmap? by mutableStateOf(null)
 
     init {
         viewModelScope.launch {
-            qrBitmap = profileRepository.getProfileStream(profileExportArgs.profileId)
+            qrBitmap = channelRepository.getChannelStream(channelExportArgs.channelId)
                 .map { it.toQRCode().toImageBitmap() }
                 .first()
         }
     }
 
     /**
-     * Save the profile's QR code as an image.
+     * Save the channel's QR code as an image.
      */
     fun saveQRBitmap() {
         viewModelScope.launch {
-            profileRepository.saveQRBitmap(qrBitmap)
+            channelRepository.saveQRBitmap(qrBitmap)
         }
     }
 }

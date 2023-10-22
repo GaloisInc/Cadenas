@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profiles.add
+package com.hashapps.cadenas.ui.settings.channels.add
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,42 +17,38 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
-import com.hashapps.cadenas.ui.settings.profiles.ProfileUiState
-import com.hashapps.cadenas.ui.settings.profiles.isTagValid
+import com.hashapps.cadenas.ui.settings.channels.ChannelUiState
+import com.hashapps.cadenas.ui.settings.channels.isTagValid
 
 private const val MAX_LEN = 128
 
 /**
- * Cadenas profile-add screen.
+ * Cadenas channel-add screen.
  *
- * Much of the detail about Cadenas profiles can be found in the documentation
- * for [ProfileEditScreen]. Note that a secret encryption key is generated
- * automatically when creating a channel this way, and this cannot be changed.
- *
- * Channels may be shared via QR code; see [ProfileExportScreen].
+ * Allows the creation of Cadenas channels "from scratch".
  */
 @Composable
-fun ProfileAddScreen(
+fun ChannelAddScreen(
     navigateNext: () -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProfileAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(R.string.profile_entry),
+                title = stringResource(R.string.channel_entry),
                 navigateUp = navigateUp,
             )
         }
     ) { innerPadding ->
-        ProfileAddBody(
+        ChannelAddBody(
             modifier = modifier.padding(innerPadding),
-            profileUiState = viewModel.profileUiState,
+            channelUiState = viewModel.channelUiState,
             models = viewModel.availableModels,
-            onProfileValueChange = viewModel::updateUiState,
+            onChannelValueChange = viewModel::updateUiState,
             onSaveClick = {
-                viewModel.saveProfile()
+                viewModel.saveChannel()
                 navigateNext()
             },
         )
@@ -60,10 +56,10 @@ fun ProfileAddScreen(
 }
 
 @Composable
-private fun ProfileAddBody(
-    profileUiState: ProfileUiState,
+private fun ChannelAddBody(
+    channelUiState: ChannelUiState,
     models: List<String>,
-    onProfileValueChange: (ProfileUiState) -> Unit,
+    onChannelValueChange: (ChannelUiState) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -74,16 +70,16 @@ private fun ProfileAddBody(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        ProfileInputForm(
-            profileUiState = profileUiState,
+        ChannelInputForm(
+            channelUiState = channelUiState,
             models = models,
-            onValueChange = onProfileValueChange,
+            onValueChange = onChannelValueChange,
         )
 
         Button(
             onClick = onSaveClick,
             modifier = Modifier.fillMaxWidth(),
-            enabled = profileUiState.actionEnabled,
+            enabled = channelUiState.actionEnabled,
         ) {
             Text(
                 text = stringResource(R.string.save),
@@ -95,11 +91,11 @@ private fun ProfileAddBody(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileInputForm(
-    profileUiState: ProfileUiState,
+fun ChannelInputForm(
+    channelUiState: ChannelUiState,
     modifier: Modifier = Modifier,
     models: List<String>,
-    onValueChange: (ProfileUiState) -> Unit = {},
+    onValueChange: (ChannelUiState) -> Unit = {},
     editing: Boolean = false,
 ) {
     val focusManager = LocalFocusManager.current
@@ -111,11 +107,11 @@ fun ProfileInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            value = profileUiState.name,
-            onValueChange = { onValueChange(profileUiState.copy(name = it.take(MAX_LEN))) },
+            value = channelUiState.name,
+            onValueChange = { onValueChange(channelUiState.copy(name = it.take(MAX_LEN))) },
             singleLine = true,
-            label = { Text(stringResource(R.string.profile_name_label)) },
-            supportingText = { Text(stringResource(R.string.profile_name_support)) },
+            label = { Text(stringResource(R.string.channel_name_label)) },
+            supportingText = { Text(stringResource(R.string.channel_name_support)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
             ),
@@ -125,11 +121,11 @@ fun ProfileInputForm(
             modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            value = profileUiState.description,
-            onValueChange = { onValueChange(profileUiState.copy(description = it.take(MAX_LEN))) },
+            value = channelUiState.description,
+            onValueChange = { onValueChange(channelUiState.copy(description = it.take(MAX_LEN))) },
             singleLine = true,
-            label = { Text(stringResource(R.string.profile_description_label)) },
-            supportingText = { Text(stringResource(R.string.profile_description_support)) },
+            label = { Text(stringResource(R.string.channel_description_label)) },
+            supportingText = { Text(stringResource(R.string.channel_description_support)) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
             ),
@@ -144,15 +140,15 @@ fun ProfileInputForm(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                value = profileUiState.seed,
-                onValueChange = { onValueChange(profileUiState.copy(seed = it.take(MAX_LEN))) },
+                value = channelUiState.prompt,
+                onValueChange = { onValueChange(channelUiState.copy(prompt = it.take(MAX_LEN))) },
                 singleLine = true,
-                label = { Text(stringResource(R.string.seed_label)) },
+                label = { Text(stringResource(R.string.prompt_label)) },
                 supportingText = {
                     Text(
                         LocalContext.current.getString(
-                            R.string.seed_support,
-                            profileUiState.seed.length,
+                            R.string.prompt_support,
+                            channelUiState.prompt.length,
                             MAX_LEN,
                         )
                     )
@@ -177,7 +173,7 @@ fun ProfileInputForm(
                 OutlinedTextField(
                     modifier = Modifier.menuAnchor().fillMaxWidth(),
                     readOnly = true,
-                    value = profileUiState.selectedModel,
+                    value = channelUiState.selectedModel,
                     onValueChange = {},
                     label = { Text(stringResource(R.string.model)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -192,7 +188,7 @@ fun ProfileInputForm(
                         DropdownMenuItem(
                             text = { Text(it) },
                             onClick = {
-                                onValueChange(profileUiState.copy(selectedModel = it))
+                                onValueChange(channelUiState.copy(selectedModel = it))
                                 expanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -209,18 +205,18 @@ fun ProfileInputForm(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                value = profileUiState.tag,
-                onValueChange = { onValueChange(profileUiState.copy(tag = it)) },
+                value = channelUiState.tag,
+                onValueChange = { onValueChange(channelUiState.copy(tag = it)) },
                 singleLine = true,
                 label = { Text(stringResource(R.string.tag_label)) },
                 supportingText = {
-                    if (profileUiState.isTagValid()) {
+                    if (channelUiState.isTagValid()) {
                         Text(stringResource(R.string.tag_support))
                     } else {
                         Text(stringResource(R.string.tag_error))
                     }
                 },
-                isError = !profileUiState.isTagValid(),
+                isError = !channelUiState.isTagValid(),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
                 ),

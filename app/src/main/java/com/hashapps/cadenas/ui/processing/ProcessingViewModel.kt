@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
  * View model for the processing screens.
  *
  * @property[cadenasInitialized] Whether or not Cadenas is ready to process
- * @property[selectedProfile] The currently-selected messaging profile
+ * @property[selectedChannel] The currently-selected messaging channel
  * @property[processingUiState] The UI state for the processing screen
  */
 class ProcessingViewModel(
@@ -32,7 +32,7 @@ class ProcessingViewModel(
 ) : ViewModel() {
     val cadenasInitialized = settingsRepository.cadenasInitialized
 
-    val selectedProfile = settingsRepository.selectedProfile
+    val selectedChannel = settingsRepository.selectedChannel
 
     var processingUiState by mutableStateOf(ProcessingUiState())
         private set
@@ -95,7 +95,7 @@ class ProcessingViewModel(
 
     /**
      * Attempt to encode the input message using the selected messaging
-     * profile, adding the profile's tag to the end (if any.)
+     * channel, adding the channel's tag to the end (if any.)
      */
     private fun encodeMessage(tag: String) {
         viewModelScope.launch {
@@ -110,7 +110,7 @@ class ProcessingViewModel(
 
     /**
      * Attempt to decode the input message using the selected messaging
-     * profile, first removing the profile's tag (if any.)
+     * channel, first removing the channel's tag (if any.)
      */
     private fun decodeMessage(tag: String) {
         viewModelScope.launch {

@@ -26,9 +26,9 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
  *
  * New models can be added at any time, but models cannot be _removed_ at any
  * time - in particular, the model associated with the currently-selected
- * messaging profile cannot be deleted. Everything else is fair game.
+ * messaging channel cannot be deleted. Everything else is fair game.
  *
- * Note that deleting a model also deletes any profiles associated with that
+ * Note that deleting a model also deletes any channels associated with that
  * model; they become meaningless without the model, after all. The user is
  * informed of this via confirmation dialog.
  */
@@ -39,7 +39,7 @@ fun ManageModelsScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedProfile by viewModel.selectedProfile.collectAsState()
+    val selectedChannel by viewModel.selectedChannel.collectAsState()
 
     Scaffold(
         topBar = {
@@ -62,7 +62,7 @@ fun ManageModelsScreen(
         ModelList(
             modifier = modifier.padding(innerPadding),
             models = viewModel.availableModels,
-            selectedModel = selectedProfile?.selectedModel,
+            selectedModel = selectedChannel?.selectedModel,
             onModelDelete = viewModel::deleteModel,
         )
     }

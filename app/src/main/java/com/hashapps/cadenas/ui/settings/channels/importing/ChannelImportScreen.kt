@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profiles.importing
+package com.hashapps.cadenas.ui.settings.channels.importing
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -41,21 +41,21 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.data.Profile
+import com.hashapps.cadenas.data.Channel
 import com.hashapps.cadenas.data.QRAnalyzer
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import java.util.concurrent.Executors
 
-private val profileRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([a-zA-Z\d]+)""")
+private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([a-zA-Z\d]+)""")
 
-fun String.toProfile(): Profile? {
-    return profileRegex.matchEntire(this)?.groupValues?.let {
-        Profile(
+fun String.toChannel(): Channel? {
+    return channelRegex.matchEntire(this)?.groupValues?.let {
+        Channel(
             name = "",
             description = "",
             key = it[1],
-            seed = it[2],
+            prompt = it[2],
             selectedModel = it[3],
             tag ="",
         )
@@ -63,22 +63,22 @@ fun String.toProfile(): Profile? {
 }
 
 /**
- * Cadenas profile-importing screen.
+ * Cadenas channel-importing screen.
  *
- * Cadenas messaging profiles may be imported from QR codes, enabling sharing
- * of profiles, enabling communication.
+ * Cadenas messaging channels may be imported from QR codes, enabling sharing
+ * of channels, enabling communication.
  *
  * Only QR codes containing the proper text data are accepted. These are used
- * to create a new profile in the app database, which is then edited to provide
+ * to create a new channel in the app database, which is then edited to provide
  * a name and description.
  */
 @Composable
-fun ProfileImportScreen(
+fun ChannelImportScreen(
     onNavigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
-    onNavigateProfileEdit: (Int) -> Unit,
+    onNavigateToChannelEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProfileImportViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ChannelImportViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val context = LocalContext.current
 
@@ -103,14 +103,14 @@ fun ProfileImportScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(R.string.import_profile),
+                title = stringResource(R.string.import_channel),
                 navigateUp = onNavigateUp,
             )
         },
     ) { innerPadding ->
-        ProfileImportBody(
+        ChannelImportBody(
             modifier = modifier.padding(innerPadding),
-            onImportClick = { viewModel.saveProfileAndGoToEdit(it, onNavigateProfileEdit) },
+            onImportClick = { viewModel.saveChannelAndGoToEdit(it, onNavigateToChannelEdit) },
         )
         if (!hasCameraPermission) {
             AlertDialog(
@@ -129,8 +129,8 @@ fun ProfileImportScreen(
 }
 
 @Composable
-private fun ProfileImportBody(
-    onImportClick: (Profile) -> Unit,
+private fun ChannelImportBody(
+    onImportClick: (Channel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -140,7 +140,7 @@ private fun ProfileImportBody(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        var newProfile: Profile? by remember { mutableStateOf(null) }
+        var newChannel: Channel? by remember { mutableStateOf(null) }
 
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
@@ -179,7 +179,7 @@ private fun ProfileImportBody(
                             val barcodeAnalyzer = QRAnalyzer { barcodes ->
                                 barcodes.forEach { barcode ->
                                     barcode.rawValue?.let { barcodeValue ->
-                                        newProfile = barcodeValue.toProfile()
+                                        newChannel = barcodeValue.toChannel()
                                     }
                                 }
                             }
@@ -199,7 +199,7 @@ private fun ProfileImportBody(
                                     imageAnalysis,
                                 )
                             } catch (e: Exception) {
-                                Log.e("ProfileImportScreen", "CameraPreview: ${e.localizedMessage}")
+                                Log.e("ChannelImportScreen", "CameraPreview: ${e.localizedMessage}")
                             }
                         }, ContextCompat.getMainExecutor(localContext))
                     },
@@ -207,19 +207,19 @@ private fun ProfileImportBody(
             }
         }
 
-        if (newProfile != null) {
+        if (newChannel != null) {
             AlertDialog(
                 onDismissRequest = {},
                 title = { Text(stringResource(R.string.channel_found)) },
                 text = { Text(stringResource(R.string.finish_import)) },
                 modifier = Modifier.padding(16.dp),
                 confirmButton = {
-                    TextButton(onClick = { onImportClick(newProfile!!) }) {
+                    TextButton(onClick = { onImportClick(newChannel!!) }) {
                         Text(stringResource(R.string.next))
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { newProfile = null }) {
+                    TextButton(onClick = { newChannel = null }) {
                         Text(stringResource(R.string.cancel))
                     }
                 }

@@ -1,7 +1,7 @@
 package com.hashapps.cadenas.domain
 
 import com.hashapps.cadenas.data.ModelRepository
-import com.hashapps.cadenas.data.ProfileRepository
+import com.hashapps.cadenas.data.ChannelRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,13 +9,13 @@ import kotlinx.coroutines.withContext
 /**
  * Use-case for language model management.
  *
- * Unifies the language model and messaging profile repositories for the
+ * Unifies the language model and messaging channel repositories for the
  * purpose of fetching all downloaded models and appropriately deleting the
- * profiles associated with a given model.
+ * channels associated with a given model.
  */
 class ManageModelsUseCase(
     private val modelRepository: ModelRepository,
-    private val profileRepository: ProfileRepository,
+    private val channelRepository: ChannelRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
@@ -24,11 +24,11 @@ class ManageModelsUseCase(
     operator fun invoke(): List<String> = modelRepository.downloadedModels()
 
     /**
-     * Delete the given model and all associated messaging profiles, returning an
+     * Delete the given model and all associated messaging channels, returning an
      * updated list of downloaded models.
      */
     suspend operator fun invoke(model: String): List<String> = withContext(ioDispatcher) {
-        profileRepository.deleteProfilesForModel(model)
+        channelRepository.deleteChannelsForModel(model)
         modelRepository.deleteFilesForModel(model)
         modelRepository.downloadedModels()
     }

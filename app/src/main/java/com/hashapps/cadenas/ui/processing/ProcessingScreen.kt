@@ -81,9 +81,9 @@ fun ProcessingScreen(
     ) { innerPadding ->
         val cadenasInitialized by viewModel.cadenasInitialized.collectAsState()
 
-        val selectedProfile by viewModel.selectedProfile.collectAsState()
-        val formattedTag = if (selectedProfile != null && selectedProfile!!.tag.isNotBlank()) {
-            " #${selectedProfile!!.tag}"
+        val selectedChannel by viewModel.selectedChannel.collectAsState()
+        val formattedTag = if (selectedChannel != null && selectedChannel!!.tag.isNotBlank()) {
+            " #${selectedChannel!!.tag}"
         } else {
             ""
         }

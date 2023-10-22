@@ -15,25 +15,25 @@ import java.util.UUID
 import javax.crypto.KeyGenerator
 
 /**
- * Repository class for Cadenas messaging profiles.
+ * Repository class for Cadenas messaging channels.
  *
- * Loosely wraps around the [ProfileDao] methods, and provides key-generation
- * capabilities for profile creation.
+ * Loosely wraps around the [ChannelDao] methods, and provides key-generation
+ * capabilities for channel creation.
  */
-class ProfileRepository(
+class ChannelRepository(
     private val contentResolver: ContentResolver,
-    private val profileDao: ProfileDao,
+    private val channelDao: ChannelDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    suspend fun insertProfile(profile: Profile): Long = profileDao.insert(profile)
-    suspend fun updateProfile(profile: Profile): Unit = profileDao.update(profile)
-    suspend fun deleteProfile(profile: Profile): Unit = profileDao.delete(profile)
+    suspend fun insertChannel(channel: Channel): Long = channelDao.insert(channel)
+    suspend fun updateChannel(channel: Channel): Unit = channelDao.update(channel)
+    suspend fun deleteChannel(channel: Channel): Unit = channelDao.delete(channel)
 
-    suspend fun deleteProfilesForModel(model: String): Unit =
-        profileDao.deleteProfilesForModel(model)
+    suspend fun deleteChannelsForModel(model: String): Unit =
+        channelDao.deleteChannelsForModel(model)
 
-    fun getProfileStream(id: Int): Flow<Profile> = profileDao.getProfile(id)
-    fun getAllProfilesStream(): Flow<List<Profile>> = profileDao.getAllProfiles()
+    fun getChannelStream(id: Int): Flow<Channel> = channelDao.getChannel(id)
+    fun getAllChannelsStream(): Flow<List<Channel>> = channelDao.getAllChannels()
 
     private companion object {
         val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
@@ -47,7 +47,7 @@ class ProfileRepository(
     fun genKey(): String = KEYGEN.generateKey().encoded.toHex()
 
     /**
-     * Save a profile's QR bitmap to disk.
+     * Save a channel's QR bitmap to disk.
      */
     suspend fun saveQRBitmap(qrBitmap: ImageBitmap?) = withContext(ioDispatcher) {
         val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
