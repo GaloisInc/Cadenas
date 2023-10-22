@@ -33,7 +33,9 @@ object AppViewModelProvider {
         }
 
         initializer {
-            ProfileImportViewModel()
+            ProfileImportViewModel(
+                cadenasApplication().container.profileRepository
+            )
         }
 
         initializer {
