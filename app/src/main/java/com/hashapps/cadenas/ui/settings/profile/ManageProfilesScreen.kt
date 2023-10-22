@@ -111,42 +111,14 @@ fun ManageProfilesScreen(
             }
         },
     ) { innerPadding ->
-        ManageProfilesBody(
+        ProfileList(
             modifier = modifier.padding(innerPadding),
             profiles = profiles,
             selectedProfileId = selectedProfile?.id,
-            onProfileSelect = { viewModel.selectProfile(it) },
+            onProfileSelect = { viewModel.selectProfile(it.id) },
             onProfileExport = onNavigateToProfileExport,
             onProfileEdit = onNavigateToProfileEdit,
-            onProfileDelete = { viewModel.deleteProfile(it) },
-        )
-    }
-}
-
-@Composable
-private fun ManageProfilesBody(
-    profiles: List<Profile>,
-    selectedProfileId: Int?,
-    onProfileSelect: (Int) -> Unit,
-    onProfileExport: (Int) -> Unit,
-    onProfileEdit: (Int) -> Unit,
-    onProfileDelete: (Profile) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        ProfileList(
-            profiles = profiles,
-            selectedProfileId = selectedProfileId,
-            onProfileSelect = { onProfileSelect(it.id) },
-            onProfileExport = onProfileExport,
-            onProfileEdit = onProfileEdit,
-            onProfileDelete = { onProfileDelete(it) },
+            onProfileDelete = viewModel::deleteProfile,
         )
     }
 }
@@ -161,7 +133,7 @@ private fun ProfileList(
     onProfileDelete: (Profile) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyColumn(modifier = modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(profiles, key = { it.id }) {
             Profile(
                 profile = it,
