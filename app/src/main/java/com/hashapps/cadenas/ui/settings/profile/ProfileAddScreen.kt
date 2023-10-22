@@ -5,11 +5,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Key
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -27,12 +24,10 @@ private const val MAX_LEN = 128
  * Cadenas profile-add screen.
  *
  * Much of the detail about Cadenas profiles can be found in the documentation
- * for [ProfileEditScreen]. A detail of note is that the secret key can
- * currently only be added by direct generation - direct keyboard input is
- * disabled. This implies that this method of adding profiles (i.e. via user
- * form) is not equipped to directly input the details of a profile generated
- * by another user. That should be done through the application's (currently
- * not implemented) import/export functionality for profiles.
+ * for [ProfileEditScreen]. Note that a secret encryption key is generated
+ * automatically when creating a channel this way, and this cannot be changed.
+ *
+ * Channels may be shared via QR code; see [ProfileExportScreen].
  */
 @Composable
 fun ProfileAddScreen(
@@ -54,7 +49,6 @@ fun ProfileAddScreen(
             profileUiState = viewModel.profileUiState,
             models = viewModel.availableModels,
             onProfileValueChange = viewModel::updateUiState,
-            onKeyGen = viewModel::genKey,
             onSaveClick = {
                 viewModel.saveProfile()
                 navigateNext()
@@ -68,7 +62,6 @@ private fun ProfileAddBody(
     profileUiState: ProfileUiState,
     models: List<String>,
     onProfileValueChange: (ProfileUiState) -> Unit,
-    onKeyGen: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -83,7 +76,6 @@ private fun ProfileAddBody(
             profileUiState = profileUiState,
             models = models,
             onValueChange = onProfileValueChange,
-            onKeyGen = onKeyGen,
         )
 
         Button(
@@ -106,7 +98,6 @@ fun ProfileInputForm(
     modifier: Modifier = Modifier,
     models: List<String>,
     onValueChange: (ProfileUiState) -> Unit = {},
-    onKeyGen: () -> Unit = {},
     editing: Boolean = false,
 ) {
     val focusManager = LocalFocusManager.current
@@ -147,33 +138,6 @@ fun ProfileInputForm(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
         ) {
-            Row(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                OutlinedTextField(
-                    modifier = modifier.weight(1f),
-                    readOnly = true,
-                    value = profileUiState.key,
-                    onValueChange = {},
-                    singleLine = true,
-                    label = { Text(stringResource(R.string.key_label)) },
-                    placeholder = { Text(stringResource(R.string.key_placeholder)) },
-                )
-
-                FilledTonalIconButton(
-                    onClick = onKeyGen,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Key,
-                        contentDescription = stringResource(R.string.generate_key)
-                    )
-                }
-            }
-
             OutlinedTextField(
                 modifier = modifier
                     .padding(8.dp)

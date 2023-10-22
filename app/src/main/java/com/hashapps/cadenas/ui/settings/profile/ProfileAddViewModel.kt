@@ -19,7 +19,7 @@ class ProfileAddViewModel(
     private val profileRepository: ProfileRepository,
     modelRepository: ModelRepository,
 ) : ViewModel() {
-    var profileUiState by mutableStateOf(ProfileUiState())
+    var profileUiState by mutableStateOf(ProfileUiState(key = profileRepository.genKey()))
         private set
 
     /**
@@ -41,12 +41,5 @@ class ProfileAddViewModel(
                 profileRepository.insertProfile(profileUiState.toProfile())
             }
         }
-    }
-
-    /**
-     * Generate and populate the UI with an AES-256 key as ASCII-hex.
-     */
-    fun genKey() {
-        profileUiState = profileUiState.copy(key = profileRepository.genKey())
     }
 }
