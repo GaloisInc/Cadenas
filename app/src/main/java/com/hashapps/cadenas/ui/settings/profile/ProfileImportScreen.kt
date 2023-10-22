@@ -47,26 +47,19 @@ import com.hashapps.cadenas.ui.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import java.util.concurrent.Executors
 
+private val profileRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([a-zA-Z\d]+)""")
+
 fun String.toProfile(): Profile? {
-    val parts = split("-")
-
-    // Should be exactly 3 strings separated by '-'
-    if (parts.size != 3) return null
-
-    // The first should be 64 ASCII hex characters
-    if (!parts[0].matches(Regex("[0-9a-fA-F]{64}"))) return null
-
-    // The second should be no more than 128 characters
-    if (parts[1].length > 128) return null
-
-    return Profile(
-        name = "",
-        description = "",
-        key = parts[0],
-        seed = parts[1],
-        selectedModel = parts[2],
-        tag = ""
-    )
+    return profileRegex.matchEntire(this)?.groupValues?.let {
+        Profile(
+            name = "",
+            description = "",
+            key = it[1],
+            seed = it[2],
+            selectedModel = it[3],
+            tag ="",
+        )
+    }
 }
 
 /**

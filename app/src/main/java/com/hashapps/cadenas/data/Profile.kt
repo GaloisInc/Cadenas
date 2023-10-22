@@ -1,5 +1,6 @@
 package com.hashapps.cadenas.data
 
+import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
@@ -42,8 +43,9 @@ fun Profile.isValid(): Boolean {
  * Convert a [Profile] to a [QRCode].
  */
 fun Profile.toQRCode(): QRCode {
+    Log.d("TAG", "key:$key;prompt:$seed;model:$selectedModel")
     return QRCode(
-        data = listOf(key, seed, selectedModel).joinToString(separator = "-"),
+        data = "key:$key;prompt:$seed;model:$selectedModel",
         errorCorrectionLevel = ErrorCorrectionLevel.Q,
     )
 }
