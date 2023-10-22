@@ -10,10 +10,7 @@
     <string name="tag_error">Must be a valid hashtag</string>
     <string name="delete">Delete</string>
     <string name="encoded_message_label">Encoded Message</string>
-    <string name="encoded_message_support">Enter a message to decode</string>
-    <string name="key_label">Secret Key</string>
-    <string name="key_placeholder">Generate or import a key</string>
-    <string name="generate_key">Generate key</string>
+    <string name="encoded_message_support">Enter a message to decode</string>D
     <string name="prompt_label">Prompt Text</string>
     <string name="prompt_support">Text to prompt the model (%1$d / %2$d)</string>
     <string name="url_label">Model URL</string>
