@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.manage
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

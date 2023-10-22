@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.exporting
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 /**

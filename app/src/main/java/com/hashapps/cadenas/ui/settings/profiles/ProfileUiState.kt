@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles
 
 import com.hashapps.cadenas.data.Profile
 

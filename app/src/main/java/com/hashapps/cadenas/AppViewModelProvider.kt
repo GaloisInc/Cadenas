@@ -1,20 +1,19 @@
-package com.hashapps.cadenas.ui
+package com.hashapps.cadenas
 
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.hashapps.cadenas.CadenasApplication
 import com.hashapps.cadenas.domain.ManageModelsUseCase
-import com.hashapps.cadenas.ui.settings.model.ManageModelsViewModel
-import com.hashapps.cadenas.ui.settings.model.ModelAddViewModel
+import com.hashapps.cadenas.ui.settings.models.manage.ManageModelsViewModel
+import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
-import com.hashapps.cadenas.ui.settings.profile.ManageProfilesViewModel
-import com.hashapps.cadenas.ui.settings.profile.ProfileAddViewModel
-import com.hashapps.cadenas.ui.settings.profile.ProfileEditViewModel
-import com.hashapps.cadenas.ui.settings.profile.ProfileExportViewModel
-import com.hashapps.cadenas.ui.settings.profile.ProfileImportViewModel
+import com.hashapps.cadenas.ui.settings.profiles.manage.ManageProfilesViewModel
+import com.hashapps.cadenas.ui.settings.profiles.add.ProfileAddViewModel
+import com.hashapps.cadenas.ui.settings.profiles.edit.ProfileEditViewModel
+import com.hashapps.cadenas.ui.settings.profiles.exporting.ProfileExportViewModel
+import com.hashapps.cadenas.ui.settings.profiles.importing.ProfileImportViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {

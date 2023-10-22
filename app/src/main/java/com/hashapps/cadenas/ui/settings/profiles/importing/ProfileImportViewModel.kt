@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.importing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

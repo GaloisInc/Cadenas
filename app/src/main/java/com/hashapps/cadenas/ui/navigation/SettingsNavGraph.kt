@@ -5,21 +5,21 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
 import com.hashapps.cadenas.ui.settings.SETTINGS_ROUTE
-import com.hashapps.cadenas.ui.settings.model.manageModelsScreen
-import com.hashapps.cadenas.ui.settings.model.modelAddScreen
-import com.hashapps.cadenas.ui.settings.model.navigateToManageModels
-import com.hashapps.cadenas.ui.settings.model.navigateToModelAdd
+import com.hashapps.cadenas.ui.settings.models.manage.manageModelsScreen
+import com.hashapps.cadenas.ui.settings.models.add.modelAddScreen
+import com.hashapps.cadenas.ui.settings.models.manage.navigateToManageModels
+import com.hashapps.cadenas.ui.settings.models.add.navigateToModelAdd
 import com.hashapps.cadenas.ui.settings.navigateToSettingsScreen
-import com.hashapps.cadenas.ui.settings.profile.manageProfilesScreen
-import com.hashapps.cadenas.ui.settings.profile.navigateToManageProfiles
-import com.hashapps.cadenas.ui.settings.profile.navigateToProfileAdd
-import com.hashapps.cadenas.ui.settings.profile.navigateToProfileEdit
-import com.hashapps.cadenas.ui.settings.profile.navigateToProfileExport
-import com.hashapps.cadenas.ui.settings.profile.navigateToProfileImport
-import com.hashapps.cadenas.ui.settings.profile.profileAddScreen
-import com.hashapps.cadenas.ui.settings.profile.profileEditScreen
-import com.hashapps.cadenas.ui.settings.profile.profileExportScreen
-import com.hashapps.cadenas.ui.settings.profile.profileImportScreen
+import com.hashapps.cadenas.ui.settings.profiles.manage.manageProfilesScreen
+import com.hashapps.cadenas.ui.settings.profiles.manage.navigateToManageProfiles
+import com.hashapps.cadenas.ui.settings.profiles.add.navigateToProfileAdd
+import com.hashapps.cadenas.ui.settings.profiles.edit.navigateToProfileEdit
+import com.hashapps.cadenas.ui.settings.profiles.exporting.navigateToProfileExport
+import com.hashapps.cadenas.ui.settings.profiles.importing.navigateToProfileImport
+import com.hashapps.cadenas.ui.settings.profiles.add.profileAddScreen
+import com.hashapps.cadenas.ui.settings.profiles.edit.profileEditScreen
+import com.hashapps.cadenas.ui.settings.profiles.exporting.profileExportScreen
+import com.hashapps.cadenas.ui.settings.profiles.importing.profileImportScreen
 import com.hashapps.cadenas.ui.settings.settingsScreen
 
 const val SETTINGS_GRAPH_ROUTE = "settings"

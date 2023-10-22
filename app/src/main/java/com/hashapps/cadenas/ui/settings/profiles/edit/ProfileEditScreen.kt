@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,8 +13,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
+import com.hashapps.cadenas.ui.settings.profiles.ProfileUiState
+import com.hashapps.cadenas.ui.settings.profiles.add.ProfileInputForm
 
 /**
  * Cadenas profile-editing screen.

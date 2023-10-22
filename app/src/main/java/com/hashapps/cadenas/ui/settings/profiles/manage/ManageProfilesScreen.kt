@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.manage
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.Profile
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
@@ -35,7 +35,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
  * details such as name and description) between communicating parties.
  *
  * Profiles can be added at any time; the layout of this and the
- * [com.hashapps.cadenas.ui.settings.model.ManageModelsScreen] are very much
+ * [com.hashapps.cadenas.ui.settings.models.ManageModelsScreen] are very much
  * the same.
  *
  * Profiles can be edited at any time - this is purely cosmetic, so it can't

@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.edit
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ProfileRepository
 import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.data.isValid
+import com.hashapps.cadenas.ui.settings.profiles.ProfileUiState
+import com.hashapps.cadenas.ui.settings.profiles.isValid
+import com.hashapps.cadenas.ui.settings.profiles.toProfile
+import com.hashapps.cadenas.ui.settings.profiles.toProfileUiState
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

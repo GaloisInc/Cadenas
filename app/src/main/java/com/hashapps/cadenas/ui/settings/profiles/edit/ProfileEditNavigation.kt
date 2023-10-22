@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.edit
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController

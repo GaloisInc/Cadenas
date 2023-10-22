@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.add
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,8 +15,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
+import com.hashapps.cadenas.ui.settings.profiles.ProfileUiState
+import com.hashapps.cadenas.ui.settings.profiles.isTagValid
 
 private const val MAX_LEN = 128
 

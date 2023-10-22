@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.exporting
 
 import android.graphics.BitmapFactory
 import android.util.Log

@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.profiles.importing
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -43,7 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.Profile
 import com.hashapps.cadenas.data.QRAnalyzer
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import java.util.concurrent.Executors
 
