@@ -24,12 +24,12 @@ fun DeleteConfirmationDialog(
         modifier = modifier.padding(16.dp),
         dismissButton = {
             TextButton(onClick = onDeleteCancel) {
-                Text(text = stringResource(R.string.no))
+                Text(text = stringResource(R.string.cancel))
             }
         },
         confirmButton = {
             TextButton(onClick = onDeleteConfirm) {
-                Text(text = stringResource(R.string.yes))
+                Text(text = stringResource(R.string.confirm))
             }
         }
     )

@@ -34,8 +34,6 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="attention">Warning</string>
     <string name="delete_profile_question">Are you sure? This cannot be undone!</string>
-    <string name="no">No</string>
-    <string name="yes">Yes</string>
     <string name="delete_model_question">Are you sure? This cannot be undone, and all of this model\'s profiles will be deleted!</string>
     <string name="add_model">Add Model</string>
     <string name="model_name_label">Model Name</string>
@@ -68,4 +66,5 @@
     <string name="cancel">Cancel</string>
     <string name="go_back">Go Back</string>
     <string name="channel_found">Channel found!</string>
+    <string name="confirm">Confirm</string>
 </resources>
