@@ -32,6 +32,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
  */
 @Composable
 fun ProfileImportScreen(
+    onNavigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     onNavigateProfileEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
