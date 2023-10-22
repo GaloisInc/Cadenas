@@ -54,7 +54,6 @@ fun NavGraphBuilder.settingsGraph(
             onNavigateNext = { navController.popBackStack() },
             onNavigateUp = { navController.navigateUp() })
         profileImportScreen(
-            onNavigateBack = { navController.popBackStack() },
             onNavigateUp = { navController.navigateUp() },
             onNavigateProfileEdit = { navController.navigateToProfileEdit(it) })
         profileExportScreen(
