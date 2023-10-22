@@ -25,7 +25,7 @@ class ProfileRepository(
     private val profileDao: ProfileDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    suspend fun insertProfile(profile: Profile): Unit = profileDao.insert(profile)
+    suspend fun insertProfile(profile: Profile): Long = profileDao.insert(profile)
     suspend fun updateProfile(profile: Profile): Unit = profileDao.update(profile)
     suspend fun deleteProfile(profile: Profile): Unit = profileDao.delete(profile)
 

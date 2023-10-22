@@ -16,7 +16,7 @@ interface ProfileDao {
      * @param[profile] The profile to insert
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(profile: Profile)
+    suspend fun insert(profile: Profile): Long
 
     /**
      * Update a [Profile] in the database.
