@@ -43,29 +43,3 @@ fun Profile.toQRCode(): QRCode {
         errorCorrectionLevel = ErrorCorrectionLevel.Q,
     )
 }
-
-/**
- * Try to parse a [Profile] from a [String]. Returns `null` if the string is
- * not a valid Cadenas QR value.
- */
-fun profileFromString(rawQRValue: String): Profile? {
-    val parts = rawQRValue.split("-")
-
-    // Should be exactly 3 strings separated by '-'
-    if (parts.size != 3) return null
-
-    // The first should be 64 ASCII hex characters
-    if (!parts[0].matches(Regex("[0-9a-fA-F]{64}"))) return null
-
-    // The second should be no more than 128 characters
-    if (parts[1].length > 128) return null
-
-    return Profile(
-        name = "Placeholder",
-        description = "Placeholder",
-        key = parts[0],
-        seed = parts[1],
-        selectedModel = parts[2],
-        tag = ""
-    )
-}

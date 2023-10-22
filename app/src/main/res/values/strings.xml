@@ -62,4 +62,10 @@
     <string name="new_label">New</string>
     <string name="import_label">Import</string>
     <string name="import_profile">Import Profile</string>
+    <string name="camera_permission_error">QR codes cannot be scanned unless you give Cadenas camera access!</string>
+    <string name="finish_import">Found a Cadenas channel configuration! Click \'Next\' to finish creating a channel with these parameters, and \'Cancel\' to try scanning again.</string>
+    <string name="next">Next</string>
+    <string name="cancel">Cancel</string>
+    <string name="go_back">Go Back</string>
+    <string name="channel_found">Channel found!</string>
 </resources>
