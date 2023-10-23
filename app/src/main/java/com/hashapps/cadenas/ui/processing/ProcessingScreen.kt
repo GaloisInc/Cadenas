@@ -22,8 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
+import com.hashapps.cadenas.R
 
 /**
  * Cadenas message-processing screens.
