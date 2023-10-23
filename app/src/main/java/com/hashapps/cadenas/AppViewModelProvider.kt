@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hashapps.cadenas.domain.ManageModelsUseCase
+import com.hashapps.cadenas.ui.home.HomeViewModel
 import com.hashapps.cadenas.ui.settings.models.manage.ManageModelsViewModel
 import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
@@ -17,6 +18,10 @@ import com.hashapps.cadenas.ui.settings.channels.importing.ChannelImportViewMode
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
+        initializer {
+            HomeViewModel()
+        }
+
         initializer {
             ProcessingViewModel(
                 createSavedStateHandle(),
