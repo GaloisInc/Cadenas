@@ -1,7 +1,6 @@
 package com.hashapps.cadenas.ui.settings.channels.exporting
 
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,7 +22,6 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 fun Channel.toQRCode(): QRCode {
-    Log.d("TAG", "key:$key;prompt:$prompt;model:$selectedModel")
     return QRCode(
         data = "key:$key;prompt:$prompt;model:$selectedModel",
         errorCorrectionLevel = ErrorCorrectionLevel.Q,
