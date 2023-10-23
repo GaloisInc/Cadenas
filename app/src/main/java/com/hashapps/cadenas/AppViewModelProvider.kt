@@ -19,7 +19,9 @@ import com.hashapps.cadenas.ui.settings.channels.importing.ChannelImportViewMode
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            HomeViewModel()
+            HomeViewModel(
+                cadenasApplication().container.channelRepository
+            )
         }
 
         initializer {
