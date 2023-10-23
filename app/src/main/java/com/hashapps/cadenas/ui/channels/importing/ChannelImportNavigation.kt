@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.importing
+package com.hashapps.cadenas.ui.channels.importing
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

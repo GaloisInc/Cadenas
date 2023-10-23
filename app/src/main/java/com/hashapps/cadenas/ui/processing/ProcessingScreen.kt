@@ -9,8 +9,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,21 +26,15 @@ import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 
 /**
- * Cadenas message-processing screens.
+ * Cadenas message-processing screen.
  *
  * The main point of interaction with the Cadenas application, this Composable
- * defines the views for message encoding and decoding.
- *
- * The view is defined such that the user may simultaneously encode and decode
- * messages, but all UI state is lost upon navigating to the application
- * settings. This was originally an unintentional behavior, but makes sense as
- * a quick failsafe: If the user needs to quickly clear sensitive information
- * from their screen, it's as easy as navigating to the settings screen.
+ * defines the view for message encoding and decoding.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessingScreen(
-    onNavigateToSettings: () -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProcessingViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -55,11 +49,11 @@ fun ProcessingScreen(
                 navigationIcon = {
                     IconButton(
                         enabled = !(viewModel.processingUiState.inProgress),
-                        onClick = onNavigateToSettings,
+                        onClick = onNavigateBack,
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = stringResource(R.string.settings),
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back),
                         )
                     }
                 },
@@ -79,17 +73,8 @@ fun ProcessingScreen(
             )
         },
     ) { innerPadding ->
-        val cadenasInitialized by viewModel.cadenasInitialized.collectAsState()
-
-        val selectedChannel by viewModel.selectedChannel.collectAsState()
-        val formattedTag = if (selectedChannel != null && selectedChannel!!.tag.isNotBlank()) {
-            " #${selectedChannel!!.tag}"
-        } else {
-            ""
-        }
-
         ProcessingBody(
-            cadenasInitialized = cadenasInitialized,
+            cadenasInitialized = viewModel.cadenasInitialized,
             processingUiState = viewModel.processingUiState,
             onValueChange = viewModel::updateProcessingUiState,
             enterEncodeMode = viewModel::encodingMode,
@@ -102,7 +87,7 @@ fun ProcessingScreen(
                 ProcessingMode.Encode -> stringResource(R.string.plaintext_message_support)
                 ProcessingMode.Decode -> stringResource(R.string.encoded_message_support)
             },
-            action = { viewModel.processMessage(formattedTag) },
+            action = { viewModel.processMessage("") },
             modifier = modifier.padding(innerPadding),
         )
     }

@@ -19,14 +19,7 @@ import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 /**
- * Cadenas model-management screen.
- *
- * Cadenas provides a screen to manage all models currently available on the
- * device, and navigation to the [ModelAddScreen] to fetch additional models.
- *
- * New models can be added at any time, but models cannot be _removed_ at any
- * time - in particular, the model associated with the currently-selected
- * messaging channel cannot be deleted. Everything else is fair game.
+ * Cadenas model-management screen.\
  *
  * Note that deleting a model also deletes any channels associated with that
  * model; they become meaningless without the model, after all. The user is
@@ -39,8 +32,6 @@ fun ManageModelsScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedChannel by viewModel.selectedChannel.collectAsState()
-
     Scaffold(
         topBar = {
             SettingsTopAppBar(
@@ -62,7 +53,6 @@ fun ManageModelsScreen(
         ModelList(
             modifier = modifier.padding(innerPadding),
             models = viewModel.availableModels,
-            selectedModel = selectedChannel?.selectedModel,
             onModelDelete = viewModel::deleteModel,
         )
     }
@@ -71,7 +61,6 @@ fun ManageModelsScreen(
 @Composable
 private fun ModelList(
     models: List<String>,
-    selectedModel: String?,
     onModelDelete: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -85,7 +74,6 @@ private fun ModelList(
         models.forEach {
             CadenasModel(
                 model = it,
-                selectedModel = selectedModel,
                 onModelDelete = onModelDelete,
             )
         }
@@ -95,7 +83,6 @@ private fun ModelList(
 @Composable
 private fun CadenasModel(
     model: String,
-    selectedModel: String?,
     onModelDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -106,20 +93,11 @@ private fun CadenasModel(
 
         ListItem(
             headlineContent = { Text(model) },
-            leadingContent = {
-                if (model == selectedModel) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = stringResource(R.string.model_selected),
-                    )
-                }
-            },
             trailingContent = {
                 Box(
                     modifier.wrapContentSize(Alignment.TopStart),
                 ) {
                     IconButton(
-                        enabled = model != selectedModel,
                         onClick = { deleteConfirmationRequired = true },
                     ) {
                         Icon(

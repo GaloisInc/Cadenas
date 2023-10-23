@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.add
+package com.hashapps.cadenas.ui.channels.add
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,8 +17,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
-import com.hashapps.cadenas.ui.settings.channels.ChannelUiState
-import com.hashapps.cadenas.ui.settings.channels.isTagValid
+import com.hashapps.cadenas.ui.channels.ChannelUiState
+import com.hashapps.cadenas.ui.channels.isTagValid
 
 private const val MAX_LEN = 128
 

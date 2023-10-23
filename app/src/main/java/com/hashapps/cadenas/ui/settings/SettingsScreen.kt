@@ -21,7 +21,6 @@ import com.hashapps.cadenas.R
 fun SettingsScreen(
     navigateUp: () -> Unit,
     navigateToManageModels: () -> Unit,
-    navigateToManageChannels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -34,7 +33,6 @@ fun SettingsScreen(
     ) { innerPadding ->
         SettingsBody(
             navigateToManageModels = navigateToManageModels,
-            navigateToManageChannels = navigateToManageChannels,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -43,7 +41,6 @@ fun SettingsScreen(
 @Composable
 private fun SettingsBody(
     navigateToManageModels: () -> Unit,
-    navigateToManageChannels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -72,26 +69,6 @@ private fun SettingsBody(
                         contentDescription = null,
                     )
                 }
-            )
-
-            HorizontalDivider(thickness = 1.dp)
-
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.channels)) },
-                modifier = Modifier.clickable(onClick = navigateToManageChannels),
-                supportingContent = { Text(stringResource(R.string.manage_channels_support)) },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Filled.SwitchAccount,
-                        contentDescription = null,
-                    )
-                },
-                trailingContent = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.NavigateNext,
-                        contentDescription = null,
-                    )
-                },
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels
+package com.hashapps.cadenas.ui.channels
 
 import com.hashapps.cadenas.data.Channel
 

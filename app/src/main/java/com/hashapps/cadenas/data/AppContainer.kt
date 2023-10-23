@@ -1,17 +1,7 @@
 package com.hashapps.cadenas.data
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.WorkManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-
-private const val CADENAS_SETTINGS_NAME = "cadenas_settings"
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = CADENAS_SETTINGS_NAME
-)
 
 /**
  * Interface for containers providing data to Cadenas.
@@ -25,12 +15,10 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
  * expose friendlier APIs than the repositories themselves.
  *
  * @property[channelRepository] Repository of Cadenas channels
- * @property[settingsRepository] Repository of application settings
  * @property[modelRepository] Repository of available language models
  */
 interface AppContainer {
     val channelRepository: ChannelRepository
-    val settingsRepository: SettingsRepository
     val modelRepository: ModelRepository
 }
 
@@ -47,16 +35,8 @@ class AppDataContainer(
     override val channelRepository by lazy {
         ChannelRepository(
             contentResolver = context.contentResolver,
-            channelDao = ChannelDatabase.getDatabase(context).channelDao(),
-        )
-    }
-
-    override val settingsRepository by lazy {
-        SettingsRepository(
-            dataStore = context.dataStore,
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
             channelDao = ChannelDatabase.getDatabase(context).channelDao(),
-            externalScope = CoroutineScope(SupervisorJob()),
         )
     }
 

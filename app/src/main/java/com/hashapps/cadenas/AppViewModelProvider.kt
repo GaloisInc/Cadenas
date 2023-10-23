@@ -10,11 +10,10 @@ import com.hashapps.cadenas.ui.home.HomeViewModel
 import com.hashapps.cadenas.ui.settings.models.manage.ManageModelsViewModel
 import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
-import com.hashapps.cadenas.ui.settings.channels.manage.ManageChannelsViewModel
-import com.hashapps.cadenas.ui.settings.channels.add.ChannelAddViewModel
-import com.hashapps.cadenas.ui.settings.channels.edit.ChannelEditViewModel
-import com.hashapps.cadenas.ui.settings.channels.exporting.ChannelExportViewModel
-import com.hashapps.cadenas.ui.settings.channels.importing.ChannelImportViewModel
+import com.hashapps.cadenas.ui.channels.add.ChannelAddViewModel
+import com.hashapps.cadenas.ui.channels.edit.ChannelEditViewModel
+import com.hashapps.cadenas.ui.channels.exporting.ChannelExportViewModel
+import com.hashapps.cadenas.ui.channels.importing.ChannelImportViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -27,7 +26,7 @@ object AppViewModelProvider {
         initializer {
             ProcessingViewModel(
                 createSavedStateHandle(),
-                cadenasApplication().container.settingsRepository,
+                cadenasApplication().container.channelRepository,
             )
         }
 
@@ -65,20 +64,12 @@ object AppViewModelProvider {
                     cadenasApplication().container.modelRepository,
                     cadenasApplication().container.channelRepository
                 ),
-                cadenasApplication().container.settingsRepository,
             )
         }
 
         initializer {
             ModelAddViewModel(
                 cadenasApplication().container.modelRepository,
-            )
-        }
-
-        initializer {
-            ManageChannelsViewModel(
-                cadenasApplication().container.channelRepository,
-                cadenasApplication().container.settingsRepository,
             )
         }
     }
