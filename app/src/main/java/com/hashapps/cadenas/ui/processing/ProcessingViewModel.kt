@@ -1,14 +1,21 @@
 package com.hashapps.cadenas.ui.processing
 
+import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.galois.cadenas.mbfte.TextCover
 import com.hashapps.cadenas.data.ChannelRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,6 +28,29 @@ class ProcessingViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
 ) : ViewModel() {
+    private val sharedTextState = savedStateHandle.getStateFlow(NavController.KEY_DEEP_LINK_INTENT, Intent())
+        .map {
+            if (it.action != Intent.ACTION_SEND) {
+                return@map ""
+            }
+
+            if (it.type.equals("text/plain")) {
+                it.getStringExtra(Intent.EXTRA_TEXT) ?: ""
+            } else {
+                ""
+            }
+        }
+        .onEach { if (it.isNotEmpty()) updateProcessingUiState(ProcessingUiState(toProcess = it, processingMode = ProcessingMode.Decode)) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = ""
+        )
+
+    init {
+        sharedTextState.launchIn(viewModelScope)
+    }
+
     private val processingArgs = ProcessingArgs(savedStateHandle)
 
     private var textCover: TextCover? by mutableStateOf(null)
