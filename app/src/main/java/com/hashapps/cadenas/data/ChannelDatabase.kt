@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 /**
  * Room database storing Cadenas messaging channels.
  */
-@Database(entities = [Channel::class], version = 8, exportSchema = false)
+@Database(entities = [Channel::class], version = 9, exportSchema = false)
 abstract class ChannelDatabase : RoomDatabase() {
     abstract fun channelDao(): ChannelDao
 

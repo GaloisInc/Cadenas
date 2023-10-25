@@ -57,7 +57,6 @@ fun String.toChannel(): Channel? {
             key = it[1],
             prompt = it[2],
             selectedModel = it[3],
-            tag ="",
         )
     }
 }

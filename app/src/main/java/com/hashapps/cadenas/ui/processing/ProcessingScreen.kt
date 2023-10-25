@@ -87,7 +87,7 @@ fun ProcessingScreen(
                 ProcessingMode.Encode -> stringResource(R.string.plaintext_message_support)
                 ProcessingMode.Decode -> stringResource(R.string.encoded_message_support)
             },
-            action = { viewModel.processMessage("") },
+            action = { viewModel.processMessage() },
             modifier = modifier.padding(innerPadding),
         )
     }

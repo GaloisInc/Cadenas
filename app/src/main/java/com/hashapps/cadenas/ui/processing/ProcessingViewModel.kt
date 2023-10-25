@@ -93,37 +93,37 @@ class ProcessingViewModel(
     /**
      * Encode or decode the input, based on the current processing mode.
      */
-    fun processMessage(tag: String) {
+    fun processMessage() {
         when (processingUiState.processingMode) {
-            ProcessingMode.Encode -> encodeMessage(tag)
-            ProcessingMode.Decode -> decodeMessage(tag)
+            ProcessingMode.Encode -> encodeMessage()
+            ProcessingMode.Decode -> decodeMessage()
         }
     }
 
     /**
      * Attempt to encode the input message using the selected messaging
-     * channel, adding the channel's tag to the end (if any.)
+     * channel.
      */
-    private fun encodeMessage(tag: String) {
+    private fun encodeMessage() {
         viewModelScope.launch {
             processingUiState = processingUiState.copy(inProgress = true, result = null)
             val encodedMessage = withContext(Dispatchers.Default) {
                 textCover?.encodeUntilDecodable(processingUiState.toProcess)
             }
             processingUiState =
-                processingUiState.copy(inProgress = false, result = encodedMessage?.plus(tag))
+                processingUiState.copy(inProgress = false, result = encodedMessage)
         }
     }
 
     /**
      * Attempt to decode the input message using the selected messaging
-     * channel, first removing the channel's tag (if any.)
+     * channel.
      */
-    private fun decodeMessage(tag: String) {
+    private fun decodeMessage() {
         viewModelScope.launch {
             processingUiState = processingUiState.copy(inProgress = true, result = null)
             val decodedMessage = withContext(Dispatchers.Default) {
-                textCover?.decode(processingUiState.toProcess.removeSuffix(tag))
+                textCover?.decode(processingUiState.toProcess)
             }
             processingUiState = processingUiState.copy(inProgress = false, result = decodedMessage)
         }

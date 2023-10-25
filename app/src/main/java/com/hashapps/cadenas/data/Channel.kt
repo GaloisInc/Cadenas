@@ -17,7 +17,6 @@ import androidx.room.PrimaryKey
  * @property[key] The secret key shared by communicating messengers
  * @property[prompt] Prompt text for the language model
  * @property[selectedModel] The model associated with the channel
- * @property[tag] The hashtag (without '#') to append to messages encoded using
  * this channel
  */
 @Entity(tableName = "channels")
@@ -29,7 +28,6 @@ data class Channel(
     val key: String,
     val prompt: String,
     val selectedModel: String,
-    val tag: String,
 )
 
 fun Channel.isValid(): Boolean {
