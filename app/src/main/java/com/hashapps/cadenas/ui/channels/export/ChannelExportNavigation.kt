@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.channels.exporting
+package com.hashapps.cadenas.ui.channels.export
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController

@@ -12,8 +12,8 @@ import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
 import com.hashapps.cadenas.ui.channels.add.ChannelAddViewModel
 import com.hashapps.cadenas.ui.channels.edit.ChannelEditViewModel
-import com.hashapps.cadenas.ui.channels.exporting.ChannelExportViewModel
-import com.hashapps.cadenas.ui.channels.importing.ChannelImportViewModel
+import com.hashapps.cadenas.ui.channels.export.ChannelExportViewModel
+import com.hashapps.cadenas.ui.channels.import.ChannelImportViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {

@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.channels.importing
+package com.hashapps.cadenas.ui.channels.import
 
 import android.Manifest
 import android.content.pm.PackageManager

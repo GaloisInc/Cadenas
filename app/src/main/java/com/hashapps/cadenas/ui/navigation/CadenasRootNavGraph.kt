@@ -13,10 +13,10 @@ import com.hashapps.cadenas.ui.channels.add.channelAddScreen
 import com.hashapps.cadenas.ui.channels.add.navigateToChannelAdd
 import com.hashapps.cadenas.ui.channels.edit.channelEditScreen
 import com.hashapps.cadenas.ui.channels.edit.navigateToChannelEdit
-import com.hashapps.cadenas.ui.channels.exporting.channelExportScreen
-import com.hashapps.cadenas.ui.channels.exporting.navigateToChannelExport
-import com.hashapps.cadenas.ui.channels.importing.channelImportScreen
-import com.hashapps.cadenas.ui.channels.importing.navigateToChannelImport
+import com.hashapps.cadenas.ui.channels.export.channelExportScreen
+import com.hashapps.cadenas.ui.channels.export.navigateToChannelExport
+import com.hashapps.cadenas.ui.channels.import.channelImportScreen
+import com.hashapps.cadenas.ui.channels.import.navigateToChannelImport
 
 /**
  * Top-level navigation host for Cadenas (post setup).
