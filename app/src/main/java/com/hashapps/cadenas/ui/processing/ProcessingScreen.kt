@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 
 /**
  * Cadenas message-processing screens.
@@ -81,9 +81,9 @@ fun ProcessingScreen(
     ) { innerPadding ->
         val cadenasInitialized by viewModel.cadenasInitialized.collectAsState()
 
-        val selectedProfile by viewModel.selectedProfile.collectAsState()
-        val formattedTag = if (selectedProfile != null && selectedProfile!!.tag.isNotBlank()) {
-            " #${selectedProfile!!.tag}"
+        val selectedChannel by viewModel.selectedChannel.collectAsState()
+        val formattedTag = if (selectedChannel != null && selectedChannel!!.tag.isNotBlank()) {
+            " #${selectedChannel!!.tag}"
         } else {
             ""
         }

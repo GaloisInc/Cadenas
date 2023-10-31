@@ -1,8 +1,8 @@
-package com.hashapps.cadenas.ui.settings.model
+package com.hashapps.cadenas.ui.settings.models.manage
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
@@ -26,9 +26,9 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
  *
  * New models can be added at any time, but models cannot be _removed_ at any
  * time - in particular, the model associated with the currently-selected
- * messaging profile cannot be deleted. Everything else is fair game.
+ * messaging channel cannot be deleted. Everything else is fair game.
  *
- * Note that deleting a model also deletes any profiles associated with that
+ * Note that deleting a model also deletes any channels associated with that
  * model; they become meaningless without the model, after all. The user is
  * informed of this via confirmation dialog.
  */
@@ -39,7 +39,7 @@ fun ManageModelsScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val selectedProfile by viewModel.selectedProfile.collectAsState()
+    val selectedChannel by viewModel.selectedChannel.collectAsState()
 
     Scaffold(
         topBar = {
@@ -59,33 +59,11 @@ fun ManageModelsScreen(
             }
         },
     ) { innerPadding ->
-        ManageModelsBody(
+        ModelList(
             modifier = modifier.padding(innerPadding),
             models = viewModel.availableModels,
-            selectedModel = selectedProfile?.selectedModel,
+            selectedModel = selectedChannel?.selectedModel,
             onModelDelete = viewModel::deleteModel,
-        )
-    }
-}
-
-@Composable
-private fun ManageModelsBody(
-    models: List<String>,
-    selectedModel: String?,
-    onModelDelete: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        ModelList(
-            models = models,
-            selectedModel = selectedModel,
-            onModelDelete = onModelDelete,
         )
     }
 }
@@ -96,8 +74,15 @@ private fun ModelList(
     selectedModel: String?,
     onModelDelete: (String) -> Unit,
     modifier: Modifier = Modifier
-) {LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = models) {
+) {
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        models.forEach {
             CadenasModel(
                 model = it,
                 selectedModel = selectedModel,

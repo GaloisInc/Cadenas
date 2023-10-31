@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.profile
+package com.hashapps.cadenas.ui.settings.channels.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,51 +13,49 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.AppViewModelProvider
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
+import com.hashapps.cadenas.ui.settings.channels.ChannelUiState
+import com.hashapps.cadenas.ui.settings.channels.add.ChannelInputForm
 
 /**
- * Cadenas profile-editing screen.
+ * Cadenas channel-editing screen.
  *
- * Cadenas messaging profiles define the parameters with which messages are
+ * Cadenas messaging channels define the parameters with which messages are
  * encoded and decoded. They are intended to be shared by communicating parties
- * through either text-based formats or QR codes (features that, as of now, are
- * not implemented.)
+ * through QR codes.
  *
  * It is crucial that communicating parties agree on all non-cosmetic parts of
- * a messaging profile, namely the model to use, the secret key, and the seed
- * text. The profile name and description, however, are fully cosmetic and for
+ * a messaging channel, namely the model to use, the secret key, and the prompt
+ * text. The channel name and description, however, are fully cosmetic and for
  * the benefit of the user - they do _not_ need to be consistent between
  * communicating parties.
  *
- * For this reason, the profile-editing screen is fairly limited - only the
- * name and description may be modified after the profile is created. This may
- * change in the future (and in fact was the behavior in earlier versions), but
- * for now it is easiest to prevent users from breaking the agreed-upon aspects
- * of a communication channel.
+ * For this reason, the channel-editing screen is fairly limited - only the
+ * name and description may be modified after the channel is created.
  */
 @Composable
-fun ProfileEditScreen(
+fun ChannelEditScreen(
     onNavigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProfileEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ChannelEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(R.string.edit_profile),
+                title = stringResource(R.string.edit_channel),
                 navigateUp = onNavigateUp,
             )
         }
     ) { innerPadding ->
-        ProfileEditBody(
+        ChannelEditBody(
             modifier = modifier.padding(innerPadding),
-            profileUiState = viewModel.profileUiState,
+            channelUiState = viewModel.channelUiState,
             models = viewModel.availableModels,
-            onProfileValueChange = viewModel::updateUiState,
+            onChannelValueChange = viewModel::updateUiState,
             onSaveClick = {
-                viewModel.updateProfile()
+                viewModel.updateChannel()
                 onNavigateBack()
             },
         )
@@ -65,10 +63,10 @@ fun ProfileEditScreen(
 }
 
 @Composable
-private fun ProfileEditBody(
-    profileUiState: ProfileUiState,
+private fun ChannelEditBody(
+    channelUiState: ChannelUiState,
     models: List<String>,
-    onProfileValueChange: (ProfileUiState) -> Unit,
+    onChannelValueChange: (ChannelUiState) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -79,17 +77,17 @@ private fun ProfileEditBody(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        ProfileInputForm(
-            profileUiState = profileUiState,
+        ChannelInputForm(
+            channelUiState = channelUiState,
             models = models,
-            onValueChange = onProfileValueChange,
+            onValueChange = onChannelValueChange,
             editing = true,
         )
 
         Button(
             onClick = onSaveClick,
             modifier = Modifier.fillMaxWidth(),
-            enabled = profileUiState.actionEnabled,
+            enabled = channelUiState.actionEnabled,
         ) {
             Text(
                 text = stringResource(R.string.save),

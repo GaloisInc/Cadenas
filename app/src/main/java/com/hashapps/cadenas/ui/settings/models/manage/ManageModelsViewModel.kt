@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.model
+package com.hashapps.cadenas.ui.settings.models.manage
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,14 +12,14 @@ import kotlinx.coroutines.launch
 /**
  * View model for the model-management screen.
  *
- * @property[selectedProfile] The currently-selected messaging profile
+ * @property[selectedChannel] The currently-selected messaging channel
  * @property[availableModels] The list of all downloaded models
  */
 class ManageModelsViewModel(
     private val manageModelsUseCase: ManageModelsUseCase,
     settingsRepository: SettingsRepository,
 ) : ViewModel() {
-    val selectedProfile = settingsRepository.selectedProfile
+    val selectedChannel = settingsRepository.selectedChannel
 
     var availableModels: List<String> by mutableStateOf(manageModelsUseCase())
         private set

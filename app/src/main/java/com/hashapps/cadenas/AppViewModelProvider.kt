@@ -1,18 +1,19 @@
-package com.hashapps.cadenas.ui
+package com.hashapps.cadenas
 
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.hashapps.cadenas.CadenasApplication
 import com.hashapps.cadenas.domain.ManageModelsUseCase
-import com.hashapps.cadenas.ui.settings.model.ManageModelsViewModel
-import com.hashapps.cadenas.ui.settings.model.ModelAddViewModel
+import com.hashapps.cadenas.ui.settings.models.manage.ManageModelsViewModel
+import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
-import com.hashapps.cadenas.ui.settings.profile.ManageProfilesViewModel
-import com.hashapps.cadenas.ui.settings.profile.ProfileAddViewModel
-import com.hashapps.cadenas.ui.settings.profile.ProfileEditViewModel
+import com.hashapps.cadenas.ui.settings.channels.manage.ManageChannelsViewModel
+import com.hashapps.cadenas.ui.settings.channels.add.ChannelAddViewModel
+import com.hashapps.cadenas.ui.settings.channels.edit.ChannelEditViewModel
+import com.hashapps.cadenas.ui.settings.channels.exporting.ChannelExportViewModel
+import com.hashapps.cadenas.ui.settings.channels.importing.ChannelImportViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -24,16 +25,29 @@ object AppViewModelProvider {
         }
 
         initializer {
-            ProfileAddViewModel(
-                cadenasApplication().container.profileRepository,
+            ChannelAddViewModel(
+                cadenasApplication().container.channelRepository,
                 cadenasApplication().container.modelRepository,
             )
         }
 
         initializer {
-            ProfileEditViewModel(
+            ChannelImportViewModel(
+                cadenasApplication().container.channelRepository
+            )
+        }
+
+        initializer {
+            ChannelExportViewModel(
                 createSavedStateHandle(),
-                cadenasApplication().container.profileRepository,
+                cadenasApplication().container.channelRepository,
+            )
+        }
+
+        initializer {
+            ChannelEditViewModel(
+                createSavedStateHandle(),
+                cadenasApplication().container.channelRepository,
                 cadenasApplication().container.modelRepository,
             )
         }
@@ -42,7 +56,7 @@ object AppViewModelProvider {
             ManageModelsViewModel(
                 ManageModelsUseCase(
                     cadenasApplication().container.modelRepository,
-                    cadenasApplication().container.profileRepository
+                    cadenasApplication().container.channelRepository
                 ),
                 cadenasApplication().container.settingsRepository,
             )
@@ -55,8 +69,8 @@ object AppViewModelProvider {
         }
 
         initializer {
-            ManageProfilesViewModel(
-                cadenasApplication().container.profileRepository,
+            ManageChannelsViewModel(
+                cadenasApplication().container.channelRepository,
                 cadenasApplication().container.settingsRepository,
             )
         }

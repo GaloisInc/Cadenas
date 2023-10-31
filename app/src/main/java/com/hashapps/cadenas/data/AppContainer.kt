@@ -16,20 +16,20 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 /**
  * Interface for containers providing data to Cadenas.
  *
- * Implementors must provide repositories for messaging profiles, the app's
- * settings (e.g. which messaging profile is active), and the models one may
+ * Implementors must provide repositories for messaging channels, the app's
+ * settings (e.g. which messaging channel is active), and the models one may
  * use to encode messages.
  *
  * While there currently isn't a huge benefit to having this interface, it
  * does provide a mechanism by which we may implement additional containers or
  * expose friendlier APIs than the repositories themselves.
  *
- * @property[profileRepository] Repository of Cadenas profiles
+ * @property[channelRepository] Repository of Cadenas channels
  * @property[settingsRepository] Repository of application settings
  * @property[modelRepository] Repository of available language models
  */
 interface AppContainer {
-    val profileRepository: ProfileRepository
+    val channelRepository: ChannelRepository
     val settingsRepository: SettingsRepository
     val modelRepository: ModelRepository
 }
@@ -44,9 +44,10 @@ interface AppContainer {
 class AppDataContainer(
     private val context: Context
 ) : AppContainer {
-    override val profileRepository by lazy {
-        ProfileRepository(
-            profileDao = ProfileDatabase.getDatabase(context).profileDao(),
+    override val channelRepository by lazy {
+        ChannelRepository(
+            contentResolver = context.contentResolver,
+            channelDao = ChannelDatabase.getDatabase(context).channelDao(),
         )
     }
 
@@ -54,7 +55,7 @@ class AppDataContainer(
         SettingsRepository(
             dataStore = context.dataStore,
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
-            profileDao = ProfileDatabase.getDatabase(context).profileDao(),
+            channelDao = ChannelDatabase.getDatabase(context).channelDao(),
             externalScope = CoroutineScope(SupervisorJob()),
         )
     }

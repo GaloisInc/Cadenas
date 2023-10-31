@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.model
+package com.hashapps.cadenas.ui.settings.models
 
 /**
  * UI state for the model-adding screen.

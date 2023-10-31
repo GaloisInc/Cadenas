@@ -16,19 +16,12 @@ import com.hashapps.cadenas.R
 
 /**
  * Cadenas main settings screen.
- *
- * This view provides navigation back to the
- * [com.hashapps.cadenas.ui.processing.ProcessingScreen]s, as well as to the
- * views for model/profile management.
- *
- * This is intended to be extensible with additional settings destinations;
- * cosmetics of the app UI, import/export for profiles, etc.
  */
 @Composable
 fun SettingsScreen(
     navigateUp: () -> Unit,
     navigateToManageModels: () -> Unit,
-    navigateToManageProfiles: () -> Unit,
+    navigateToManageChannels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -41,7 +34,7 @@ fun SettingsScreen(
     ) { innerPadding ->
         SettingsBody(
             navigateToManageModels = navigateToManageModels,
-            navigateToManageProfiles = navigateToManageProfiles,
+            navigateToManageChannels = navigateToManageChannels,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -50,7 +43,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsBody(
     navigateToManageModels: () -> Unit,
-    navigateToManageProfiles: () -> Unit,
+    navigateToManageChannels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -84,9 +77,9 @@ private fun SettingsBody(
             HorizontalDivider(thickness = 1.dp)
 
             ListItem(
-                headlineContent = { Text(stringResource(R.string.profiles)) },
-                modifier = Modifier.clickable(onClick = navigateToManageProfiles),
-                supportingContent = { Text(stringResource(R.string.manage_profiles_support)) },
+                headlineContent = { Text(stringResource(R.string.channels)) },
+                modifier = Modifier.clickable(onClick = navigateToManageChannels),
+                supportingContent = { Text(stringResource(R.string.manage_channels_support)) },
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Filled.SwitchAccount,
@@ -109,7 +102,6 @@ private fun SettingsBody(
 fun SettingsTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
-    navigationNeeded: Boolean = true,
     canNavigateUp: Boolean = true,
     navigateUp: () -> Unit = {},
 ) {
@@ -117,16 +109,14 @@ fun SettingsTopAppBar(
         title = { Text(title) },
         modifier = modifier,
         navigationIcon = {
-            if (navigationNeeded) {
-                IconButton(
-                    enabled = canNavigateUp,
-                    onClick = navigateUp,
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                    )
-                }
+            IconButton(
+                enabled = canNavigateUp,
+                onClick = navigateUp,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back),
+                )
             }
         },
     )
