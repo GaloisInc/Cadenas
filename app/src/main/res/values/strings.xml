@@ -58,4 +58,5 @@
     <string name="channel_found">Channel found!</string>
     <string name="confirm">Confirm</string>
     <string name="channel_placeholder">To get started, go to settings and add a model. Then, import or add a channel.</string>
+    <string name="add_channel">Add Channel</string>
 </resources>

@@ -2,7 +2,6 @@ package com.hashapps.cadenas.ui.home
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
@@ -25,11 +25,14 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,7 +67,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val channels by viewModel.channels.collectAsState()
-    
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -78,22 +81,56 @@ fun HomeScreen(
                         )
                     }
                 },
-                actions = {
-                    IconButton(onClick = onNavigateToImportChannel) {
-                        Icon(
-                            imageVector = Icons.Filled.FileDownload,
-                            contentDescription = stringResource(R.string.import_label),
-                        )
-                    }
-                    IconButton(onClick = onNavigateToNewChannel) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = stringResource(R.string.new_label),
-                        )
-                    }
-                }
             )
         },
+        bottomBar = {
+            NavigationBar {}
+        },
+        floatingActionButton = {
+            var expanded by remember { mutableStateOf(false) }
+            Box(
+                modifier = Modifier.wrapContentSize(Alignment.TopStart),
+            ) {
+                ExtendedFloatingActionButton(
+                    text = { Text(stringResource(R.string.add_channel)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Message,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = { expanded = true }
+                )
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.new_label)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToNewChannel()
+                        },
+                        leadingIcon = {
+                            Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+                        },
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.import_label)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToImportChannel()
+                        },
+                        leadingIcon = {
+                            Icon(imageVector = Icons.Filled.FileDownload, contentDescription = null)
+                        },
+                    )
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.EndOverlay,
     ) { innerPadding ->
         ChannelList(
             modifier = modifier.padding(innerPadding),
@@ -162,7 +199,9 @@ private fun Channel(
     var expanded by remember { mutableStateOf(false) }
 
     ListItem(
-        modifier = modifier.fillMaxWidth().clickable { onChannelSelect(channel.id) },
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onChannelSelect(channel.id) },
         headlineContent = { Text(channel.name) },
         supportingContent = { Text(channel.description) },
         leadingContent = {
