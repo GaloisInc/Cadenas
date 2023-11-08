@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,10 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
+import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
-import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 /**
  * Cadenas model-management screen.\
@@ -25,6 +25,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
  * model; they become meaningless without the model, after all. The user is
  * informed of this via confirmation dialog.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageModelsScreen(
     navigateUp: () -> Unit,
@@ -34,20 +35,26 @@ fun ManageModelsScreen(
 ) {
     Scaffold(
         topBar = {
-            SettingsTopAppBar(
-                title = stringResource(R.string.manage_models),
-                navigateUp = navigateUp,
+            CenterAlignedTopAppBar(
+                title = { Text(stringResource(R.string.manage_models)) },
+                modifier = modifier,
+                navigationIcon = {
+                    IconButton(onClick = navigateUp) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back),
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = navigateToModelAdd) {
+                        Icon(
+                            imageVector = Icons.Filled.CreateNewFolder,
+                            contentDescription = stringResource(R.string.add_model)
+                        )
+                    }
+                }
             )
-        },
-        floatingActionButton = {
-            LargeFloatingActionButton(
-                onClick = navigateToModelAdd,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.add_item),
-                )
-            }
         },
     ) { innerPadding ->
         ModelList(
