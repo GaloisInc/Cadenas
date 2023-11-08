@@ -59,4 +59,5 @@
     <string name="confirm">Confirm</string>
     <string name="channel_placeholder">To get started, go to settings and add a model. Then, import or add a channel.</string>
     <string name="add_channel">Add Channel</string>
+    <string name="model_placeholder">To get started, download a model by tapping the folder icon above.</string>
 </resources>

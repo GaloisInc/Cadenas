@@ -12,6 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
@@ -73,16 +74,29 @@ private fun ModelList(
 ) {
     Column(
         modifier = modifier
-            .padding(8.dp)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        models.forEach {
-            CadenasModel(
-                model = it,
-                onModelDelete = onModelDelete,
-            )
+        if (models.isEmpty()) {
+            ElevatedCard(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    textAlign = TextAlign.Center,
+                    text = stringResource(R.string.model_placeholder),
+                )
+            }
+        } else {
+            models.forEach {
+                CadenasModel(
+                    model = it,
+                    onModelDelete = onModelDelete,
+                )
+            }
         }
     }
 }
