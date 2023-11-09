@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.importing
+package com.hashapps.cadenas.ui.channels.import
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -57,7 +57,6 @@ fun String.toChannel(): Channel? {
             key = it[1],
             prompt = it[2],
             selectedModel = it[3],
-            tag ="",
         )
     }
 }

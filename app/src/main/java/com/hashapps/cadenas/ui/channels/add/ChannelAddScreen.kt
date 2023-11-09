@@ -1,15 +1,13 @@
-package com.hashapps.cadenas.ui.settings.channels.add
+package com.hashapps.cadenas.ui.channels.add
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -17,8 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
-import com.hashapps.cadenas.ui.settings.channels.ChannelUiState
-import com.hashapps.cadenas.ui.settings.channels.isTagValid
+import com.hashapps.cadenas.ui.channels.ChannelUiState
 
 private const val MAX_LEN = 128
 
@@ -98,8 +95,6 @@ fun ChannelInputForm(
     onValueChange: (ChannelUiState) -> Unit = {},
     editing: Boolean = false,
 ) {
-    val focusManager = LocalFocusManager.current
-
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
     ) {
@@ -196,36 +191,6 @@ fun ChannelInputForm(
                     }
                 }
             }
-        }
-
-        ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            OutlinedTextField(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                value = channelUiState.tag,
-                onValueChange = { onValueChange(channelUiState.copy(tag = it)) },
-                singleLine = true,
-                label = { Text(stringResource(R.string.tag_label)) },
-                supportingText = {
-                    if (channelUiState.isTagValid()) {
-                        Text(stringResource(R.string.tag_support))
-                    } else {
-                        Text(stringResource(R.string.tag_error))
-                    }
-                },
-                isError = !channelUiState.isTagValid(),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                    }
-                ),
-            )
         }
     }
 }

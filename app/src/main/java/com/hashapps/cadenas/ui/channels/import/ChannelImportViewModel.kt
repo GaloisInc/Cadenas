@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.importing
+package com.hashapps.cadenas.ui.channels.import
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

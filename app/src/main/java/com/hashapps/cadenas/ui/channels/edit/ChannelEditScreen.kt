@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.edit
+package com.hashapps.cadenas.ui.channels.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +15,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
-import com.hashapps.cadenas.ui.settings.channels.ChannelUiState
-import com.hashapps.cadenas.ui.settings.channels.add.ChannelInputForm
+import com.hashapps.cadenas.ui.channels.ChannelUiState
+import com.hashapps.cadenas.ui.channels.add.ChannelInputForm
 
 /**
  * Cadenas channel-editing screen.

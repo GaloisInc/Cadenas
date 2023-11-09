@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.edit
+package com.hashapps.cadenas.ui.channels.edit
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ChannelRepository
 import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.data.isValid
-import com.hashapps.cadenas.ui.settings.channels.ChannelUiState
-import com.hashapps.cadenas.ui.settings.channels.isValid
-import com.hashapps.cadenas.ui.settings.channels.toChannel
-import com.hashapps.cadenas.ui.settings.channels.toChannelUiState
+import com.hashapps.cadenas.ui.channels.ChannelUiState
+import com.hashapps.cadenas.ui.channels.isValid
+import com.hashapps.cadenas.ui.channels.toChannel
+import com.hashapps.cadenas.ui.channels.toChannelUiState
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

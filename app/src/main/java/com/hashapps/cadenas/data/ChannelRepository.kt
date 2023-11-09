@@ -7,10 +7,16 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import com.galois.cadenas.crypto.RandomPadding
+import com.galois.cadenas.crypto.SivAesWithSentinel
+import com.galois.cadenas.mbfte.TextCover
+import com.galois.cadenas.model.PyTorchGPT2LanguageModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.UUID
 import javax.crypto.KeyGenerator
 
@@ -22,6 +28,7 @@ import javax.crypto.KeyGenerator
  */
 class ChannelRepository(
     private val contentResolver: ContentResolver,
+    private val modelsDir: File,
     private val channelDao: ChannelDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -64,6 +71,24 @@ class ChannelRepository(
         val qrUri = contentResolver.insert(imageCollection, qrDetails)!!
         contentResolver.openOutputStream(qrUri).use {
             it?.also { qrBitmap?.asAndroidBitmap()?.compress(Bitmap.CompressFormat.PNG, 0, it) }
+        }
+    }
+
+    /**
+     * Create a [TextCover] for the profile with given ID.
+     */
+    suspend fun createTextCoverForChannel(id: Int): TextCover {
+        return withContext(ioDispatcher) {
+            val channel = getChannelStream(id).first()
+            TextCover(
+                cryptoSystem = RandomPadding(
+                    SivAesWithSentinel(
+                        channel.key.chunked(2).map { b -> b.toInt(16).toByte() }.toByteArray()
+                    )
+                ),
+                languageModel = PyTorchGPT2LanguageModel(modelsDir.resolve(channel.selectedModel).path),
+                seed = channel.prompt,
+            )
         }
     }
 }

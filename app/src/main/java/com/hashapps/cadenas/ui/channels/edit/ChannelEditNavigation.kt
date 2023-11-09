@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.edit
+package com.hashapps.cadenas.ui.channels.edit
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController

@@ -10,13 +10,11 @@ const val SETTINGS_ROUTE = "settings_home"
 fun NavGraphBuilder.settingsScreen(
     onNavigateUp: () -> Unit,
     onNavigateToManageModels: () -> Unit,
-    onNavigateToManageChannels: () -> Unit,
 ) {
     composable(SETTINGS_ROUTE) {
         SettingsScreen(
             navigateUp = onNavigateUp,
             navigateToManageModels = onNavigateToManageModels,
-            navigateToManageChannels = onNavigateToManageChannels,
         )
     }
 }

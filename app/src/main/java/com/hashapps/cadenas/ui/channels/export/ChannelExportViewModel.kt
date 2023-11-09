@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels.exporting
+package com.hashapps.cadenas.ui.channels.export
 
 import android.graphics.BitmapFactory
 import androidx.compose.runtime.getValue

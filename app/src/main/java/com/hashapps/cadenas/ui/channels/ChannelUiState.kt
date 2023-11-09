@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.ui.settings.channels
+package com.hashapps.cadenas.ui.channels
 
 import com.hashapps.cadenas.data.Channel
 
@@ -15,7 +15,6 @@ import com.hashapps.cadenas.data.Channel
  * @property[key] The secret key shared by messengers using this channel
  * @property[prompt] Prompt text for the language model
  * @property[selectedModel] The model associated with the channel
- * @property[tag] The hashtag (without '#') to append to messages encoded using
  * this channel
  * @property[actionEnabled] Whether or not the save action is enabled
  */
@@ -26,7 +25,6 @@ data class ChannelUiState(
     val key: String = "",
     val prompt: String = "",
     val selectedModel: String = "",
-    val tag: String = "",
     val actionEnabled: Boolean = false,
 )
 
@@ -40,7 +38,6 @@ fun ChannelUiState.toChannel(): Channel = Channel(
     key = key,
     prompt = prompt,
     selectedModel = selectedModel,
-    tag = tag,
 )
 
 /**
@@ -56,22 +53,11 @@ fun Channel.toChannelUiState(
     key = key,
     prompt = prompt,
     selectedModel = selectedModel,
-    tag = tag,
     actionEnabled = actionEnabled,
 )
 
-private val tagRegex = Regex("""\w*[a-zA-Z]\w*""")
-
 /**
- * Return true iff the hashtag is valid or empty.
- *
- * 'Valid' means alphanumeric or underscore, with at least one alphabetic
- * character.
- */
-fun ChannelUiState.isTagValid() = tag == "" || tagRegex.matches(tag)
-
-/**
- * Return true iff all required fields are non-blank and the hashtag is valid.
+ * Return true iff all required fields are non-blank.
  */
 fun ChannelUiState.isValid() =
-    name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && prompt.isNotBlank() && selectedModel.isNotBlank() && isTagValid()
+    name.isNotBlank() && description.isNotBlank() && key.isNotBlank() && prompt.isNotBlank() && selectedModel.isNotBlank()
