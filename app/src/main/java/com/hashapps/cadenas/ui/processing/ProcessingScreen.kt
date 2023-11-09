@@ -43,7 +43,7 @@ fun ProcessingScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.app_name))
+                    Text(text = viewModel.processingUiState.channelName)
                 },
                 modifier = modifier,
                 navigationIcon = {
