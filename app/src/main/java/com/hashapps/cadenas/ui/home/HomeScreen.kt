@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -83,9 +82,6 @@ fun HomeScreen(
                 },
             )
         },
-        bottomBar = {
-            NavigationBar {}
-        },
         floatingActionButton = {
             var expanded by remember { mutableStateOf(false) }
             Box(
@@ -130,7 +126,7 @@ fun HomeScreen(
                 }
             }
         },
-        floatingActionButtonPosition = FabPosition.EndOverlay,
+        floatingActionButtonPosition = FabPosition.Center,
     ) { innerPadding ->
         ChannelList(
             modifier = modifier.padding(innerPadding),
