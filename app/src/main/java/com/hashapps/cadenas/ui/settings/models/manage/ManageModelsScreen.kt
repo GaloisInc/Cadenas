@@ -74,7 +74,6 @@ private fun ModelList(
 ) {
     Column(
         modifier = modifier
-            .padding(8.dp)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
