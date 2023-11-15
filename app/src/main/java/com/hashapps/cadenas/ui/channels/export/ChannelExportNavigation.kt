@@ -10,9 +10,9 @@ import androidx.navigation.navArgument
 
 private const val CHANNEL_ID_ARG = "channelId"
 
-internal class ChannelExportArgs(val channelId: Int) {
+internal class ChannelExportArgs(val channelId: Long) {
     constructor(savedStateHandle: SavedStateHandle) :
-        this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Int)
+        this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Long)
 }
 
 const val CHANNEL_EXPORT_ROUTE = "channel_export"
@@ -24,13 +24,13 @@ fun NavGraphBuilder.channelExportScreen(
     composable(
         route = "$CHANNEL_EXPORT_ROUTE/{$CHANNEL_ID_ARG}",
         arguments = listOf(navArgument(CHANNEL_ID_ARG) {
-            type = NavType.IntType
+            type = NavType.LongType
         })
     ) {
         ChannelExportScreen(onNavigateBack = onNavigateBack, onNavigateUp = onNavigateUp)
     }
 }
 
-fun NavController.navigateToChannelExport(channelId: Int, navOptions: NavOptions? = null) {
+fun NavController.navigateToChannelExport(channelId: Long, navOptions: NavOptions? = null) {
     this.navigate("$CHANNEL_EXPORT_ROUTE/$channelId", navOptions)
 }

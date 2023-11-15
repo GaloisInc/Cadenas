@@ -50,7 +50,7 @@ interface ChannelDao {
      * @return A cold flow of [Channel] with the given ID
      */
     @Query("SELECT * FROM channels WHERE id = :id")
-    fun getChannel(id: Int): Flow<Channel>
+    fun getChannel(id: Long): Flow<Channel>
 
     /**
      * Emit all [Channel]s in the database.

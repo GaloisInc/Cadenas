@@ -39,7 +39,7 @@ class ChannelRepository(
     suspend fun deleteChannelsForModel(model: String): Unit =
         channelDao.deleteChannelsForModel(model)
 
-    fun getChannelStream(id: Int): Flow<Channel> = channelDao.getChannel(id)
+    fun getChannelStream(id: Long): Flow<Channel> = channelDao.getChannel(id)
     fun getAllChannelsStream(): Flow<List<Channel>> = channelDao.getAllChannels()
 
     private companion object {
@@ -77,7 +77,7 @@ class ChannelRepository(
     /**
      * Create a [TextCover] for the profile with given ID.
      */
-    suspend fun createTextCoverForChannel(id: Int): TextCover {
+    suspend fun createTextCoverForChannel(id: Long): TextCover {
         return withContext(ioDispatcher) {
             val channel = getChannelStream(id).first()
             TextCover(

@@ -22,7 +22,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "channels")
 data class Channel(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String,
     val description: String,
     val key: String,

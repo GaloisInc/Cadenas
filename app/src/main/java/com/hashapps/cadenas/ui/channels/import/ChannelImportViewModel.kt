@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 class ChannelImportViewModel(
     private val channelRepository: ChannelRepository,
 ) : ViewModel() {
-    fun saveChannelAndGoToEdit(channel: Channel, navigateToEdit: (Int) -> Unit) {
+    fun saveChannelAndGoToEdit(channel: Channel, navigateToEdit: (Long) -> Unit) {
         viewModelScope.launch {
-            navigateToEdit(channelRepository.insertChannel(channel).toInt())
+            navigateToEdit(channelRepository.insertChannel(channel))
         }
     }
 }

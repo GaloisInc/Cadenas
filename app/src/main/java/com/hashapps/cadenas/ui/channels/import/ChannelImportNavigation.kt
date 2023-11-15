@@ -10,7 +10,7 @@ const val CHANNEL_IMPORT_ROUTE = "channel_import"
 fun NavGraphBuilder.channelImportScreen(
     onNavigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
-    onNavigateToChannelEdit: (Int) -> Unit,
+    onNavigateToChannelEdit: (Long) -> Unit,
 ) {
     composable(
         route = CHANNEL_IMPORT_ROUTE,

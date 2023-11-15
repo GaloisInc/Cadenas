@@ -75,7 +75,7 @@ fun String.toChannel(): Channel? {
 fun ChannelImportScreen(
     onNavigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
-    onNavigateToChannelEdit: (Int) -> Unit,
+    onNavigateToChannelEdit: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelImportViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {

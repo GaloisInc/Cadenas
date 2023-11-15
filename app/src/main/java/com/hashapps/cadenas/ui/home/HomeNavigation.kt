@@ -11,9 +11,9 @@ fun NavGraphBuilder.homeScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToNewChannel: () -> Unit,
     onNavigateToImportChannel: () -> Unit,
-    onNavigateToChannel: (Int) -> Unit,
-    onNavigateToExportChannel: (Int) -> Unit,
-    onNavigateToEditChannel: (Int) -> Unit,
+    onNavigateToChannel: (Long) -> Unit,
+    onNavigateToExportChannel: (Long) -> Unit,
+    onNavigateToEditChannel: (Long) -> Unit,
 ) {
     composable(HOME_ROUTE) {
         HomeScreen(
