@@ -3,7 +3,6 @@ package com.hashapps.cadenas.workers
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
-import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -106,18 +105,12 @@ class ModelDownloadWorker(
 
     private fun succeed(): Result {
         return Result.success(
-            Data.Builder().putString(
-                KEY_RESULT_MSG,
-                "Model download successful!"
-            ).build()
+            workDataOf(KEY_RESULT_MSG to "Model download successful!")
         )
     }
     private fun fail(msg: String): Result {
         return Result.failure(
-            Data.Builder().putString(
-                KEY_RESULT_MSG,
-                msg
-            ).build()
+            workDataOf(KEY_RESULT_MSG to msg)
         )
     }
 
