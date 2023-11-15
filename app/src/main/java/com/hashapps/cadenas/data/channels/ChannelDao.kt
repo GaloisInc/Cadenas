@@ -1,6 +1,7 @@
-package com.hashapps.cadenas.data
+package com.hashapps.cadenas.data.channels
 
 import androidx.room.*
+import com.hashapps.cadenas.data.channels.Channel
 import kotlinx.coroutines.flow.Flow
 
 /**

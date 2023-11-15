@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data
+package com.hashapps.cadenas.data.channels
 
 import android.content.ContentResolver
 import android.content.ContentValues

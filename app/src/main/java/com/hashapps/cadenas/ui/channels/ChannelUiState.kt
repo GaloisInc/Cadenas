@@ -1,6 +1,6 @@
 package com.hashapps.cadenas.ui.channels
 
-import com.hashapps.cadenas.data.Channel
+import com.hashapps.cadenas.data.channels.Channel
 
 /**
  * UI state for channel screens.

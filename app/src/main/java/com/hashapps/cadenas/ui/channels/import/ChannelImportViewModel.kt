@@ -2,8 +2,8 @@ package com.hashapps.cadenas.ui.channels.import
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.Channel
-import com.hashapps.cadenas.data.ChannelRepository
+import com.hashapps.cadenas.data.channels.Channel
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import kotlinx.coroutines.launch
 
 class ChannelImportViewModel(
