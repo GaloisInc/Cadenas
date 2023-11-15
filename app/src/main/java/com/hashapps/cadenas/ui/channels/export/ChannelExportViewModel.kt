@@ -18,12 +18,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
-fun Channel.toQRCode(): QRCode {
-    return QRCode(
-        data = "key:$key;prompt:$prompt;model:$selectedModel",
-        errorCorrectionLevel = ErrorCorrectionLevel.Q,
-    )
-}
+fun Channel.toQRCode(): QRCode = QRCode(
+    data = "key:$key;prompt:$prompt;model:$selectedModel",
+    errorCorrectionLevel = ErrorCorrectionLevel.Q,
+)
 
 fun QRCode.toByteArray(): ByteArray =
     ByteArrayOutputStream()
