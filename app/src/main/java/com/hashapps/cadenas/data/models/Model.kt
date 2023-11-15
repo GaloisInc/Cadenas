@@ -1,6 +1,5 @@
 package com.hashapps.cadenas.data.models
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -11,14 +10,12 @@ import androidx.room.PrimaryKey
  * guarantee that generated QR codes contain the appropriate hash, file paths
  * are predictable, etc.
  *
- * @property[id] Room-generated primary key uniquely identifying the model.
  * @property[name] The name associated with the model (must be unique)
  * @property[hash] An MD5 hash of the PTL file defining the model weights
  */
 @Entity(tableName = "model")
 data class Model(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey
     val name: String,
     val hash: String,
 )

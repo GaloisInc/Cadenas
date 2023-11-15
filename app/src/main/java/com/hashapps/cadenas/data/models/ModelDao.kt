@@ -33,11 +33,11 @@ interface ModelDao {
     /**
      * Emit the [Model] with a given ID.
      *
-     * @param[id] The ID of the channel to emit
-     * @return A cold flow of [Model] with the given ID
+     * @param[name] The name of the channel to emit
+     * @return A cold flow of [Model] with the given name
      */
-    @Query("SELECT * FROM model WHERE id = :id")
-    fun getModel(id: Long): Flow<Model>
+    @Query("SELECT * FROM model WHERE name = :name")
+    fun getModel(name: String): Flow<Model>
 
     /**
      * Emit all [Model]s in the database.

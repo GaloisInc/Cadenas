@@ -30,7 +30,7 @@ class ModelRepository(
     suspend fun insertModel(model: Model): Long = modelDao.insert(model)
     suspend fun deleteModel(model: Model): Unit = modelDao.delete(model)
 
-    fun getModelStream(id: Long): Flow<Model> = modelDao.getModel(id)
+    fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
     fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
 
     val modelDownloaderState = workManager

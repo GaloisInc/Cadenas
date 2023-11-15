@@ -12,7 +12,7 @@ import com.hashapps.cadenas.data.models.ModelDao
 /**
  * Room database storing Cadenas messaging channels.
  */
-@Database(entities = [Model::class, Channel::class], version = 11, exportSchema = false)
+@Database(entities = [Model::class, Channel::class], version = 12, exportSchema = false)
 abstract class CadenasDatabase : RoomDatabase() {
     abstract fun channelDao(): ChannelDao
     abstract fun modelDao(): ModelDao
