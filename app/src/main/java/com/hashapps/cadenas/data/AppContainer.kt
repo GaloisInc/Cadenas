@@ -45,6 +45,7 @@ class AppDataContainer(
         ModelRepository(
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
             workManager = WorkManager.getInstance(context),
+            modelDao = CadenasDatabase.getDatabase(context).modelDao(),
         )
     }
 }

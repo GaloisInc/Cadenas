@@ -2,6 +2,8 @@ package com.hashapps.cadenas.data
 
 import androidx.lifecycle.asFlow
 import androidx.work.*
+import com.hashapps.cadenas.data.models.Model
+import com.hashapps.cadenas.data.models.ModelDao
 import com.hashapps.cadenas.workers.ModelDeleteWorker
 import com.hashapps.cadenas.workers.ModelDownloadWorker
 import kotlinx.coroutines.flow.*
@@ -23,7 +25,14 @@ import java.io.File
 class ModelRepository(
     private val modelsDir: File,
     private val workManager: WorkManager,
+    private val modelDao: ModelDao,
 ) {
+    suspend fun insertModel(model: Model): Long = modelDao.insert(model)
+    suspend fun deleteModel(model: Model): Unit = modelDao.delete(model)
+
+    fun getModelStream(id: Long): Flow<Model> = modelDao.getModel(id)
+    fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
+
     val modelDownloaderState = workManager
         .getWorkInfosForUniqueWorkLiveData("downloadModel")
         .asFlow()
