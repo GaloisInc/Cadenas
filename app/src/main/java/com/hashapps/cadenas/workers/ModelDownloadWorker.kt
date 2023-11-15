@@ -8,12 +8,15 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.hashapps.cadenas.CadenasApplication
 import com.hashapps.cadenas.R
+import com.hashapps.cadenas.utils.toHex
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.net.SocketTimeoutException
 import java.net.URL
+import java.security.DigestInputStream
+import java.security.MessageDigest
 import java.util.zip.ZipException
 import java.util.zip.ZipInputStream
 import javax.net.ssl.HttpsURLConnection
@@ -80,18 +83,25 @@ class ModelDownloadWorker(
             return fail("Could not create a directory for the model. Please try again.")
         }
 
-        try {
+        val hash = try {
+            val md = MessageDigest.getInstance("MD5")
             ZipInputStream(zipStream).use { inStream ->
                 generateSequence { inStream.nextEntry }
                     .filterNot { it.isDirectory }
                     .forEach {
+                        val dis = if (it.name == "gpt2.ptl") {
+                            DigestInputStream(inStream, md)
+                        } else {
+                            inStream
+                        }
                         Path(tempOutDir.path, it.name).outputStream().use { outStream ->
                             setProgress(workDataOf(PROGRESS to it.name))
-                            inStream.copyTo(outStream)
+                            dis.copyTo(outStream)
                         }
                     }
             }
             tempOutDir.renameTo(File(outDir))
+            md.digest().toHex()
         } catch (_: ZipException) {
             tempOutDir.deleteRecursively()
             return fail("There was an error decoding the ZIP at $url. Please try again.")
@@ -100,12 +110,12 @@ class ModelDownloadWorker(
             return fail("Something went wrong reading the ZIP at $url. Please try again.")
         }
 
-        return succeed()
+        return succeed(hash)
     }
 
-    private fun succeed(): Result {
+    private fun succeed(hash: String): Result {
         return Result.success(
-            workDataOf(KEY_RESULT_MSG to "Model download successful!")
+            workDataOf(KEY_RESULT_MSG to "Model download successful!", KEY_MODEL_HASH to hash)
         )
     }
     private fun fail(msg: String): Result {
@@ -119,6 +129,7 @@ class ModelDownloadWorker(
         const val KEY_MODEL_URL = "model_url"
         const val KEY_MODEL_DIR = "model_dir"
         const val KEY_RESULT_MSG = "msg"
+        const val KEY_MODEL_HASH = "hash"
         private const val ZIP_MIME = "application/zip"
     }
 }

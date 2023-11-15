@@ -71,6 +71,7 @@ fun ModelAddScreen(
                 downloading = false
 
                 if (it.state == WorkInfo.State.SUCCEEDED) {
+                    viewModel.saveModel(it.outputData.getString(ModelDownloadWorker.KEY_MODEL_HASH)!!)
                     viewModel.updateUiState(ModelUiState())
                 }
 
