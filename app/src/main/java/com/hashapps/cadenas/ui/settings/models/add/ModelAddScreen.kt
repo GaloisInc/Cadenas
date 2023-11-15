@@ -123,24 +123,22 @@ fun ModelAddScreen(
                 )
             }
 
-            if (downloading) {
+            val fileName = workerState?.progress?.getString(ModelDownloadWorker.PROGRESS)
+            if (downloading && fileName != null) {
                 LinearProgressIndicator(
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth()
                 )
-                val fileName = workerState?.progress?.getString(ModelDownloadWorker.PROGRESS)
-                if (fileName != null) {
-                    Text(
-                        modifier = modifier
-                            .align(Alignment.CenterHorizontally),
-                        textAlign = TextAlign.Center,
-                        text = LocalContext.current.getString(
-                            R.string.download_progress,
-                            fileName
-                        )
+                Text(
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center,
+                    text = LocalContext.current.getString(
+                        R.string.download_progress,
+                        fileName
                     )
-                }
+                )
             }
         }
     }
