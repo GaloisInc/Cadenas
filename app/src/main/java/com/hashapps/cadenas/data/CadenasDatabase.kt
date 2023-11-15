@@ -6,13 +6,16 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.channels.ChannelDao
+import com.hashapps.cadenas.data.models.Model
+import com.hashapps.cadenas.data.models.ModelDao
 
 /**
  * Room database storing Cadenas messaging channels.
  */
-@Database(entities = [Channel::class], version = 9, exportSchema = false)
+@Database(entities = [Model::class, Channel::class], version = 11, exportSchema = false)
 abstract class CadenasDatabase : RoomDatabase() {
     abstract fun channelDao(): ChannelDao
+    abstract fun modelDao(): ModelDao
 
     companion object {
         @Volatile

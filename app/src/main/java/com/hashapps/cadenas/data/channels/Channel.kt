@@ -19,7 +19,7 @@ import androidx.room.PrimaryKey
  * @property[selectedModel] The model associated with the channel
  * this channel
  */
-@Entity(tableName = "channels")
+@Entity(tableName = "channel")
 data class Channel(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

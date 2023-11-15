@@ -41,7 +41,7 @@ interface ChannelDao {
      * @param[model] The name of the model for which all associated channels
      * should be deleted
      */
-    @Query("DELETE FROM channels WHERE selectedModel = :model")
+    @Query("DELETE FROM channel WHERE selectedModel = :model")
     suspend fun deleteChannelsForModel(model: String)
 
     /**
@@ -50,7 +50,7 @@ interface ChannelDao {
      * @param[id] The ID of the channel to emit
      * @return A cold flow of [Channel] with the given ID
      */
-    @Query("SELECT * FROM channels WHERE id = :id")
+    @Query("SELECT * FROM channel WHERE id = :id")
     fun getChannel(id: Long): Flow<Channel>
 
     /**
@@ -58,6 +58,6 @@ interface ChannelDao {
      *
      * @return A cold flow of [List]<[Channel]>, ordered by name
      */
-    @Query("SELECT * FROM channels ORDER BY name ASC")
+    @Query("SELECT * FROM channel ORDER BY name ASC")
     fun getAllChannels(): Flow<List<Channel>>
 }
