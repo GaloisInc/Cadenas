@@ -39,8 +39,6 @@ class ModelDownloadWorker(
     }
 
     private fun downloadModelTo(url: String, outDir: String): Result {
-        val tempOutDir = File("$outDir.temp").also { it.mkdirs() }
-
         // TODO: We need to be smarter about some of these string literals for localization!
         // TODO: Maybe we use some internal string constants to later choose the UI text?
 
@@ -70,6 +68,12 @@ class ModelDownloadWorker(
         } catch (_: IOException) {
             return fail("Something went wrong creating an input stream for $url. Please try again.")
         }
+
+        val tempOutDir = File("$outDir.temp")
+        if (!tempOutDir.mkdirs()) {
+            return fail("Could not create a directory for the model. Please try again.")
+        }
+
         try {
             ZipInputStream(zipStream).use { inStream ->
                 generateSequence { inStream.nextEntry }
@@ -80,13 +84,14 @@ class ModelDownloadWorker(
                         }
                     }
             }
+            tempOutDir.renameTo(File(outDir))
         } catch (_: ZipException) {
+            tempOutDir.deleteRecursively()
             return fail("There was an error decoding the ZIP at $url. Please try again.")
         } catch (_: IOException) {
+            tempOutDir.deleteRecursively()
             return fail("Something went wrong reading the ZIP at $url. Please try again.")
         }
-
-        tempOutDir.renameTo(File(outDir))
 
         return succeed()
     }
