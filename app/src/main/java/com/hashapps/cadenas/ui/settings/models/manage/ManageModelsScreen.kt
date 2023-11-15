@@ -74,15 +74,14 @@ private fun ModelList(
 ) {
     Column(
         modifier = modifier
+            .padding(8.dp)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         if (models.isEmpty()) {
             ElevatedCard(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
