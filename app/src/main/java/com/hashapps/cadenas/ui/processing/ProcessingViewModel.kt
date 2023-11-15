@@ -97,14 +97,20 @@ class ProcessingViewModel(
      * Enter encoding mode.
      */
     fun encodingMode() {
-        processingUiState = ProcessingUiState(processingMode = ProcessingMode.Encode)
+        processingUiState = ProcessingUiState(
+            channelName = processingUiState.channelName,
+            processingMode = ProcessingMode.Encode
+        )
     }
 
     /**
      * Enter decoding mode.
      */
     fun decodingMode() {
-        processingUiState = ProcessingUiState(processingMode = ProcessingMode.Decode)
+        processingUiState = ProcessingUiState(
+            channelName = processingUiState.channelName,
+            processingMode = ProcessingMode.Decode
+        )
     }
 
     /**
