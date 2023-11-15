@@ -44,8 +44,6 @@ import com.hashapps.cadenas.ui.settings.models.isUrlValid
 import com.hashapps.cadenas.workers.ModelDownloadWorker
 import kotlinx.coroutines.launch
 
-private const val MAX_LEN = 128
-
 /**
  * Cadenas model-add screen.
  *
@@ -194,18 +192,12 @@ private fun ModelInputForm(
                 .fillMaxWidth(),
             enabled = enabled,
             value = modelUiState.url,
-            onValueChange = { onValueChange(modelUiState.copy(url = it.take(MAX_LEN))) },
+            onValueChange = { onValueChange(modelUiState.copy(url = it)) },
             singleLine = true,
             label = { Text(stringResource(R.string.url_label)) },
             supportingText = {
                 if (displaySupportText) {
-                    Text(
-                        LocalContext.current.getString(
-                            R.string.url_support,
-                            modelUiState.url.length,
-                            MAX_LEN,
-                        )
-                    )
+                    Text(stringResource(R.string.url_support))
                 } else {
                     Text(stringResource(R.string.url_error))
                 }

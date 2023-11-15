@@ -11,7 +11,7 @@
     <string name="prompt_label">Prompt Text</string>
     <string name="prompt_support">Text to prompt the model (%1$d / %2$d)</string>
     <string name="url_label">Model URL</string>
-    <string name="url_support">Add URLs to fetch models (%1$d / %2$d)</string>
+    <string name="url_support">And an HTTPS URL where its ZIP can be downloaded</string>
     <string name="url_error">Must be a valid https URL</string>
     <string name="save">Save</string>
     <string name="channel_name_label">Channel Name</string>
