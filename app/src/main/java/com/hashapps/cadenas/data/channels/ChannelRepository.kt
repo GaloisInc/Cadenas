@@ -11,6 +11,7 @@ import com.galois.cadenas.crypto.RandomPadding
 import com.galois.cadenas.crypto.SivAesWithSentinel
 import com.galois.cadenas.mbfte.TextCover
 import com.galois.cadenas.model.PyTorchGPT2LanguageModel
+import com.hashapps.cadenas.utils.toHex
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -45,8 +46,6 @@ class ChannelRepository(
     private companion object {
         val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
     }
-
-    private fun ByteArray.toHex(): String = joinToString(separator = "") { "%02x".format(it) }
 
     /**
      * Generate and return an AES-256 key as ASCII-Hex.
