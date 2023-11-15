@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
 import com.hashapps.cadenas.ui.settings.models.isValid
+import com.hashapps.cadenas.ui.settings.models.toModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * View model for the model-add screen.
@@ -44,6 +46,15 @@ class ModelAddViewModel(
     fun downloadModel() {
         if (modelUiState.isValid()) {
             modelRepository.downloadModelFromAndSaveAs(modelUiState.url, modelUiState.name)
+        }
+    }
+
+    /**
+     * Save a downloaded model to the database.
+     */
+    fun saveModel(hash: String) {
+        viewModelScope.launch {
+            modelRepository.insertModel(modelUiState.toModel(hash))
         }
     }
 }
