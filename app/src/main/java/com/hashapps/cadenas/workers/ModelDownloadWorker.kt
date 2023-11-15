@@ -2,12 +2,15 @@ package com.hashapps.cadenas.workers
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
+import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
-import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.hashapps.cadenas.CadenasApplication
 import com.hashapps.cadenas.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -21,8 +24,8 @@ import kotlin.io.path.outputStream
 class ModelDownloadWorker(
     private val context: Context,
     params: WorkerParameters,
-) : Worker(context, params) {
-    override fun getForegroundInfo(): ForegroundInfo {
+) : CoroutineWorker(context, params) {
+    override suspend fun getForegroundInfo(): ForegroundInfo {
         val notification = NotificationCompat.Builder(context, CadenasApplication.CHANNEL_ID)
             .setContentTitle(context.getString(R.string.download_title))
             .setSmallIcon(R.drawable.baseline_downloading_24)
@@ -31,19 +34,21 @@ class ModelDownloadWorker(
         return ForegroundInfo(0, notification)
     }
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val url = inputData.getString(KEY_MODEL_URL) ?: return Result.failure()
         val outDir = inputData.getString(KEY_MODEL_DIR) ?: return Result.failure()
 
         return downloadModelTo(url, outDir)
     }
 
-    private fun downloadModelTo(url: String, outDir: String): Result {
+    private suspend fun downloadModelTo(url: String, outDir: String): Result {
         // TODO: We need to be smarter about some of these string literals for localization!
         // TODO: Maybe we use some internal string constants to later choose the UI text?
 
         val urlConnection = try {
-            URL(url).openConnection()
+            withContext(Dispatchers.IO) {
+                URL(url).openConnection()
+            }
         } catch (_: IOException) {
             return fail("Something went wrong preparing a connection to $url. Please try again.")
         }
@@ -52,7 +57,9 @@ class ModelDownloadWorker(
         require(urlConnection is HttpsURLConnection)
 
         try {
-            urlConnection.connect()
+            withContext(Dispatchers.IO) {
+                urlConnection.connect()
+            }
         } catch (_: SocketTimeoutException) {
             return fail("The connection to $url timed out. Please try again.")
         } catch (_: IOException) {
@@ -80,6 +87,7 @@ class ModelDownloadWorker(
                     .filterNot { it.isDirectory }
                     .forEach {
                         Path(tempOutDir.path, it.name).outputStream().use { outStream ->
+                            setProgress(workDataOf(PROGRESS to it.name))
                             inStream.copyTo(outStream)
                         }
                     }
@@ -114,6 +122,7 @@ class ModelDownloadWorker(
     }
 
     companion object {
+        const val PROGRESS = "progress"
         const val KEY_MODEL_URL = "model_url"
         const val KEY_MODEL_DIR = "model_dir"
         const val KEY_RESULT_MSG = "msg"

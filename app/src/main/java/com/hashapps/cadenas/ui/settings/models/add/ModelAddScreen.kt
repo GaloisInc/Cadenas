@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.WorkInfo
@@ -134,6 +135,15 @@ fun ModelAddScreen(
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth()
+                )
+                Text(
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center,
+                    text = LocalContext.current.getString(
+                        R.string.download_progress,
+                        workerState?.progress?.getString(ModelDownloadWorker.PROGRESS)
+                    )
                 )
             }
         }
