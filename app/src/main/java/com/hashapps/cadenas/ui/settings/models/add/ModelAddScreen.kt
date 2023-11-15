@@ -64,48 +64,25 @@ fun ModelAddScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var showProgressIndicator by rememberSaveable { mutableStateOf(false) }
-
-    /*
-     * This is a fun block. First, we need some state to track whether a
-     * model download has been started - we can't rely on the worker state,
-     * since this will still be `SUCCEEDED` if the application is restarted
-     * after a successful model download. The problem here is that we wish
-     * to show a Snackbar message upon download success and failure, and
-     * relying on the state alone would cause such a message to be shown
-     * regardless.
-     *
-     * Additionally, there is some special-case logic for when this screen is
-     * interacted with during the first-time setup sequence - rather than
-     * simply resetting the UI in that case, we must advance to the next
-     * screen.
-     */
-    var modelDownloadTriggered by rememberSaveable { mutableStateOf(false) }
+    var downloading by rememberSaveable { mutableStateOf(false) }
     val workerState by viewModel.modelDownloaderState.collectAsState()
     workerState?.also {
-        LaunchedEffect(it.state) {
-            when (it.state) {
-                WorkInfo.State.RUNNING -> showProgressIndicator = true
-                WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED -> {
-                    if (modelDownloadTriggered) {
-                        this.launch {
-                            snackbarHostState.showSnackbar(
-                                it.outputData.getString(
-                                    ModelDownloadWorker.KEY_RESULT_MSG
-                                )!!
-                            )
-                        }
+        LaunchedEffect(it) {
+            val finished = it.state == WorkInfo.State.SUCCEEDED || it.state == WorkInfo.State.FAILED
+            if (downloading && finished) {
+                downloading = false
 
-                        if (it.state == WorkInfo.State.SUCCEEDED) {
-                            viewModel.updateUiState(ModelUiState())
-                        }
-                    }
-
-                    showProgressIndicator = false
-                    modelDownloadTriggered = false
+                if (it.state == WorkInfo.State.SUCCEEDED) {
+                    viewModel.updateUiState(ModelUiState())
                 }
 
-                else -> {}
+                this.launch {
+                    snackbarHostState.showSnackbar(
+                        it.outputData.getString(
+                            ModelDownloadWorker.KEY_RESULT_MSG
+                        )!!
+                    )
+                }
             }
         }
     }
@@ -114,7 +91,7 @@ fun ModelAddScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.add_model),
-                canNavigateUp = !showProgressIndicator,
+                canNavigateUp = !downloading,
                 navigateUp = onNavigateNext,
             )
         },
@@ -131,16 +108,16 @@ fun ModelAddScreen(
             ModelInputForm(
                 modelUiState = viewModel.modelUiState,
                 onValueChange = viewModel::updateUiState,
-                enabled = !showProgressIndicator,
+                enabled = !downloading,
             )
 
             Button(
                 onClick = {
+                    downloading = true
                     viewModel.downloadModel()
-                    modelDownloadTriggered = true
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !showProgressIndicator && viewModel.modelUiState.actionEnabled,
+                enabled = !downloading && viewModel.modelUiState.actionEnabled,
             ) {
                 Text(
                     text = stringResource(R.string.download),
@@ -148,21 +125,24 @@ fun ModelAddScreen(
                 )
             }
 
-            if (showProgressIndicator) {
+            if (downloading) {
                 LinearProgressIndicator(
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth()
                 )
-                Text(
-                    modifier = modifier
-                        .align(Alignment.CenterHorizontally),
-                    textAlign = TextAlign.Center,
-                    text = LocalContext.current.getString(
-                        R.string.download_progress,
-                        workerState?.progress?.getString(ModelDownloadWorker.PROGRESS) ?: ""
+                val fileName = workerState?.progress?.getString(ModelDownloadWorker.PROGRESS)
+                if (fileName != null) {
+                    Text(
+                        modifier = modifier
+                            .align(Alignment.CenterHorizontally),
+                        textAlign = TextAlign.Center,
+                        text = LocalContext.current.getString(
+                            R.string.download_progress,
+                            fileName
+                        )
                     )
-                )
+                }
             }
         }
     }
