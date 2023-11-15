@@ -1,5 +1,7 @@
 package com.hashapps.cadenas.ui.settings.models
 
+import com.hashapps.cadenas.data.models.Model
+
 /**
  * UI state for the model-adding screen.
  *
@@ -11,6 +13,14 @@ data class ModelUiState(
     val name: String = "",
     val url: String = "",
     val actionEnabled: Boolean = false,
+)
+
+/**
+ * Convert to a [Model] to be added/removed from the database.
+ */
+fun ModelUiState.toModel(hash: String): Model = Model(
+    name = name,
+    hash = hash,
 )
 
 private val nameRegex =
