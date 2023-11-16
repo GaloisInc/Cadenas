@@ -38,6 +38,15 @@ interface ModelDao {
     fun getModel(name: String): Flow<Model>
 
     /**
+     * If it exists, emit the [Model] with a given hash.
+     *
+     * @param[hash] The hash to search for in the database
+     * @return A close flow of [Model] with the given name, or null
+     */
+    @Query("SELECT * FROM model WHERE hash = :hash")
+    fun getModelWithHash(hash: String): Flow<Model?>
+
+    /**
      * Emit all [Model]s in the database.
      *
      * @return A cold flow of [List]<[Model]>, ordered by name

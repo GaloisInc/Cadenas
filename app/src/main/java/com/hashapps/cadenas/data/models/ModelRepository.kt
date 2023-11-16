@@ -32,6 +32,7 @@ class ModelRepository(
     }
 
     fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
+    fun getModelStreamWithHash(hash: String): Flow<Model?> = modelDao.getModelWithHash(hash)
     fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
 
     val modelDownloaderState = workManager
