@@ -11,6 +11,7 @@ fun NavGraphBuilder.channelImportScreen(
     onNavigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     onNavigateToChannelEdit: (Long) -> Unit,
+    onNavigateToAddModel: () -> Unit,
 ) {
     composable(
         route = CHANNEL_IMPORT_ROUTE,
@@ -19,6 +20,7 @@ fun NavGraphBuilder.channelImportScreen(
             onNavigateBack = onNavigateBack,
             onNavigateUp = onNavigateUp,
             onNavigateToChannelEdit = onNavigateToChannelEdit,
+            onNavigateToAddModel = onNavigateToAddModel,
         )
     }
 }
