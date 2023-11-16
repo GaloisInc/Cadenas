@@ -1,7 +1,10 @@
 package com.hashapps.cadenas.data.channels
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
+import com.hashapps.cadenas.data.models.Model
 
 /**
  * A Cadenas messaging channel.
@@ -19,7 +22,17 @@ import androidx.room.PrimaryKey
  * @property[selectedModel] The model associated with the channel
  * this channel
  */
-@Entity(tableName = "channel")
+@Entity(
+    tableName = "channel",
+    foreignKeys = [
+        ForeignKey(
+            entity = Model::class,
+            parentColumns = ["name"],
+            childColumns = ["selectedModel"],
+            onDelete = CASCADE,
+        )
+    ]
+)
 data class Channel(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

@@ -62,7 +62,6 @@ object AppViewModelProvider {
             ManageModelsViewModel(
                 ManageModelsUseCase(
                     cadenasApplication().container.modelRepository,
-                    cadenasApplication().container.channelRepository
                 ),
             )
         }

@@ -1,7 +1,6 @@
 package com.hashapps.cadenas.domain
 
 import com.hashapps.cadenas.data.ModelRepository
-import com.hashapps.cadenas.data.channels.ChannelRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,7 +14,6 @@ import kotlinx.coroutines.withContext
  */
 class ManageModelsUseCase(
     private val modelRepository: ModelRepository,
-    private val channelRepository: ChannelRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
@@ -28,7 +26,6 @@ class ManageModelsUseCase(
      * updated list of downloaded models.
      */
     suspend operator fun invoke(model: String): List<String> = withContext(ioDispatcher) {
-        channelRepository.deleteChannelsForModel(model)
         modelRepository.deleteModel(model)
         modelRepository.deleteFilesForModel(model)
         modelRepository.downloadedModels()

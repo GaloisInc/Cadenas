@@ -37,9 +37,6 @@ class ChannelRepository(
     suspend fun updateChannel(channel: Channel): Unit = channelDao.update(channel)
     suspend fun deleteChannel(channel: Channel): Unit = channelDao.delete(channel)
 
-    suspend fun deleteChannelsForModel(model: String): Unit =
-        channelDao.deleteChannelsForModel(model)
-
     fun getChannelStream(id: Long): Flow<Channel> = channelDao.getChannel(id)
     fun getAllChannelsStream(): Flow<List<Channel>> = channelDao.getAllChannels()
 
