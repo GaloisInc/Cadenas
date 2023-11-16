@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
+import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 
@@ -31,6 +32,8 @@ fun ChannelAddScreen(
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val models by viewModel.availableModels.collectAsState()
+
     Scaffold(
         topBar = {
             SettingsTopAppBar(
@@ -42,7 +45,7 @@ fun ChannelAddScreen(
         ChannelAddBody(
             modifier = modifier.padding(innerPadding),
             channelUiState = viewModel.channelUiState,
-            models = viewModel.availableModels,
+            models = models,
             onChannelValueChange = viewModel::updateUiState,
             onSaveClick = {
                 viewModel.saveChannel()
@@ -55,7 +58,7 @@ fun ChannelAddScreen(
 @Composable
 private fun ChannelAddBody(
     channelUiState: ChannelUiState,
-    models: List<String>,
+    models: List<Model>,
     onChannelValueChange: (ChannelUiState) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -91,7 +94,7 @@ private fun ChannelAddBody(
 fun ChannelInputForm(
     channelUiState: ChannelUiState,
     modifier: Modifier = Modifier,
-    models: List<String>,
+    models: List<Model>,
     onValueChange: (ChannelUiState) -> Unit = {},
     editing: Boolean = false,
 ) {
@@ -166,7 +169,9 @@ fun ChannelInputForm(
                 },
             ) {
                 OutlinedTextField(
-                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
                     readOnly = true,
                     value = channelUiState.selectedModel,
                     onValueChange = {},
@@ -181,9 +186,9 @@ fun ChannelInputForm(
                 ) {
                     models.forEach {
                         DropdownMenuItem(
-                            text = { Text(it) },
+                            text = { Text(it.name) },
                             onClick = {
-                                onValueChange(channelUiState.copy(selectedModel = it))
+                                onValueChange(channelUiState.copy(selectedModel = it.name))
                                 expanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,

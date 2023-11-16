@@ -91,17 +91,4 @@ class ModelRepository(
 
         workManager.enqueue(modelDeleteWOrkRequest)
     }
-
-    /**
-     * Return all models that have been downloaded to this device.
-     *
-     * @return The list of all model names that have been downloaded to the
-     * device
-     */
-    fun downloadedModels() = modelsDir
-        .listFiles()
-        .orEmpty()
-        .filter { it.isDirectory && !it.path.endsWith(".temp") }
-        .map { it.name }
-        .sorted()
 }

@@ -10,6 +10,8 @@ import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 import com.hashapps.cadenas.ui.channels.isValid
 import com.hashapps.cadenas.ui.channels.toChannel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -33,7 +35,11 @@ class ChannelAddViewModel(
         channelUiState = newChannelUiState.copy(actionEnabled = newChannelUiState.isValid())
     }
 
-    val availableModels = modelRepository.downloadedModels()
+    val availableModels = modelRepository.getAllModelsStream().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = listOf(),
+    )
 
     /**
      * If valid, add the channel to the database.

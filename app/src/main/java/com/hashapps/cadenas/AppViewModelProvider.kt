@@ -54,7 +54,6 @@ object AppViewModelProvider {
             ChannelEditViewModel(
                 createSavedStateHandle(),
                 cadenasApplication().container.channelRepository,
-                cadenasApplication().container.modelRepository,
             )
         }
 

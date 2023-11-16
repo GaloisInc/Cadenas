@@ -52,7 +52,6 @@ fun ChannelEditScreen(
         ChannelEditBody(
             modifier = modifier.padding(innerPadding),
             channelUiState = viewModel.channelUiState,
-            models = viewModel.availableModels,
             onChannelValueChange = viewModel::updateUiState,
             onSaveClick = {
                 viewModel.updateChannel()
@@ -65,7 +64,6 @@ fun ChannelEditScreen(
 @Composable
 private fun ChannelEditBody(
     channelUiState: ChannelUiState,
-    models: List<String>,
     onChannelValueChange: (ChannelUiState) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -79,7 +77,7 @@ private fun ChannelEditBody(
     ) {
         ChannelInputForm(
             channelUiState = channelUiState,
-            models = models,
+            models = listOf(),
             onValueChange = onChannelValueChange,
             editing = true,
         )
