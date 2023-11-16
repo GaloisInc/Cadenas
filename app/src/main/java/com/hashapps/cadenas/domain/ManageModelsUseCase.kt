@@ -29,6 +29,7 @@ class ManageModelsUseCase(
      */
     suspend operator fun invoke(model: String): List<String> = withContext(ioDispatcher) {
         channelRepository.deleteChannelsForModel(model)
+        modelRepository.deleteModel(model)
         modelRepository.deleteFilesForModel(model)
         modelRepository.downloadedModels()
     }

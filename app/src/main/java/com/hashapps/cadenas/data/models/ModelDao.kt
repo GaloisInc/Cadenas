@@ -1,7 +1,6 @@
 package com.hashapps.cadenas.data.models
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -23,12 +22,12 @@ interface ModelDao {
     suspend fun insert(model: Model): Long
 
     /**
-     * Delete a [Model] from the database.
+     * Delete a [Model] from the database by name.
      *
-     * @param[model] The model to delete
+     * @param[name] The name of the model to delete
      */
-    @Delete
-    suspend fun delete(model: Model)
+    @Query("DELETE FROM model WHERE name = :name")
+    suspend fun delete(name: String)
 
     /**
      * Emit the [Model] with a given ID.

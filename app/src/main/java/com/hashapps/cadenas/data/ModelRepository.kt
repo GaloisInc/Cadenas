@@ -28,7 +28,7 @@ class ModelRepository(
     private val modelDao: ModelDao,
 ) {
     suspend fun insertModel(model: Model): Long = modelDao.insert(model)
-    suspend fun deleteModel(model: Model): Unit = modelDao.delete(model)
+    suspend fun deleteModel(name: String): Unit = modelDao.delete(name)
 
     fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
     fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
