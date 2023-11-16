@@ -108,7 +108,7 @@ fun ChannelInputForm(
                 .padding(8.dp)
                 .fillMaxWidth(),
             value = channelUiState.name,
-            onValueChange = { onValueChange(channelUiState.copy(name = it.take(MAX_LEN))) },
+            onValueChange = { onValueChange(channelUiState.copy(name = it)) },
             singleLine = true,
             label = { Text(stringResource(R.string.channel_name_label)) },
             supportingText = { Text(stringResource(R.string.channel_name_support)) },
@@ -122,7 +122,7 @@ fun ChannelInputForm(
                 .padding(8.dp)
                 .fillMaxWidth(),
             value = channelUiState.description,
-            onValueChange = { onValueChange(channelUiState.copy(description = it.take(MAX_LEN))) },
+            onValueChange = { onValueChange(channelUiState.copy(description = it)) },
             singleLine = true,
             label = { Text(stringResource(R.string.channel_description_label)) },
             supportingText = { Text(stringResource(R.string.channel_description_support)) },
