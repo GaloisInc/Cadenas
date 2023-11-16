@@ -18,7 +18,6 @@
     <string name="channel_name_support">Give this channel a name</string>
     <string name="channel_entry">Add Channel</string>
     <string name="back">Back</string>
-    <string name="add_item">Add item</string>
     <string name="manage_models">Models</string>
     <string name="manage_models_support">Download/manage models</string>
     <string name="clear">Clear item</string>
@@ -61,4 +60,6 @@
     <string name="add_channel">Add Channel</string>
     <string name="model_placeholder">To get started, download a model by tapping the folder icon above.</string>
     <string name="download_progress">Extracting %1$s…</string>
+    <string name="model_not_found">The model used by this channel has not been added to Cadenas. Please download the appropriate model and try again.</string>
+    <string name="ok">OK</string>
 </resources>
