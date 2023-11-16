@@ -17,6 +17,7 @@ class ChannelImportViewModel(
     private val modelRepository: ModelRepository,
 ) : ViewModel() {
     var modelInQR: Model? by mutableStateOf(null)
+        private set
 
     fun saveChannelAndGoToEdit(channel: Channel, navigateToEdit: (Long) -> Unit) {
         viewModelScope.launch {

@@ -51,6 +51,7 @@ class ChannelExportViewModel(
     private val channelExportArgs = ChannelExportArgs(savedStateHandle)
 
     var qrBitmap: ImageBitmap? by mutableStateOf(null)
+        private set
 
     init {
         viewModelScope.launch {
