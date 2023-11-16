@@ -1,6 +1,7 @@
 package com.hashapps.cadenas.domain
 
 import com.hashapps.cadenas.data.ModelRepository
+import com.hashapps.cadenas.data.models.Model
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,17 +18,10 @@ class ManageModelsUseCase(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
-     * Return all language models downloaded to the device.
+     * Delete the given model and all associated messaging channels.
      */
-    operator fun invoke(): List<String> = modelRepository.downloadedModels()
-
-    /**
-     * Delete the given model and all associated messaging channels, returning an
-     * updated list of downloaded models.
-     */
-    suspend operator fun invoke(model: String): List<String> = withContext(ioDispatcher) {
+    suspend operator fun invoke(model: Model): Unit = withContext(ioDispatcher) {
         modelRepository.deleteModel(model)
-        modelRepository.deleteFilesForModel(model)
-        modelRepository.downloadedModels()
+        modelRepository.deleteFilesForModel(model.name)
     }
 }

@@ -60,6 +60,7 @@ object AppViewModelProvider {
 
         initializer {
             ManageModelsViewModel(
+                cadenasApplication().container.modelRepository,
                 ManageModelsUseCase(
                     cadenasApplication().container.modelRepository,
                 ),

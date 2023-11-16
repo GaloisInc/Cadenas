@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
+import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 
 /**
@@ -34,6 +35,8 @@ fun ManageModelsScreen(
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val models by viewModel.models.collectAsState()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -60,7 +63,7 @@ fun ManageModelsScreen(
     ) { innerPadding ->
         ModelList(
             modifier = modifier.padding(innerPadding),
-            models = viewModel.availableModels,
+            models = models,
             onModelDelete = viewModel::deleteModel,
         )
     }
@@ -68,8 +71,8 @@ fun ManageModelsScreen(
 
 @Composable
 private fun ModelList(
-    models: List<String>,
-    onModelDelete: (String) -> Unit,
+    models: List<Model>,
+    onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -102,8 +105,8 @@ private fun ModelList(
 
 @Composable
 private fun CadenasModel(
-    model: String,
-    onModelDelete: (String) -> Unit,
+    model: Model,
+    onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
@@ -112,7 +115,7 @@ private fun CadenasModel(
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
         ListItem(
-            headlineContent = { Text(model) },
+            headlineContent = { Text(model.name) },
             trailingContent = {
                 Box(
                     modifier.wrapContentSize(Alignment.TopStart),
