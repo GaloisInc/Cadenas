@@ -28,7 +28,10 @@ class ModelRepository(
     private val modelDao: ModelDao,
 ) {
     suspend fun insertModel(model: Model): Long = modelDao.insert(model)
-    suspend fun deleteModel(model: Model): Unit = modelDao.delete(model)
+    suspend fun deleteModel(model: Model) {
+        modelDao.delete(model)
+        deleteFilesForModel(model.name)
+    }
 
     fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
     fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
@@ -67,17 +70,9 @@ class ModelRepository(
             )
     }
 
-    /**
-     * Delete a model from the device. As with [downloadModelFromAndSaveAs],
-     * the work is done such that even application death will not cancel the
-     * deletion.
-     *
-     * @param[modelName] The name of the model/directory to delete
-     */
-    fun deleteFilesForModel(modelName: String) {
+    private fun deleteFilesForModel(modelName: String) {
         val toDeleteDir = modelsDir.resolve("$modelName.temp")
         modelsDir.resolve(modelName).renameTo(toDeleteDir)
-
 
         val modelDeleteWOrkRequest = OneTimeWorkRequestBuilder<ModelDeleteWorker>()
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)

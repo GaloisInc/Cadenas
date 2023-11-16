@@ -1,15 +1,10 @@
 package com.hashapps.cadenas.ui.settings.models.manage
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.data.models.Model
-import com.hashapps.cadenas.domain.ManageModelsUseCase
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -20,7 +15,6 @@ import kotlinx.coroutines.launch
  */
 class ManageModelsViewModel(
     private val modelRepository: ModelRepository,
-    private val manageModelsUseCase: ManageModelsUseCase,
 ) : ViewModel() {
     val models = modelRepository.getAllModelsStream().stateIn(
         scope = viewModelScope,
@@ -36,7 +30,7 @@ class ManageModelsViewModel(
      */
     fun deleteModel(model: Model) {
         viewModelScope.launch {
-            manageModelsUseCase(model)
+            modelRepository.deleteModel(model)
         }
     }
 }

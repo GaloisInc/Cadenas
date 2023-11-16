@@ -5,7 +5,6 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.hashapps.cadenas.domain.ManageModelsUseCase
 import com.hashapps.cadenas.ui.home.HomeViewModel
 import com.hashapps.cadenas.ui.settings.models.manage.ManageModelsViewModel
 import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
@@ -60,9 +59,6 @@ object AppViewModelProvider {
         initializer {
             ManageModelsViewModel(
                 cadenasApplication().container.modelRepository,
-                ManageModelsUseCase(
-                    cadenasApplication().container.modelRepository,
-                ),
             )
         }
 
