@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.ModelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
 import com.hashapps.cadenas.ui.settings.models.isValid
 import com.hashapps.cadenas.ui.settings.models.toModel

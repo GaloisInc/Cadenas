@@ -1,9 +1,7 @@
-package com.hashapps.cadenas.data
+package com.hashapps.cadenas.data.models
 
 import androidx.lifecycle.asFlow
 import androidx.work.*
-import com.hashapps.cadenas.data.models.Model
-import com.hashapps.cadenas.data.models.ModelDao
 import com.hashapps.cadenas.workers.ModelDeleteWorker
 import com.hashapps.cadenas.workers.ModelDownloadWorker
 import kotlinx.coroutines.flow.*

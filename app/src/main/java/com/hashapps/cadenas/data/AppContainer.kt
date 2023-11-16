@@ -3,6 +3,7 @@ package com.hashapps.cadenas.data
 import android.content.Context
 import androidx.work.WorkManager
 import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 
 /**
  * Interface for containers providing data to Cadenas.
