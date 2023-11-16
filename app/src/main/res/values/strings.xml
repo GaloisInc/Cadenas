@@ -33,7 +33,7 @@
     <string name="download">Download</string>
     <string name="channel_menu">Channel settings</string>
     <string name="edit">Edit</string>
-    <string name="name_error">Model names must be alphanumeric</string>
+    <string name="name_error">Model names must be alphabetic and unique</string>
     <string name="model">Model</string>
     <string name="download_title">Downloading model…</string>
     <string name="notification_channel_name">Model Management</string>
@@ -62,4 +62,5 @@
     <string name="download_progress">Extracting %1$s…</string>
     <string name="model_not_found">The model used by this channel has not been added to Cadenas. Please download the appropriate model and try again.</string>
     <string name="ok">OK</string>
+    <string name="duplicate_model_name">A model with this name is already installed</string>
 </resources>

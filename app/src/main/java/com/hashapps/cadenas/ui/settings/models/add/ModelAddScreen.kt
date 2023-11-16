@@ -86,6 +86,8 @@ fun ModelAddScreen(
         }
     }
 
+    val modelNames by viewModel.modelNames.collectAsState()
+
     Scaffold(
         topBar = {
             SettingsTopAppBar(
@@ -106,6 +108,7 @@ fun ModelAddScreen(
         ) {
             ModelInputForm(
                 modelUiState = viewModel.modelUiState,
+                modelNames = modelNames,
                 onValueChange = viewModel::updateUiState,
                 enabled = !downloading,
             )
@@ -149,12 +152,13 @@ fun ModelAddScreen(
 private fun ModelInputForm(
     modelUiState: ModelUiState,
     modifier: Modifier = Modifier,
+    modelNames: List<String>,
     onValueChange: (ModelUiState) -> Unit = {},
     enabled: Boolean = true,
 ) {
     val focusManager = LocalFocusManager.current
 
-    var displaySupportText = modelUiState.name == "" || modelUiState.isNameValid()
+    var displaySupportText = modelUiState.name == "" || modelUiState.isNameValid(modelNames)
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
     ) {

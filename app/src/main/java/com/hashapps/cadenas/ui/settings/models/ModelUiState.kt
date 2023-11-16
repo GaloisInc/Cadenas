@@ -24,12 +24,12 @@ fun ModelUiState.toModel(hash: String): Model = Model(
 )
 
 private val nameRegex =
-    Regex("""[a-zA-Z\d]+""")
+    Regex("""[a-zA-Z]+""")
 
 /**
  * Return true iff the model name is alphanumeric.
  */
-fun ModelUiState.isNameValid() = nameRegex.matches(name)
+fun ModelUiState.isNameValid(modelNames: List<String>) = nameRegex.matches(name) && name !in modelNames
 
 private val urlRegex =
     Regex("""https://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()!@:%_+.~#?&/=]*)""")
@@ -43,5 +43,5 @@ fun ModelUiState.isUrlValid() = urlRegex.matches(url)
 /**
  * Return true iff the model name and URL are valid.
  */
-fun ModelUiState.isValid() =
-    isNameValid() && isUrlValid()
+fun ModelUiState.isValid(modelNames: List<String>) =
+    isNameValid(modelNames) && isUrlValid()
