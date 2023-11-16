@@ -14,29 +14,34 @@ import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-fun Channel.toQRCode(hash: String): QRCode = QRCode(
+private fun Channel.toQRCode(hash: String): QRCode = QRCode(
     data = "key:$key;prompt:$prompt;model:$hash",
     errorCorrectionLevel = ErrorCorrectionLevel.Q,
 )
 
-fun QRCode.toByteArray(): ByteArray =
+private suspend fun QRCode.toByteArray(): ByteArray = withContext(Dispatchers.Default) {
     ByteArrayOutputStream()
         .also {
             render(margin = 25).writeImage(destination = it, quality = 50)
         }
         .toByteArray()
+}
 
-fun QRCode.toImageBitmap(): ImageBitmap {
-    val bytes = toByteArray()
-    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size).asImageBitmap()
-        .also { it.prepareToDraw() }
+suspend fun QRCode.toImageBitmap(): ImageBitmap {
+    return withContext(Dispatchers.Default) {
+        val bytes = toByteArray()
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size).asImageBitmap()
+            .also { it.prepareToDraw() }
+    }
 }
 
 /**
