@@ -12,14 +12,13 @@ private const val CHANNEL_ID_ARG = "channelId"
 
 internal class ChannelExportArgs(val channelId: Long) {
     constructor(savedStateHandle: SavedStateHandle) :
-        this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Long)
+            this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Long)
 }
 
 const val CHANNEL_EXPORT_ROUTE = "channel_export"
 
 fun NavGraphBuilder.channelExportScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
 ) {
     composable(
         route = "$CHANNEL_EXPORT_ROUTE/{$CHANNEL_ID_ARG}",
@@ -27,7 +26,7 @@ fun NavGraphBuilder.channelExportScreen(
             type = NavType.LongType
         })
     ) {
-        ChannelExportScreen(onNavigateBack = onNavigateBack, onNavigateUp = onNavigateUp)
+        ChannelExportScreen(onNavigateBack = onNavigateBack)
     }
 }
 

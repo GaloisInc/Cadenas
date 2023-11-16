@@ -63,7 +63,6 @@ private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+
 @Composable
 fun ChannelImportScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
     onNavigateToChannelEdit: (Long) -> Unit,
     onNavigateToAddModel: () -> Unit,
     modifier: Modifier = Modifier,
@@ -93,7 +92,7 @@ fun ChannelImportScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.import_channel),
-                navigateUp = onNavigateUp,
+                onNavigateBack = onNavigateBack,
             )
         },
     ) { innerPadding ->

@@ -30,9 +30,8 @@ private const val MAX_LEN = 128
  */
 @Composable
 fun ChannelAddScreen(
-    navigateNext: () -> Unit,
-    navigateUp: () -> Unit,
-    navigateToAddModel: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToAddModel: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -43,7 +42,7 @@ fun ChannelAddScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.channel_entry),
-                navigateUp = navigateUp,
+                onNavigateBack = onNavigateBack,
             )
         }
     ) { innerPadding ->
@@ -52,10 +51,10 @@ fun ChannelAddScreen(
             channelUiState = viewModel.channelUiState,
             models = models,
             onChannelValueChange = viewModel::updateUiState,
-            onAddModel = navigateToAddModel,
+            onAddModel = onNavigateToAddModel,
             onSaveClick = {
                 viewModel.saveChannel()
-                navigateNext()
+                onNavigateBack()
             },
         )
     }

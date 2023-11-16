@@ -9,7 +9,6 @@ const val CHANNEL_IMPORT_ROUTE = "channel_import"
 
 fun NavGraphBuilder.channelImportScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
     onNavigateToChannelEdit: (Long) -> Unit,
     onNavigateToAddModel: () -> Unit,
 ) {
@@ -18,7 +17,6 @@ fun NavGraphBuilder.channelImportScreen(
     ) {
         ChannelImportScreen(
             onNavigateBack = onNavigateBack,
-            onNavigateUp = onNavigateUp,
             onNavigateToChannelEdit = onNavigateToChannelEdit,
             onNavigateToAddModel = onNavigateToAddModel,
         )

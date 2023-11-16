@@ -30,8 +30,8 @@ import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageModelsScreen(
-    navigateUp: () -> Unit,
-    navigateToModelAdd: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToModelAdd: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -43,7 +43,7 @@ fun ManageModelsScreen(
                 title = { Text(stringResource(R.string.manage_models)) },
                 modifier = modifier,
                 navigationIcon = {
-                    IconButton(onClick = navigateUp) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
@@ -51,7 +51,7 @@ fun ManageModelsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = navigateToModelAdd) {
+                    IconButton(onClick = onNavigateToModelAdd) {
                         Icon(
                             imageVector = Icons.Filled.CreateNewFolder,
                             contentDescription = stringResource(R.string.add_model)

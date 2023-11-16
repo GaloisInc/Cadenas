@@ -47,7 +47,6 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 @Composable
 fun ChannelExportScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelExportViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -71,7 +70,7 @@ fun ChannelExportScreen(
                     R.string.export_channel,
                     viewModel.channelName,
                 ),
-                navigateUp = onNavigateUp,
+                onNavigateBack = onNavigateBack,
             )
         },
     ) { innerPadding ->

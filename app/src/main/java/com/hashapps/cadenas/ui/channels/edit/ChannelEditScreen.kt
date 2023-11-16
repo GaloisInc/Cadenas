@@ -37,7 +37,6 @@ import com.hashapps.cadenas.ui.channels.add.ChannelInputForm
 @Composable
 fun ChannelEditScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -45,7 +44,7 @@ fun ChannelEditScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.edit_channel),
-                navigateUp = onNavigateUp,
+                onNavigateBack = onNavigateBack,
             )
         }
     ) { innerPadding ->

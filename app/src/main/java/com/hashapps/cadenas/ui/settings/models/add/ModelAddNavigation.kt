@@ -8,10 +8,10 @@ import androidx.navigation.compose.composable
 const val MODEL_ADD_ROUTE = "model_add"
 
 fun NavGraphBuilder.modelAddScreen(
-    onNavigateNext: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     composable(MODEL_ADD_ROUTE) {
-        ModelAddScreen(onNavigateNext = onNavigateNext)
+        ModelAddScreen(onNavigateBack = onNavigateBack)
     }
 }
 

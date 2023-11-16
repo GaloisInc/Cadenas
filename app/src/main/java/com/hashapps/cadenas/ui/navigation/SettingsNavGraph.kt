@@ -4,12 +4,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
+import com.hashapps.cadenas.ui.home.navigateToHome
 import com.hashapps.cadenas.ui.settings.SETTINGS_ROUTE
 import com.hashapps.cadenas.ui.settings.models.manage.manageModelsScreen
 import com.hashapps.cadenas.ui.settings.models.add.modelAddScreen
 import com.hashapps.cadenas.ui.settings.models.manage.navigateToManageModels
 import com.hashapps.cadenas.ui.settings.models.add.navigateToModelAdd
-import com.hashapps.cadenas.ui.settings.navigateToSettingsScreen
 import com.hashapps.cadenas.ui.settings.settingsScreen
 
 const val SETTINGS_GRAPH_ROUTE = "settings"
@@ -18,7 +18,6 @@ const val SETTINGS_GRAPH_ROUTE = "settings"
  * Navigation graph for the settings screens.
  */
 fun NavGraphBuilder.settingsGraph(
-    onNavigateToProcessing: () -> Unit,
     navController: NavController,
 ) {
     navigation(
@@ -26,13 +25,13 @@ fun NavGraphBuilder.settingsGraph(
         route = SETTINGS_GRAPH_ROUTE,
     ) {
         settingsScreen(
-            onNavigateUp = onNavigateToProcessing,
+            onNavigateBack = { navController.popBackStack() },
             onNavigateToManageModels = { navController.navigateToManageModels() },
         )
         manageModelsScreen(
-            onNavigateUp = { navController.navigateToSettingsScreen() },
+            onNavigateBack = { navController.popBackStack() },
             onNavigateToModelAdd = { navController.navigateToModelAdd() })
-        modelAddScreen(onNavigateNext = { navController.navigateToManageModels() })
+        modelAddScreen(onNavigateBack = { navController.popBackStack() })
     }
 }
 

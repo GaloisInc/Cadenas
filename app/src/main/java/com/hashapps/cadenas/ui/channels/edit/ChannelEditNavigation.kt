@@ -19,7 +19,6 @@ const val CHANNEL_EDIT_ROUTE = "channel_edit"
 
 fun NavGraphBuilder.channelEditScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
 ) {
     composable(
         route = "$CHANNEL_EDIT_ROUTE/{$CHANNEL_ID_ARG}",
@@ -27,7 +26,7 @@ fun NavGraphBuilder.channelEditScreen(
             type = NavType.LongType
         })
     ) {
-        ChannelEditScreen(onNavigateBack = onNavigateBack, onNavigateUp = onNavigateUp)
+        ChannelEditScreen(onNavigateBack = onNavigateBack)
     }
 }
 

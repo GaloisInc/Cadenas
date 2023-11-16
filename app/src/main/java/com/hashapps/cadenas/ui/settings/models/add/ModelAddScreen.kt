@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun ModelAddScreen(
-    onNavigateNext: () -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ModelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -90,8 +90,8 @@ fun ModelAddScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.add_model),
-                canNavigateUp = !downloading,
-                navigateUp = onNavigateNext,
+                canNavigateBack = !downloading,
+                onNavigateBack = onNavigateBack,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
