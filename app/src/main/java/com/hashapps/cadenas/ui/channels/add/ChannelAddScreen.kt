@@ -1,5 +1,6 @@
 package com.hashapps.cadenas.ui.channels.add
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,7 +33,8 @@ fun ChannelAddScreen(
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val models by viewModel.availableModels.collectAsState()
+    val models by viewModel.models.collectAsState()
+    Log.d("ChannelAdd", models.toString())
 
     Scaffold(
         topBar = {
@@ -157,42 +159,44 @@ fun ChannelInputForm(
             )
 
             var expanded by remember { mutableStateOf(false) }
-            ExposedDropdownMenuBox(
-                modifier = modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                expanded = expanded,
-                onExpandedChange = {
-                    if (models.isNotEmpty()) {
-                        expanded = !expanded
-                    }
-                },
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .menuAnchor()
+            key(models) {
+                ExposedDropdownMenuBox(
+                    modifier = modifier
+                        .padding(8.dp)
                         .fillMaxWidth(),
-                    readOnly = true,
-                    value = channelUiState.selectedModel,
-                    onValueChange = {},
-                    label = { Text(stringResource(R.string.model)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                )
-
-                ExposedDropdownMenu(
-                    modifier = Modifier.fillMaxWidth(),
                     expanded = expanded,
-                    onDismissRequest = { expanded = false },
+                    onExpandedChange = {
+                        if (models.isNotEmpty()) {
+                            expanded = !expanded
+                        }
+                    },
                 ) {
-                    models.forEach {
-                        DropdownMenuItem(
-                            text = { Text(it.name) },
-                            onClick = {
-                                onValueChange(channelUiState.copy(selectedModel = it.name))
-                                expanded = false
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                        )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(),
+                        readOnly = true,
+                        value = channelUiState.selectedModel,
+                        onValueChange = {},
+                        label = { Text(stringResource(R.string.model)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    )
+
+                    ExposedDropdownMenu(
+                        modifier = Modifier.fillMaxWidth(),
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        models.forEach {
+                            DropdownMenuItem(
+                                text = { Text(it.name) },
+                                onClick = {
+                                    onValueChange(channelUiState.copy(selectedModel = it.name))
+                                    expanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            )
+                        }
                     }
                 }
             }

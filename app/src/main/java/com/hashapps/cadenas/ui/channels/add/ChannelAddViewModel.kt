@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  * View model for the channel-add screen.
  *
  * @property[channelUiState] The UI state
- * @property[availableModels] The list of all downloaded models
+ * @property[models] The list of all downloaded models
  */
 class ChannelAddViewModel(
     private val channelRepository: ChannelRepository,
@@ -35,7 +35,7 @@ class ChannelAddViewModel(
         channelUiState = newChannelUiState.copy(actionEnabled = newChannelUiState.isValid())
     }
 
-    val availableModels = modelRepository.getAllModelsStream().stateIn(
+    val models = modelRepository.getAllModelsStream().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = listOf(),
