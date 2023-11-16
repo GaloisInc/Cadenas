@@ -81,6 +81,7 @@ fun SettingsTopAppBar(
     modifier: Modifier = Modifier,
     canNavigateUp: Boolean = true,
     navigateUp: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
@@ -96,5 +97,6 @@ fun SettingsTopAppBar(
                 )
             }
         },
+        actions = actions,
     )
 }
