@@ -44,20 +44,23 @@ import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.QRAnalyzer
 import com.hashapps.cadenas.AppViewModelProvider
+import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import java.util.concurrent.Executors
 
-private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([a-zA-Z\d]+)""")
+private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([0-9a-fA-F]{32})""")
 
-fun String.toChannel(): Channel? {
+fun String.toChannel(getModel: (hash: String) -> Model?): Channel? {
     return channelRegex.matchEntire(this)?.groupValues?.let {
-        Channel(
-            name = "",
-            description = "",
-            key = it[1],
-            prompt = it[2],
-            selectedModel = it[3],
-        )
+        getModel(it[3])?.let { model ->
+            Channel(
+                name = "",
+                description = "",
+                key = it[1],
+                prompt = it[2],
+                selectedModel = model.name,
+            )
+        }
     }
 }
 
@@ -109,6 +112,10 @@ fun ChannelImportScreen(
     ) { innerPadding ->
         ChannelImportBody(
             modifier = modifier.padding(innerPadding),
+            getModel = {
+                viewModel.getModelWithHash(it)
+                viewModel.modelInQR
+            },
             onImportClick = { viewModel.saveChannelAndGoToEdit(it, onNavigateToChannelEdit) },
         )
         if (!hasCameraPermission) {
@@ -129,6 +136,7 @@ fun ChannelImportScreen(
 
 @Composable
 private fun ChannelImportBody(
+    getModel: (hash: String) -> Model?,
     onImportClick: (Channel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -178,7 +186,7 @@ private fun ChannelImportBody(
                             val barcodeAnalyzer = QRAnalyzer { barcodes ->
                                 barcodes.forEach { barcode ->
                                     barcode.rawValue?.let { barcodeValue ->
-                                        newChannel = barcodeValue.toChannel()
+                                        newChannel = barcodeValue.toChannel(getModel)
                                     }
                                 }
                             }

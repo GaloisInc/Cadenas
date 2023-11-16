@@ -38,7 +38,8 @@ object AppViewModelProvider {
 
         initializer {
             ChannelImportViewModel(
-                cadenasApplication().container.channelRepository
+                cadenasApplication().container.channelRepository,
+                cadenasApplication().container.modelRepository,
             )
         }
 
