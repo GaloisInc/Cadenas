@@ -1,5 +1,6 @@
 package com.hashapps.cadenas.data.channels
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
@@ -40,6 +41,7 @@ data class Channel(
     val description: String,
     val key: String,
     val prompt: String,
+    @ColumnInfo(index = true)
     val selectedModel: String,
 )
 
