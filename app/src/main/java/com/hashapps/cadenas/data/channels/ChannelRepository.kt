@@ -52,7 +52,7 @@ class ChannelRepository(
     /**
      * Save a channel's QR bitmap to disk.
      */
-    suspend fun saveQRBitmap(qrBitmap: ImageBitmap?) = withContext(ioDispatcher) {
+    suspend fun saveQRBitmap(qrBitmap: ImageBitmap, channelId: Long) = withContext(ioDispatcher) {
         val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(
                 MediaStore.VOLUME_EXTERNAL_PRIMARY
@@ -62,11 +62,11 @@ class ChannelRepository(
         }
 
         val qrDetails = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-${UUID.randomUUID()}.png")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-$channelId.png")
         }
         val qrUri = contentResolver.insert(imageCollection, qrDetails)!!
         contentResolver.openOutputStream(qrUri).use {
-            it?.also { qrBitmap?.asAndroidBitmap()?.compress(Bitmap.CompressFormat.PNG, 0, it) }
+            it?.also { qrBitmap.asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 0, it) }
         }
     }
 
