@@ -9,17 +9,20 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hashapps.cadenas.data.ModelRepository
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
-fun Channel.toQRCode(): QRCode = QRCode(
-    data = "key:$key;prompt:$prompt;model:$selectedModel",
+fun Channel.toQRCode(hash: String): QRCode = QRCode(
+    data = "key:$key;prompt:$prompt;model:$hash",
     errorCorrectionLevel = ErrorCorrectionLevel.Q,
 )
 
@@ -39,9 +42,11 @@ fun QRCode.toImageBitmap(): ImageBitmap {
 /**
  * View model for the channel-exporting screen.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class ChannelExportViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
     private val channelExportArgs = ChannelExportArgs(savedStateHandle)
 
@@ -50,7 +55,12 @@ class ChannelExportViewModel(
     init {
         viewModelScope.launch {
             qrBitmap = channelRepository.getChannelStream(channelExportArgs.channelId)
-                .map { it.toQRCode().toImageBitmap() }
+                .flatMapLatest { channel ->
+                    modelRepository.getModelStream(channel.selectedModel)
+                        .map { model ->
+                            channel.toQRCode(model.hash).toImageBitmap()
+                        }
+                }
                 .first()
         }
     }

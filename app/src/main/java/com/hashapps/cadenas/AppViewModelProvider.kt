@@ -46,6 +46,7 @@ object AppViewModelProvider {
             ChannelExportViewModel(
                 createSavedStateHandle(),
                 cadenasApplication().container.channelRepository,
+                cadenasApplication().container.modelRepository,
             )
         }
 
