@@ -42,7 +42,8 @@ fun CadenasRootNavHost(
         )
         channelAddScreen(
             onNavigateNext = { navController.popBackStack() },
-            onNavigateUp = { navController.navigateUp() })
+            onNavigateUp = { navController.navigateUp() },
+            onNavigateToAddModel = { navController.navigateToModelAdd() })
         channelImportScreen(
             onNavigateBack = { navController.popBackStack() },
             onNavigateUp = { navController.navigateUp() },

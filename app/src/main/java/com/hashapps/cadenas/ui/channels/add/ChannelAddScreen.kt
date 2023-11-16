@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -13,11 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
+import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.models.Model
-import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import com.hashapps.cadenas.ui.channels.ChannelUiState
+import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 private const val MAX_LEN = 128
 
@@ -30,6 +32,7 @@ private const val MAX_LEN = 128
 fun ChannelAddScreen(
     navigateNext: () -> Unit,
     navigateUp: () -> Unit,
+    navigateToAddModel: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -49,6 +52,7 @@ fun ChannelAddScreen(
             channelUiState = viewModel.channelUiState,
             models = models,
             onChannelValueChange = viewModel::updateUiState,
+            onAddModel = navigateToAddModel,
             onSaveClick = {
                 viewModel.saveChannel()
                 navigateNext()
@@ -60,10 +64,11 @@ fun ChannelAddScreen(
 @Composable
 private fun ChannelAddBody(
     channelUiState: ChannelUiState,
+    modifier: Modifier = Modifier,
     models: List<Model>,
     onChannelValueChange: (ChannelUiState) -> Unit,
+    onAddModel: () -> Unit = {},
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -76,6 +81,7 @@ private fun ChannelAddBody(
             channelUiState = channelUiState,
             models = models,
             onValueChange = onChannelValueChange,
+            onAddModel = onAddModel,
         )
 
         Button(
@@ -98,6 +104,7 @@ fun ChannelInputForm(
     modifier: Modifier = Modifier,
     models: List<Model>,
     onValueChange: (ChannelUiState) -> Unit = {},
+    onAddModel: () -> Unit = {},
     editing: Boolean = false,
 ) {
     ElevatedCard(
@@ -159,44 +166,54 @@ fun ChannelInputForm(
             )
 
             var expanded by remember { mutableStateOf(false) }
-            key(models) {
-                ExposedDropdownMenuBox(
-                    modifier = modifier
-                        .padding(8.dp)
+            ExposedDropdownMenuBox(
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                expanded = expanded,
+                onExpandedChange = {
+                    expanded = !expanded
+                },
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .menuAnchor()
                         .fillMaxWidth(),
-                    expanded = expanded,
-                    onExpandedChange = {
-                        if (models.isNotEmpty()) {
-                            expanded = !expanded
-                        }
-                    },
-                ) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .menuAnchor()
-                            .fillMaxWidth(),
-                        readOnly = true,
-                        value = channelUiState.selectedModel,
-                        onValueChange = {},
-                        label = { Text(stringResource(R.string.model)) },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    )
+                    readOnly = true,
+                    value = channelUiState.selectedModel,
+                    onValueChange = {},
+                    label = { Text(stringResource(R.string.model)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                )
 
-                    ExposedDropdownMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        models.forEach {
-                            DropdownMenuItem(
-                                text = { Text(it.name) },
-                                onClick = {
-                                    onValueChange(channelUiState.copy(selectedModel = it.name))
-                                    expanded = false
-                                },
-                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                ExposedDropdownMenu(
+                    modifier = Modifier.fillMaxWidth(),
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.add_model)) },
+                        onClick = {
+                            expanded = false
+                            onAddModel()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = null,
                             )
-                        }
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                    models.forEach {
+                        DropdownMenuItem(
+                            text = { Text(it.name) },
+                            onClick = {
+                                expanded = false
+                                onValueChange(channelUiState.copy(selectedModel = it.name))
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                        )
                     }
                 }
             }

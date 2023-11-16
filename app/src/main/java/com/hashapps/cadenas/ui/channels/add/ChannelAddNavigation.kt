@@ -10,9 +10,10 @@ const val CHANNEL_ADD_ROUTE = "channel_entry"
 fun NavGraphBuilder.channelAddScreen(
     onNavigateNext: () -> Unit,
     onNavigateUp: () -> Unit,
+    onNavigateToAddModel: () -> Unit,
 ) {
     composable(CHANNEL_ADD_ROUTE) {
-        ChannelAddScreen(navigateNext = onNavigateNext, navigateUp = onNavigateUp)
+        ChannelAddScreen(navigateNext = onNavigateNext, navigateUp = onNavigateUp, navigateToAddModel = onNavigateToAddModel)
     }
 }
 
