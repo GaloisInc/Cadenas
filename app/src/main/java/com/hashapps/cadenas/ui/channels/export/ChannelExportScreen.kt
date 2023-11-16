@@ -67,7 +67,10 @@ fun ChannelExportScreen(
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(R.string.export_channel),
+                title = LocalContext.current.getString(
+                    R.string.export_channel,
+                    viewModel.channelName,
+                ),
                 navigateUp = onNavigateUp,
             )
         },

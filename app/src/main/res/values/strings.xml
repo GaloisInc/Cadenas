@@ -41,7 +41,7 @@
     <string name="delete_title">Deleting model…</string>
     <string name="go">Go!</string>
     <string name="export">Export</string>
-    <string name="export_channel">Export Channel</string>
+    <string name="export_channel">Export Channel - %1$s</string>
     <string name="qr_description">A QR code representing the channel to be exported.</string>
     <string name="storage_permission_error">The QR code cannot be saved unless you give Cadenas storage access!</string>
     <string name="oops">Oops!</string>

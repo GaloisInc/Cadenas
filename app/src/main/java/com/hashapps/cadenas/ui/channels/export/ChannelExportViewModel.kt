@@ -57,13 +57,15 @@ class ChannelExportViewModel(
 
     var qrBitmap: ImageBitmap? by mutableStateOf(null)
         private set
-
+    var channelName: String? by mutableStateOf(null)
+        private set
     private var channelId: Long? by mutableStateOf(null)
 
     init {
         viewModelScope.launch {
             qrBitmap = channelRepository.getChannelStream(channelExportArgs.channelId)
                 .flatMapLatest { channel ->
+                    channelName = channel.name
                     channelId = channel.id
                     modelRepository.getModelStream(channel.selectedModel)
                         .map { model ->
