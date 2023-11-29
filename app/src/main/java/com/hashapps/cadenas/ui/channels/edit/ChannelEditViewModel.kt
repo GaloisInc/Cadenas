@@ -6,9 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.ChannelRepository
-import com.hashapps.cadenas.data.ModelRepository
-import com.hashapps.cadenas.data.isValid
+import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.channels.isValid
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 import com.hashapps.cadenas.ui.channels.isValid
 import com.hashapps.cadenas.ui.channels.toChannel
@@ -21,12 +20,10 @@ import kotlinx.coroutines.launch
  * View model for the channel-editing screen.
  *
  * @property[channelUiState] The UI state
- * @property[availableModels] The list of all downloaded models
  */
 class ChannelEditViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
-    private val modelRepository: ModelRepository,
 ) : ViewModel() {
     private val channelEditArgs = ChannelEditArgs(savedStateHandle)
 
@@ -49,8 +46,6 @@ class ChannelEditViewModel(
     fun updateUiState(newChannelUiState: ChannelUiState) {
         channelUiState = newChannelUiState.copy(actionEnabled = newChannelUiState.isValid())
     }
-
-    val availableModels = modelRepository.downloadedModels()
 
     /**
      * If a valid name and description have been entered, save the changes to

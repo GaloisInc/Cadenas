@@ -19,20 +19,20 @@ import com.hashapps.cadenas.R
  */
 @Composable
 fun SettingsScreen(
-    navigateUp: () -> Unit,
-    navigateToManageModels: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToManageModels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.settings),
-                navigateUp = navigateUp,
+                onNavigateBack = onNavigateBack,
             )
         }
     ) { innerPadding ->
         SettingsBody(
-            navigateToManageModels = navigateToManageModels,
+            navigateToManageModels = onNavigateToManageModels,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -79,16 +79,17 @@ private fun SettingsBody(
 fun SettingsTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
-    canNavigateUp: Boolean = true,
-    navigateUp: () -> Unit = {},
+    canNavigateBack: Boolean = true,
+    onNavigateBack: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
         modifier = modifier,
         navigationIcon = {
             IconButton(
-                enabled = canNavigateUp,
-                onClick = navigateUp,
+                enabled = canNavigateBack,
+                onClick = onNavigateBack,
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -96,5 +97,6 @@ fun SettingsTopAppBar(
                 )
             }
         },
+        actions = actions,
     )
 }

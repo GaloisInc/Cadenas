@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data
+package com.hashapps.cadenas.data.models
 
 import androidx.lifecycle.asFlow
 import androidx.work.*
@@ -23,7 +23,18 @@ import java.io.File
 class ModelRepository(
     private val modelsDir: File,
     private val workManager: WorkManager,
+    private val modelDao: ModelDao,
 ) {
+    suspend fun insertModel(model: Model): Long = modelDao.insert(model)
+    suspend fun deleteModel(model: Model) {
+        modelDao.delete(model)
+        deleteFilesForModel(model.name)
+    }
+
+    fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
+    fun getModelStreamWithHash(hash: String): Flow<Model?> = modelDao.getModelWithHash(hash)
+    fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
+
     val modelDownloaderState = workManager
         .getWorkInfosForUniqueWorkLiveData("downloadModel")
         .asFlow()
@@ -58,17 +69,9 @@ class ModelRepository(
             )
     }
 
-    /**
-     * Delete a model from the device. As with [downloadModelFromAndSaveAs],
-     * the work is done such that even application death will not cancel the
-     * deletion.
-     *
-     * @param[modelName] The name of the model/directory to delete
-     */
-    fun deleteFilesForModel(modelName: String) {
+    private fun deleteFilesForModel(modelName: String) {
         val toDeleteDir = modelsDir.resolve("$modelName.temp")
         modelsDir.resolve(modelName).renameTo(toDeleteDir)
-
 
         val modelDeleteWOrkRequest = OneTimeWorkRequestBuilder<ModelDeleteWorker>()
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
@@ -82,17 +85,4 @@ class ModelRepository(
 
         workManager.enqueue(modelDeleteWOrkRequest)
     }
-
-    /**
-     * Return all models that have been downloaded to this device.
-     *
-     * @return The list of all model names that have been downloaded to the
-     * device
-     */
-    fun downloadedModels() = modelsDir
-        .listFiles()
-        .orEmpty()
-        .filter { it.isDirectory && !it.path.endsWith(".temp") }
-        .map { it.name }
-        .sorted()
 }

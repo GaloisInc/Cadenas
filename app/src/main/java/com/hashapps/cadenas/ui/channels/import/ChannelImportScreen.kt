@@ -41,25 +41,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.data.Channel
+import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.QRAnalyzer
 import com.hashapps.cadenas.AppViewModelProvider
+import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import java.util.concurrent.Executors
 
-private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([a-zA-Z\d]+)""")
-
-fun String.toChannel(): Channel? {
-    return channelRegex.matchEntire(this)?.groupValues?.let {
-        Channel(
-            name = "",
-            description = "",
-            key = it[1],
-            prompt = it[2],
-            selectedModel = it[3],
-        )
-    }
-}
+private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([0-9a-fA-F]{32})""")
 
 /**
  * Cadenas channel-importing screen.
@@ -74,8 +63,8 @@ fun String.toChannel(): Channel? {
 @Composable
 fun ChannelImportScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
-    onNavigateToChannelEdit: (Int) -> Unit,
+    onNavigateToChannelEdit: (Long) -> Unit,
+    onNavigateToAddModel: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelImportViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -103,13 +92,18 @@ fun ChannelImportScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.import_channel),
-                navigateUp = onNavigateUp,
+                onNavigateBack = onNavigateBack,
             )
         },
     ) { innerPadding ->
         ChannelImportBody(
             modifier = modifier.padding(innerPadding),
+            getModel = {
+                viewModel.getModelWithHash(it)
+                viewModel.modelInQR
+            },
             onImportClick = { viewModel.saveChannelAndGoToEdit(it, onNavigateToChannelEdit) },
+            onDismissModelError = onNavigateToAddModel,
         )
         if (!hasCameraPermission) {
             AlertDialog(
@@ -129,8 +123,10 @@ fun ChannelImportScreen(
 
 @Composable
 private fun ChannelImportBody(
+    getModel: (hash: String) -> Model?,
     onImportClick: (Channel) -> Unit,
     modifier: Modifier = Modifier,
+    onDismissModelError: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -139,7 +135,7 @@ private fun ChannelImportBody(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        var newChannel: Channel? by remember { mutableStateOf(null) }
+        var channelParts: List<String>? by remember { mutableStateOf(null) }
 
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
@@ -165,64 +161,87 @@ private fun ChannelImportBody(
                         }
                     },
                     modifier = Modifier.fillMaxSize(),
-                    update = { previewView ->
-                        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-                        val cameraExecutor = Executors.newSingleThreadExecutor()
-                        val cameraProviderFuture = ProcessCameraProvider.getInstance(localContext)
+                ) { previewView ->
+                    val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                    val cameraExecutor = Executors.newSingleThreadExecutor()
+                    val cameraProviderFuture = ProcessCameraProvider.getInstance(localContext)
 
-                        cameraProviderFuture.addListener({
-                            previewBoth = Preview.Builder().build().also {
-                                it.setSurfaceProvider(previewView.surfaceProvider)
-                            }
-                            val cameraProvider = cameraProviderFuture.get()
-                            val barcodeAnalyzer = QRAnalyzer { barcodes ->
-                                barcodes.forEach { barcode ->
-                                    barcode.rawValue?.let { barcodeValue ->
-                                        newChannel = barcodeValue.toChannel()
-                                    }
+                    cameraProviderFuture.addListener({
+                        previewBoth = Preview.Builder().build().also {
+                            it.setSurfaceProvider(previewView.surfaceProvider)
+                        }
+                        val cameraProvider = cameraProviderFuture.get()
+                        val barcodeAnalyzer = QRAnalyzer { barcodes ->
+                            barcodes.forEach { barcode ->
+                                barcode.rawValue?.let { barcodeValue ->
+                                    channelParts =
+                                        channelRegex.matchEntire(barcodeValue)?.groupValues
                                 }
                             }
-                            val imageAnalysis = ImageAnalysis.Builder()
-                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                                .build()
-                                .also {
-                                    it.setAnalyzer(cameraExecutor, barcodeAnalyzer)
-                                }
-
-                            try {
-                                cameraProvider.unbindAll()
-                                cameraProvider.bindToLifecycle(
-                                    lifecycleOwner,
-                                    cameraSelector,
-                                    previewBoth,
-                                    imageAnalysis,
-                                )
-                            } catch (e: Exception) {
-                                Log.e("ChannelImportScreen", "CameraPreview: ${e.localizedMessage}")
+                        }
+                        val imageAnalysis = ImageAnalysis.Builder()
+                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                            .build()
+                            .also {
+                                it.setAnalyzer(cameraExecutor, barcodeAnalyzer)
                             }
-                        }, ContextCompat.getMainExecutor(localContext))
-                    },
-                )
+
+                        try {
+                            cameraProvider.unbindAll()
+                            cameraProvider.bindToLifecycle(
+                                lifecycleOwner,
+                                cameraSelector,
+                                previewBoth,
+                                imageAnalysis,
+                            )
+                        } catch (e: Exception) {
+                            Log.e("ChannelImportScreen", "CameraPreview: ${e.localizedMessage}")
+                        }
+                    }, ContextCompat.getMainExecutor(localContext))
+                }
             }
         }
 
-        if (newChannel != null) {
-            AlertDialog(
-                onDismissRequest = {},
-                title = { Text(stringResource(R.string.channel_found)) },
-                text = { Text(stringResource(R.string.finish_import)) },
-                modifier = Modifier.padding(16.dp),
-                confirmButton = {
-                    TextButton(onClick = { onImportClick(newChannel!!) }) {
-                        Text(stringResource(R.string.next))
+        if (channelParts != null) {
+            val model = getModel(channelParts!![3])
+
+            if (model == null) {
+                AlertDialog(
+                    onDismissRequest = {},
+                    title = { Text(stringResource(R.string.oops)) },
+                    text = { Text(stringResource(R.string.model_not_found)) },
+                    modifier = Modifier.padding(16.dp),
+                    confirmButton = {
+                        TextButton(onClick = onDismissModelError) {
+                            Text(stringResource(R.string.ok))
+                        }
+                    },
+                )
+            } else {
+                val newChannel = Channel(
+                    name = "",
+                    description = "",
+                    key = channelParts!![1],
+                    prompt = channelParts!![2],
+                    selectedModel = model.name,
+                )
+                AlertDialog(
+                    onDismissRequest = {},
+                    title = { Text(stringResource(R.string.channel_found)) },
+                    text = { Text(stringResource(R.string.finish_import)) },
+                    modifier = Modifier.padding(16.dp),
+                    confirmButton = {
+                        TextButton(onClick = { onImportClick(newChannel) }) {
+                            Text(stringResource(R.string.next))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { channelParts = null }) {
+                            Text(stringResource(R.string.cancel))
+                        }
                     }
-                },
-                dismissButton = {
-                    TextButton(onClick = { newChannel = null }) {
-                        Text(stringResource(R.string.cancel))
-                    }
-                }
-            )
+                )
+            }
         }
     }
 }

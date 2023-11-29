@@ -5,7 +5,6 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.hashapps.cadenas.domain.ManageModelsUseCase
 import com.hashapps.cadenas.ui.home.HomeViewModel
 import com.hashapps.cadenas.ui.settings.models.manage.ManageModelsViewModel
 import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
@@ -39,7 +38,8 @@ object AppViewModelProvider {
 
         initializer {
             ChannelImportViewModel(
-                cadenasApplication().container.channelRepository
+                cadenasApplication().container.channelRepository,
+                cadenasApplication().container.modelRepository,
             )
         }
 
@@ -47,6 +47,7 @@ object AppViewModelProvider {
             ChannelExportViewModel(
                 createSavedStateHandle(),
                 cadenasApplication().container.channelRepository,
+                cadenasApplication().container.modelRepository,
             )
         }
 
@@ -54,16 +55,12 @@ object AppViewModelProvider {
             ChannelEditViewModel(
                 createSavedStateHandle(),
                 cadenasApplication().container.channelRepository,
-                cadenasApplication().container.modelRepository,
             )
         }
 
         initializer {
             ManageModelsViewModel(
-                ManageModelsUseCase(
-                    cadenasApplication().container.modelRepository,
-                    cadenasApplication().container.channelRepository
-                ),
+                cadenasApplication().container.modelRepository,
             )
         }
 

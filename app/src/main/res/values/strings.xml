@@ -11,14 +11,13 @@
     <string name="prompt_label">Prompt Text</string>
     <string name="prompt_support">Text to prompt the model (%1$d / %2$d)</string>
     <string name="url_label">Model URL</string>
-    <string name="url_support">Add URLs to fetch models (%1$d / %2$d)</string>
+    <string name="url_support">And an HTTPS URL where its ZIP can be downloaded</string>
     <string name="url_error">Must be a valid https URL</string>
     <string name="save">Save</string>
     <string name="channel_name_label">Channel Name</string>
     <string name="channel_name_support">Give this channel a name</string>
     <string name="channel_entry">Add Channel</string>
     <string name="back">Back</string>
-    <string name="add_item">Add item</string>
     <string name="manage_models">Models</string>
     <string name="manage_models_support">Download/manage models</string>
     <string name="clear">Clear item</string>
@@ -34,7 +33,7 @@
     <string name="download">Download</string>
     <string name="channel_menu">Channel settings</string>
     <string name="edit">Edit</string>
-    <string name="name_error">Model names must be alphanumeric</string>
+    <string name="name_error">Model names must be alphabetic and unique</string>
     <string name="model">Model</string>
     <string name="download_title">Downloading model…</string>
     <string name="notification_channel_name">Model Management</string>
@@ -42,7 +41,7 @@
     <string name="delete_title">Deleting model…</string>
     <string name="go">Go!</string>
     <string name="export">Export</string>
-    <string name="export_channel">Export Channel</string>
+    <string name="export_channel">Export Channel - %1$s</string>
     <string name="qr_description">A QR code representing the channel to be exported.</string>
     <string name="storage_permission_error">The QR code cannot be saved unless you give Cadenas storage access!</string>
     <string name="oops">Oops!</string>
@@ -60,4 +59,8 @@
     <string name="channel_placeholder">To get started, go to settings and add a model. Then, import or add a channel.</string>
     <string name="add_channel">Add Channel</string>
     <string name="model_placeholder">To get started, download a model by tapping the folder icon above.</string>
+    <string name="download_progress">Extracting %1$s…</string>
+    <string name="model_not_found">The model used by this channel has not been added to Cadenas. Please download the appropriate model and try again.</string>
+    <string name="ok">OK</string>
+    <string name="duplicate_model_name">A model with this name is already installed</string>
 </resources>

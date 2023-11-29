@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.galois.cadenas.mbfte.TextCover
-import com.hashapps.cadenas.data.ChannelRepository
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -97,14 +97,20 @@ class ProcessingViewModel(
      * Enter encoding mode.
      */
     fun encodingMode() {
-        processingUiState = ProcessingUiState(processingMode = ProcessingMode.Encode)
+        processingUiState = ProcessingUiState(
+            channelName = processingUiState.channelName,
+            processingMode = ProcessingMode.Encode
+        )
     }
 
     /**
      * Enter decoding mode.
      */
     fun decodingMode() {
-        processingUiState = ProcessingUiState(processingMode = ProcessingMode.Decode)
+        processingUiState = ProcessingUiState(
+            channelName = processingUiState.channelName,
+            processingMode = ProcessingMode.Decode
+        )
     }
 
     /**

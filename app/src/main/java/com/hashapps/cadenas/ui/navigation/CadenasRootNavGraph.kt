@@ -17,6 +17,7 @@ import com.hashapps.cadenas.ui.channels.export.channelExportScreen
 import com.hashapps.cadenas.ui.channels.export.navigateToChannelExport
 import com.hashapps.cadenas.ui.channels.import.channelImportScreen
 import com.hashapps.cadenas.ui.channels.import.navigateToChannelImport
+import com.hashapps.cadenas.ui.settings.models.add.navigateToModelAdd
 
 /**
  * Top-level navigation host for Cadenas (post setup).
@@ -40,19 +41,15 @@ fun CadenasRootNavHost(
             onNavigateToEditChannel = { navController.navigateToChannelEdit(it) },
         )
         channelAddScreen(
-            onNavigateNext = { navController.popBackStack() },
-            onNavigateUp = { navController.navigateUp() })
+            onNavigateBack = { navController.popBackStack() },
+            onNavigateToAddModel = { navController.navigateToModelAdd() })
         channelImportScreen(
             onNavigateBack = { navController.popBackStack() },
-            onNavigateUp = { navController.navigateUp() },
-            onNavigateToChannelEdit = { navController.navigateToChannelEdit(it) })
-        channelExportScreen(
-            onNavigateBack = { navController.popBackStack() },
-            onNavigateUp = { navController.navigateUp() })
-        channelEditScreen(
-            onNavigateBack = { navController.popBackStack() },
-            onNavigateUp = { navController.navigateUp() })
+            onNavigateToChannelEdit = { navController.navigateToChannelEdit(it) },
+            onNavigateToAddModel = { navController.navigateToModelAdd() })
+        channelExportScreen(onNavigateBack = { navController.popBackStack() })
+        channelEditScreen(onNavigateBack = { navController.popBackStack() })
         processingScreen { navController.popBackStack() }
-        settingsGraph(onNavigateToProcessing = { navController.navigateToHome() }, navController)
+        settingsGraph(navController)
     }
 }

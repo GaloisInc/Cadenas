@@ -1,9 +1,12 @@
 package com.hashapps.cadenas.ui.channels.add
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,10 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
-import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
+import com.hashapps.cadenas.R
+import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.channels.ChannelUiState
+import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 
 private const val MAX_LEN = 128
 
@@ -26,27 +30,31 @@ private const val MAX_LEN = 128
  */
 @Composable
 fun ChannelAddScreen(
-    navigateNext: () -> Unit,
-    navigateUp: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToAddModel: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val models by viewModel.models.collectAsState()
+    Log.d("ChannelAdd", models.toString())
+
     Scaffold(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.channel_entry),
-                navigateUp = navigateUp,
+                onNavigateBack = onNavigateBack,
             )
         }
     ) { innerPadding ->
         ChannelAddBody(
             modifier = modifier.padding(innerPadding),
             channelUiState = viewModel.channelUiState,
-            models = viewModel.availableModels,
+            models = models,
             onChannelValueChange = viewModel::updateUiState,
+            onAddModel = onNavigateToAddModel,
             onSaveClick = {
                 viewModel.saveChannel()
-                navigateNext()
+                onNavigateBack()
             },
         )
     }
@@ -55,10 +63,11 @@ fun ChannelAddScreen(
 @Composable
 private fun ChannelAddBody(
     channelUiState: ChannelUiState,
-    models: List<String>,
-    onChannelValueChange: (ChannelUiState) -> Unit,
-    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
+    models: List<Model>,
+    onChannelValueChange: (ChannelUiState) -> Unit,
+    onAddModel: () -> Unit = {},
+    onSaveClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -71,6 +80,7 @@ private fun ChannelAddBody(
             channelUiState = channelUiState,
             models = models,
             onValueChange = onChannelValueChange,
+            onAddModel = onAddModel,
         )
 
         Button(
@@ -91,8 +101,9 @@ private fun ChannelAddBody(
 fun ChannelInputForm(
     channelUiState: ChannelUiState,
     modifier: Modifier = Modifier,
-    models: List<String>,
+    models: List<Model>,
     onValueChange: (ChannelUiState) -> Unit = {},
+    onAddModel: () -> Unit = {},
     editing: Boolean = false,
 ) {
     ElevatedCard(
@@ -103,7 +114,7 @@ fun ChannelInputForm(
                 .padding(8.dp)
                 .fillMaxWidth(),
             value = channelUiState.name,
-            onValueChange = { onValueChange(channelUiState.copy(name = it.take(MAX_LEN))) },
+            onValueChange = { onValueChange(channelUiState.copy(name = it)) },
             singleLine = true,
             label = { Text(stringResource(R.string.channel_name_label)) },
             supportingText = { Text(stringResource(R.string.channel_name_support)) },
@@ -117,7 +128,7 @@ fun ChannelInputForm(
                 .padding(8.dp)
                 .fillMaxWidth(),
             value = channelUiState.description,
-            onValueChange = { onValueChange(channelUiState.copy(description = it.take(MAX_LEN))) },
+            onValueChange = { onValueChange(channelUiState.copy(description = it)) },
             singleLine = true,
             label = { Text(stringResource(R.string.channel_description_label)) },
             supportingText = { Text(stringResource(R.string.channel_description_support)) },
@@ -160,13 +171,13 @@ fun ChannelInputForm(
                     .fillMaxWidth(),
                 expanded = expanded,
                 onExpandedChange = {
-                    if (models.isNotEmpty()) {
-                        expanded = !expanded
-                    }
+                    expanded = !expanded
                 },
             ) {
                 OutlinedTextField(
-                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
                     readOnly = true,
                     value = channelUiState.selectedModel,
                     onValueChange = {},
@@ -179,12 +190,26 @@ fun ChannelInputForm(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                 ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.add_model)) },
+                        onClick = {
+                            expanded = false
+                            onAddModel()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = null,
+                            )
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
                     models.forEach {
                         DropdownMenuItem(
-                            text = { Text(it) },
+                            text = { Text(it.name) },
                             onClick = {
-                                onValueChange(channelUiState.copy(selectedModel = it))
                                 expanded = false
+                                onValueChange(channelUiState.copy(selectedModel = it.name))
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                         )

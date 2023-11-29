@@ -8,11 +8,11 @@ import androidx.navigation.compose.composable
 const val MANAGE_MODELS_ROUTE = "manage_models"
 
 fun NavGraphBuilder.manageModelsScreen(
-    onNavigateUp: () -> Unit,
+    onNavigateBack: () -> Unit,
     onNavigateToModelAdd: () -> Unit,
 ) {
     composable(MANAGE_MODELS_ROUTE) {
-        ManageModelsScreen(navigateUp = onNavigateUp, navigateToModelAdd = onNavigateToModelAdd)
+        ManageModelsScreen(onNavigateBack = onNavigateBack, onNavigateToModelAdd = onNavigateToModelAdd)
     }
 }
 

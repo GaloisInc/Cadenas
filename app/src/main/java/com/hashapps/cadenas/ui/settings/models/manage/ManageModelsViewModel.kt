@@ -1,23 +1,26 @@
 package com.hashapps.cadenas.ui.settings.models.manage
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.domain.ManageModelsUseCase
+import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.data.models.Model
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
  * View model for the model-management screen.
  *
- * @property[availableModels] The list of all downloaded models
+ * @property[models] The list of all downloaded models
  */
 class ManageModelsViewModel(
-    private val manageModelsUseCase: ManageModelsUseCase,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
-    var availableModels: List<String> by mutableStateOf(manageModelsUseCase())
-        private set
+    val models = modelRepository.getAllModelsStream().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = listOf(),
+    )
 
     /**
      * Start the model-deleting worker for the given model name and update the
@@ -25,9 +28,9 @@ class ManageModelsViewModel(
      *
      * @param[model] The name of the model to delete
      */
-    fun deleteModel(model: String) {
+    fun deleteModel(model: Model) {
         viewModelScope.launch {
-            availableModels = manageModelsUseCase(model)
+            modelRepository.deleteModel(model)
         }
     }
 }

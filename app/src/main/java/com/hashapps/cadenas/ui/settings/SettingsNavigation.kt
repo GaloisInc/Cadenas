@@ -8,13 +8,13 @@ import androidx.navigation.compose.composable
 const val SETTINGS_ROUTE = "settings_home"
 
 fun NavGraphBuilder.settingsScreen(
-    onNavigateUp: () -> Unit,
+    onNavigateBack: () -> Unit,
     onNavigateToManageModels: () -> Unit,
 ) {
     composable(SETTINGS_ROUTE) {
         SettingsScreen(
-            navigateUp = onNavigateUp,
-            navigateToManageModels = onNavigateToManageModels,
+            onNavigateBack = onNavigateBack,
+            onNavigateToManageModels = onNavigateToManageModels,
         )
     }
 }

@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.data.Channel
+import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,9 +59,9 @@ fun HomeScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToNewChannel: () -> Unit,
     onNavigateToImportChannel: () -> Unit,
-    onNavigateToChannel: (Int) -> Unit,
-    onNavigateToExportChannel: (Int) -> Unit,
-    onNavigateToEditChannel: (Int) -> Unit,
+    onNavigateToChannel: (Long) -> Unit,
+    onNavigateToExportChannel: (Long) -> Unit,
+    onNavigateToEditChannel: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -142,9 +142,9 @@ fun HomeScreen(
 @Composable
 private fun ChannelList(
     channels: List<Channel>,
-    onChannelSelect: (Int) -> Unit,
-    onChannelExport: (Int) -> Unit,
-    onChannelEdit: (Int) -> Unit,
+    onChannelSelect: (Long) -> Unit,
+    onChannelExport: (Long) -> Unit,
+    onChannelEdit: (Long) -> Unit,
     onChannelDelete: (Channel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -184,9 +184,9 @@ private fun ChannelList(
 @Composable
 private fun Channel(
     channel: Channel,
-    onChannelSelect: (Int) -> Unit,
-    onChannelExport: (Int) -> Unit,
-    onChannelEdit: (Int) -> Unit,
+    onChannelSelect: (Long) -> Unit,
+    onChannelExport: (Long) -> Unit,
+    onChannelEdit: (Long) -> Unit,
     onChannelDelete: (Channel) -> Unit,
     modifier: Modifier = Modifier,
 ) {

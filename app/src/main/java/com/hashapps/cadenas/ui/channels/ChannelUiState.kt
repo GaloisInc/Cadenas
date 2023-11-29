@@ -1,6 +1,6 @@
 package com.hashapps.cadenas.ui.channels
 
-import com.hashapps.cadenas.data.Channel
+import com.hashapps.cadenas.data.channels.Channel
 
 /**
  * UI state for channel screens.
@@ -19,7 +19,7 @@ import com.hashapps.cadenas.data.Channel
  * @property[actionEnabled] Whether or not the save action is enabled
  */
 data class ChannelUiState(
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String = "",
     val description: String = "",
     val key: String = "",

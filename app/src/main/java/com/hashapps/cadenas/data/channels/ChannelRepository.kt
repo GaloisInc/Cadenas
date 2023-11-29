@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data
+package com.hashapps.cadenas.data.channels
 
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -11,6 +11,7 @@ import com.galois.cadenas.crypto.RandomPadding
 import com.galois.cadenas.crypto.SivAesWithSentinel
 import com.galois.cadenas.mbfte.TextCover
 import com.galois.cadenas.model.PyTorchGPT2LanguageModel
+import com.hashapps.cadenas.utils.toHex
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -36,17 +37,12 @@ class ChannelRepository(
     suspend fun updateChannel(channel: Channel): Unit = channelDao.update(channel)
     suspend fun deleteChannel(channel: Channel): Unit = channelDao.delete(channel)
 
-    suspend fun deleteChannelsForModel(model: String): Unit =
-        channelDao.deleteChannelsForModel(model)
-
-    fun getChannelStream(id: Int): Flow<Channel> = channelDao.getChannel(id)
+    fun getChannelStream(id: Long): Flow<Channel> = channelDao.getChannel(id)
     fun getAllChannelsStream(): Flow<List<Channel>> = channelDao.getAllChannels()
 
     private companion object {
         val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
     }
-
-    private fun ByteArray.toHex(): String = joinToString(separator = "") { "%02x".format(it) }
 
     /**
      * Generate and return an AES-256 key as ASCII-Hex.
@@ -56,7 +52,7 @@ class ChannelRepository(
     /**
      * Save a channel's QR bitmap to disk.
      */
-    suspend fun saveQRBitmap(qrBitmap: ImageBitmap?) = withContext(ioDispatcher) {
+    suspend fun saveQRBitmap(qrBitmap: ImageBitmap, channelId: Long) = withContext(ioDispatcher) {
         val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(
                 MediaStore.VOLUME_EXTERNAL_PRIMARY
@@ -66,18 +62,18 @@ class ChannelRepository(
         }
 
         val qrDetails = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-${UUID.randomUUID()}.png")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "qr-$channelId.png")
         }
         val qrUri = contentResolver.insert(imageCollection, qrDetails)!!
         contentResolver.openOutputStream(qrUri).use {
-            it?.also { qrBitmap?.asAndroidBitmap()?.compress(Bitmap.CompressFormat.PNG, 0, it) }
+            it?.also { qrBitmap.asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 0, it) }
         }
     }
 
     /**
      * Create a [TextCover] for the profile with given ID.
      */
-    suspend fun createTextCoverForChannel(id: Int): TextCover {
+    suspend fun createTextCoverForChannel(id: Long): TextCover {
         return withContext(ioDispatcher) {
             val channel = getChannelStream(id).first()
             TextCover(

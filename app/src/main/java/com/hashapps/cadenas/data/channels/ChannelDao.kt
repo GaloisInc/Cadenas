@@ -1,4 +1,4 @@
-package com.hashapps.cadenas.data
+package com.hashapps.cadenas.data.channels
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
@@ -35,28 +35,19 @@ interface ChannelDao {
     suspend fun delete(channel: Channel)
 
     /**
-     * Delete all [Channel]s associated with a given model.
-     *
-     * @param[model] The name of the model for which all associated channels
-     * should be deleted
-     */
-    @Query("DELETE FROM channels WHERE selectedModel = :model")
-    suspend fun deleteChannelsForModel(model: String)
-
-    /**
      * Emit the [Channel] with a given ID.
      *
      * @param[id] The ID of the channel to emit
      * @return A cold flow of [Channel] with the given ID
      */
-    @Query("SELECT * FROM channels WHERE id = :id")
-    fun getChannel(id: Int): Flow<Channel>
+    @Query("SELECT * FROM channel WHERE id = :id")
+    fun getChannel(id: Long): Flow<Channel>
 
     /**
      * Emit all [Channel]s in the database.
      *
      * @return A cold flow of [List]<[Channel]>, ordered by name
      */
-    @Query("SELECT * FROM channels ORDER BY name ASC")
+    @Query("SELECT * FROM channel ORDER BY name ASC")
     fun getAllChannels(): Flow<List<Channel>>
 }

@@ -2,6 +2,8 @@ package com.hashapps.cadenas.data
 
 import android.content.Context
 import androidx.work.WorkManager
+import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 
 /**
  * Interface for containers providing data to Cadenas.
@@ -36,7 +38,7 @@ class AppDataContainer(
         ChannelRepository(
             contentResolver = context.contentResolver,
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
-            channelDao = ChannelDatabase.getDatabase(context).channelDao(),
+            channelDao = CadenasDatabase.getDatabase(context).channelDao(),
         )
     }
 
@@ -44,6 +46,7 @@ class AppDataContainer(
         ModelRepository(
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
             workManager = WorkManager.getInstance(context),
+            modelDao = CadenasDatabase.getDatabase(context).modelDao(),
         )
     }
 }

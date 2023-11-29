@@ -12,9 +12,9 @@ import androidx.navigation.navDeepLink
 
 private const val CHANNEL_ID_ARG = "channelId"
 
-internal class ProcessingArgs(val channelId: Int) {
+internal class ProcessingArgs(val channelId: Long) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Int)
+            this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Long)
 }
 
 const val PROCESSING_ROUTE = "processing"
@@ -32,13 +32,13 @@ fun NavGraphBuilder.processingScreen(
             }
         ),
         arguments = listOf(navArgument(CHANNEL_ID_ARG) {
-            type = NavType.IntType
+            type = NavType.LongType
         }),
     ) {
         ProcessingScreen(onNavigateBack = onNavigateBack)
     }
 }
 
-fun NavController.navigateToProcessing(channelId: Int, navOptions: NavOptions? = null) {
+fun NavController.navigateToProcessing(channelId: Long, navOptions: NavOptions? = null) {
     this.navigate("$PROCESSING_ROUTE/$channelId", navOptions)
 }

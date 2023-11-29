@@ -1,32 +1,48 @@
 package com.hashapps.cadenas.ui.settings.models.add
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.WorkInfo
-import com.hashapps.cadenas.R
 import com.hashapps.cadenas.AppViewModelProvider
+import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
 import com.hashapps.cadenas.ui.settings.models.isNameValid
 import com.hashapps.cadenas.ui.settings.models.isUrlValid
 import com.hashapps.cadenas.workers.ModelDownloadWorker
 import kotlinx.coroutines.launch
-
-private const val MAX_LEN = 128
 
 /**
  * Cadenas model-add screen.
@@ -40,63 +56,44 @@ private const val MAX_LEN = 128
  */
 @Composable
 fun ModelAddScreen(
-    onNavigateNext: () -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ModelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var showProgressIndicator by rememberSaveable { mutableStateOf(false) }
-
-    /*
-     * This is a fun block. First, we need some state to track whether a
-     * model download has been started - we can't rely on the worker state,
-     * since this will still be `SUCCEEDED` if the application is restarted
-     * after a successful model download. The problem here is that we wish
-     * to show a Snackbar message upon download success and failure, and
-     * relying on the state alone would cause such a message to be shown
-     * regardless.
-     *
-     * Additionally, there is some special-case logic for when this screen is
-     * interacted with during the first-time setup sequence - rather than
-     * simply resetting the UI in that case, we must advance to the next
-     * screen.
-     */
-    var modelDownloadTriggered by rememberSaveable { mutableStateOf(false) }
+    var downloading by rememberSaveable { mutableStateOf(false) }
     val workerState by viewModel.modelDownloaderState.collectAsState()
     workerState?.also {
-        LaunchedEffect(it.state) {
-            when (it.state) {
-                WorkInfo.State.RUNNING -> showProgressIndicator = true
-                WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED -> {
-                    if (modelDownloadTriggered) {
-                        this.launch {
-                            snackbarHostState.showSnackbar(
-                                it.outputData.getString(
-                                    ModelDownloadWorker.KEY_RESULT_MSG
-                                )!!
-                            )
-                        }
+        LaunchedEffect(it) {
+            val finished = it.state == WorkInfo.State.SUCCEEDED || it.state == WorkInfo.State.FAILED
+            if (downloading && finished) {
+                downloading = false
 
-                        if (it.state == WorkInfo.State.SUCCEEDED) {
-                            viewModel.updateUiState(ModelUiState())
-                        }
-                    }
-
-                    showProgressIndicator = false
-                    modelDownloadTriggered = false
+                if (it.state == WorkInfo.State.SUCCEEDED) {
+                    viewModel.saveModel(it.outputData.getString(ModelDownloadWorker.KEY_MODEL_HASH)!!)
+                    viewModel.updateUiState(ModelUiState())
                 }
-                else -> {}
+
+                this.launch {
+                    snackbarHostState.showSnackbar(
+                        it.outputData.getString(
+                            ModelDownloadWorker.KEY_RESULT_MSG
+                        )!!
+                    )
+                }
             }
         }
     }
+
+    val modelNames by viewModel.modelNames.collectAsState()
 
     Scaffold(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.add_model),
-                canNavigateUp = !showProgressIndicator,
-                navigateUp = onNavigateNext,
+                canNavigateBack = !downloading,
+                onNavigateBack = onNavigateBack,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -111,17 +108,18 @@ fun ModelAddScreen(
         ) {
             ModelInputForm(
                 modelUiState = viewModel.modelUiState,
+                modelNames = modelNames,
                 onValueChange = viewModel::updateUiState,
-                enabled = !showProgressIndicator,
+                enabled = !downloading,
             )
 
             Button(
                 onClick = {
+                    downloading = true
                     viewModel.downloadModel()
-                    modelDownloadTriggered = true
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !showProgressIndicator && viewModel.modelUiState.actionEnabled,
+                enabled = !downloading && viewModel.modelUiState.actionEnabled,
             ) {
                 Text(
                     text = stringResource(R.string.download),
@@ -129,11 +127,21 @@ fun ModelAddScreen(
                 )
             }
 
-            if (showProgressIndicator) {
+            val fileName = workerState?.progress?.getString(ModelDownloadWorker.PROGRESS)
+            if (downloading && fileName != null) {
                 LinearProgressIndicator(
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth()
+                )
+                Text(
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center,
+                    text = LocalContext.current.getString(
+                        R.string.download_progress,
+                        fileName
+                    )
                 )
             }
         }
@@ -144,12 +152,13 @@ fun ModelAddScreen(
 private fun ModelInputForm(
     modelUiState: ModelUiState,
     modifier: Modifier = Modifier,
+    modelNames: List<String>,
     onValueChange: (ModelUiState) -> Unit = {},
     enabled: Boolean = true,
 ) {
     val focusManager = LocalFocusManager.current
 
-    var displaySupportText = modelUiState.name == "" || modelUiState.isNameValid()
+    var displaySupportText = modelUiState.name == "" || modelUiState.isNameValid(modelNames)
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
     ) {
@@ -186,18 +195,12 @@ private fun ModelInputForm(
                 .fillMaxWidth(),
             enabled = enabled,
             value = modelUiState.url,
-            onValueChange = { onValueChange(modelUiState.copy(url = it.take(MAX_LEN))) },
+            onValueChange = { onValueChange(modelUiState.copy(url = it)) },
             singleLine = true,
             label = { Text(stringResource(R.string.url_label)) },
             supportingText = {
                 if (displaySupportText) {
-                    Text(
-                        LocalContext.current.getString(
-                            R.string.url_support,
-                            modelUiState.url.length,
-                            MAX_LEN,
-                        )
-                    )
+                    Text(stringResource(R.string.url_support))
                 } else {
                     Text(stringResource(R.string.url_error))
                 }

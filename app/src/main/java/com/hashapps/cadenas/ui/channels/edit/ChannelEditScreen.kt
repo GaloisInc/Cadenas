@@ -37,7 +37,6 @@ import com.hashapps.cadenas.ui.channels.add.ChannelInputForm
 @Composable
 fun ChannelEditScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -45,14 +44,13 @@ fun ChannelEditScreen(
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.edit_channel),
-                navigateUp = onNavigateUp,
+                onNavigateBack = onNavigateBack,
             )
         }
     ) { innerPadding ->
         ChannelEditBody(
             modifier = modifier.padding(innerPadding),
             channelUiState = viewModel.channelUiState,
-            models = viewModel.availableModels,
             onChannelValueChange = viewModel::updateUiState,
             onSaveClick = {
                 viewModel.updateChannel()
@@ -65,7 +63,6 @@ fun ChannelEditScreen(
 @Composable
 private fun ChannelEditBody(
     channelUiState: ChannelUiState,
-    models: List<String>,
     onChannelValueChange: (ChannelUiState) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -79,7 +76,7 @@ private fun ChannelEditBody(
     ) {
         ChannelInputForm(
             channelUiState = channelUiState,
-            models = models,
+            models = listOf(),
             onValueChange = onChannelValueChange,
             editing = true,
         )

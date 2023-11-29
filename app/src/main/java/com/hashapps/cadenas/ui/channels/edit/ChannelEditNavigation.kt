@@ -10,27 +10,26 @@ import androidx.navigation.navArgument
 
 private const val CHANNEL_ID_ARG = "channelId"
 
-internal class ChannelEditArgs(val channelId: Int) {
+internal class ChannelEditArgs(val channelId: Long) {
     constructor(savedStateHandle: SavedStateHandle) :
-        this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Int)
+        this(checkNotNull(savedStateHandle[CHANNEL_ID_ARG]) as Long)
 }
 
 const val CHANNEL_EDIT_ROUTE = "channel_edit"
 
 fun NavGraphBuilder.channelEditScreen(
     onNavigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
 ) {
     composable(
         route = "$CHANNEL_EDIT_ROUTE/{$CHANNEL_ID_ARG}",
         arguments = listOf(navArgument(CHANNEL_ID_ARG) {
-            type = NavType.IntType
+            type = NavType.LongType
         })
     ) {
-        ChannelEditScreen(onNavigateBack = onNavigateBack, onNavigateUp = onNavigateUp)
+        ChannelEditScreen(onNavigateBack = onNavigateBack)
     }
 }
 
-fun NavController.navigateToChannelEdit(channelId: Int, navOptions: NavOptions? = null) {
+fun NavController.navigateToChannelEdit(channelId: Long, navOptions: NavOptions? = null) {
     this.navigate("$CHANNEL_EDIT_ROUTE/$channelId", navOptions)
 }

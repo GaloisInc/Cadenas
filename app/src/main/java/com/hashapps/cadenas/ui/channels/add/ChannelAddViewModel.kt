@@ -5,18 +5,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.ChannelRepository
-import com.hashapps.cadenas.data.ModelRepository
+import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 import com.hashapps.cadenas.ui.channels.isValid
 import com.hashapps.cadenas.ui.channels.toChannel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
  * View model for the channel-add screen.
  *
  * @property[channelUiState] The UI state
- * @property[availableModels] The list of all downloaded models
+ * @property[models] The list of all downloaded models
  */
 class ChannelAddViewModel(
     private val channelRepository: ChannelRepository,
@@ -33,7 +35,11 @@ class ChannelAddViewModel(
         channelUiState = newChannelUiState.copy(actionEnabled = newChannelUiState.isValid())
     }
 
-    val availableModels = modelRepository.downloadedModels()
+    val models = modelRepository.getAllModelsStream().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = listOf(),
+    )
 
     /**
      * If valid, add the channel to the database.

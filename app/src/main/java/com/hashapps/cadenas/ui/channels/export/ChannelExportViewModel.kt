@@ -9,56 +9,69 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.Channel
-import com.hashapps.cadenas.data.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.data.channels.Channel
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-fun Channel.toQRCode(): QRCode {
-    return QRCode(
-        data = "key:$key;prompt:$prompt;model:$selectedModel",
-        errorCorrectionLevel = ErrorCorrectionLevel.Q,
-    )
+private fun Channel.toQRCode(hash: String): QRCode = QRCode(
+    data = "key:$key;prompt:$prompt;model:$hash",
+    errorCorrectionLevel = ErrorCorrectionLevel.Q,
+)
+
+private suspend fun QRCode.toByteArray(): ByteArray = withContext(Dispatchers.Default) {
+    ByteArrayOutputStream()
+        .also {
+            render(margin = 25).writeImage(destination = it, quality = 50)
+        }
+        .toByteArray()
 }
 
-suspend fun QRCode.toByteArray(defaultDispatcher: CoroutineDispatcher = Dispatchers.Default): ByteArray =
-    withContext(defaultDispatcher) {
-        ByteArrayOutputStream()
-            .also {
-                render(margin = 25).writeImage(destination = it, quality = 50)
-            }
-            .toByteArray()
-    }
-
-suspend fun QRCode.toImageBitmap(defaultDispatcher: CoroutineDispatcher = Dispatchers.Default): ImageBitmap =
-    withContext(defaultDispatcher) {
+suspend fun QRCode.toImageBitmap(): ImageBitmap {
+    return withContext(Dispatchers.Default) {
         val bytes = toByteArray()
         BitmapFactory.decodeByteArray(bytes, 0, bytes.size).asImageBitmap()
             .also { it.prepareToDraw() }
     }
+}
 
 /**
  * View model for the channel-exporting screen.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class ChannelExportViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
     private val channelExportArgs = ChannelExportArgs(savedStateHandle)
 
     var qrBitmap: ImageBitmap? by mutableStateOf(null)
+        private set
+    var channelName: String? by mutableStateOf(null)
+        private set
+    private var channelId: Long? by mutableStateOf(null)
 
     init {
         viewModelScope.launch {
             qrBitmap = channelRepository.getChannelStream(channelExportArgs.channelId)
-                .map { it.toQRCode().toImageBitmap() }
+                .flatMapLatest { channel ->
+                    channelName = channel.name
+                    channelId = channel.id
+                    modelRepository.getModelStream(channel.selectedModel)
+                        .map { model ->
+                            channel.toQRCode(model.hash).toImageBitmap()
+                        }
+                }
                 .first()
         }
     }
@@ -68,7 +81,9 @@ class ChannelExportViewModel(
      */
     fun saveQRBitmap() {
         viewModelScope.launch {
-            channelRepository.saveQRBitmap(qrBitmap)
+            if (qrBitmap != null && channelId != null) {
+                channelRepository.saveQRBitmap(qrBitmap!!, channelId!!)
+            }
         }
     }
 }

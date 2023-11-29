@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
+import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 
 /**
@@ -29,18 +30,20 @@ import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageModelsScreen(
-    navigateUp: () -> Unit,
-    navigateToModelAdd: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToModelAdd: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val models by viewModel.models.collectAsState()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.manage_models)) },
                 modifier = modifier,
                 navigationIcon = {
-                    IconButton(onClick = navigateUp) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
@@ -48,7 +51,7 @@ fun ManageModelsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = navigateToModelAdd) {
+                    IconButton(onClick = onNavigateToModelAdd) {
                         Icon(
                             imageVector = Icons.Filled.CreateNewFolder,
                             contentDescription = stringResource(R.string.add_model)
@@ -60,7 +63,7 @@ fun ManageModelsScreen(
     ) { innerPadding ->
         ModelList(
             modifier = modifier.padding(innerPadding),
-            models = viewModel.availableModels,
+            models = models,
             onModelDelete = viewModel::deleteModel,
         )
     }
@@ -68,8 +71,8 @@ fun ManageModelsScreen(
 
 @Composable
 private fun ModelList(
-    models: List<String>,
-    onModelDelete: (String) -> Unit,
+    models: List<Model>,
+    onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -81,9 +84,7 @@ private fun ModelList(
     ) {
         if (models.isEmpty()) {
             ElevatedCard(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
@@ -104,8 +105,8 @@ private fun ModelList(
 
 @Composable
 private fun CadenasModel(
-    model: String,
-    onModelDelete: (String) -> Unit,
+    model: Model,
+    onModelDelete: (Model) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
@@ -114,7 +115,7 @@ private fun CadenasModel(
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
         ListItem(
-            headlineContent = { Text(model) },
+            headlineContent = { Text(model.name) },
             trailingContent = {
                 Box(
                     modifier.wrapContentSize(Alignment.TopStart),
