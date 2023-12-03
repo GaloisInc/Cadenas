@@ -134,7 +134,7 @@ class ProcessingViewModel(
                 textCover?.encodeUntilDecodable(processingUiState.toProcess)
             }
             processingUiState =
-                processingUiState.copy(inProgress = false, result = encodedMessage)
+                processingUiState.copy(inProgress = false, result = encodedMessage?.coverText)
         }
     }
 
