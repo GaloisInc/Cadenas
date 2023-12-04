@@ -63,4 +63,5 @@
     <string name="model_not_found">The model used by this channel has not been added to Cadenas. Please download the appropriate model and try again.</string>
     <string name="ok">OK</string>
     <string name="duplicate_model_name">A model with this name is already installed</string>
+    <string name="choose_decoder">Choose Decoder</string>
 </resources>

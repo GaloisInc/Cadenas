@@ -71,7 +71,13 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
+                title = {
+                    if (sharedText.isNotEmpty()) {
+                        Text(stringResource(R.string.choose_decoder))
+                    } else {
+                        Text(stringResource(R.string.app_name))
+                    }
+                },
                 modifier = modifier,
                 navigationIcon = {
                     IconButton(onClick = onNavigateToSettings) {
