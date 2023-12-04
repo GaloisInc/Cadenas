@@ -4,7 +4,7 @@ Cadenas is an application for _obfuscated communication_ via "whiteboard"
 platforms such as Mastodon, Twitter, and even GitLab/GitHub comment threads.
 
 The obfuscation is provided by _model-based format-transforming encryption
-(MB-FTE)_.  See `STRATEGY.md` for a high-level description of the approach.
+(MB-FTE)_.
 
 This repository hosts the source for the Cadenas Android application, which
 provides a user-friendly interface to MB-FTE, and is not tied to any specific
@@ -14,11 +14,10 @@ work.
 
 ## Features
 
-- Material3 Design
+- Material3 design
 - Independence from social media - no data shared with other platforms
 - Dark and light themes based on system settings
-- Highly configurable
-- TODO: Simple text/QR configuration sharing
+- Simple QR configuration sharing
 
 ## Building
 
@@ -81,14 +80,11 @@ repository for build/installation instructions.
 ## Installation
 
 As of this writing, Cadenas is not distributed on the Google Play Store or
-F-Droid. To install, you will need to:
-
-1. Enable developer options on your Android device
-2. Package an APK via Android Studio
-3. Upload the APK to your device, and install
-
-The details of these steps vary depending on the device/version of Android
-you're using.
+F-Droid. To install, you will need to allow unknown applications to be
+installed from an appropriate source (e.g., Google Drive), make sure the APK
+is available at that source, and proceed with installation via that APK. **We
+also recommend disabling the Play Protect feature that sends unknown
+applications to Google.**
 
 ## Support
 
@@ -100,8 +96,17 @@ Guidelines for contributing to the project can be found in `CONTRIBUTING.md`.
 
 ## Authors and acknowledgment
 
-TODO: DARPA blurb / Galois credits
+Our deep gratitude to all of the following for their contributions to Cadenas,
+both technical and theoretical:
 
-## License
-
-TODO: Pick a license
+- David Archer
+- Luke Bauer
+- Himanshu Goyal
+- Alex Grushin
+- Rawane Issa
+- Andrew Lauziere
+- Alex J Malozemoff
+- Hari Menon
+- Chris Phifer
+- Tom Shrimpton
+- Shauna Sweet
