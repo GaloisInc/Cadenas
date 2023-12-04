@@ -4,7 +4,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
-import com.hashapps.cadenas.ui.home.navigateToHome
 import com.hashapps.cadenas.ui.settings.SETTINGS_ROUTE
 import com.hashapps.cadenas.ui.settings.models.manage.manageModelsScreen
 import com.hashapps.cadenas.ui.settings.models.add.modelAddScreen
