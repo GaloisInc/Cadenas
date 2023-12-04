@@ -17,7 +17,7 @@ class HomeViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
 ) : ViewModel() {
-    private val sharedTextState =
+    val sharedTextState =
         savedStateHandle.getStateFlow(NavController.KEY_DEEP_LINK_INTENT, Intent())
             .map {
                 if (it.action != Intent.ACTION_SEND) {

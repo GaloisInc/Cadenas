@@ -59,13 +59,14 @@ fun HomeScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToNewChannel: () -> Unit,
     onNavigateToImportChannel: () -> Unit,
-    onNavigateToChannel: (Long) -> Unit,
+    onNavigateToChannel: (Long, String) -> Unit,
     onNavigateToExportChannel: (Long) -> Unit,
     onNavigateToEditChannel: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val channels by viewModel.channels.collectAsState()
+    val sharedText by viewModel.sharedTextState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -131,6 +132,7 @@ fun HomeScreen(
         ChannelList(
             modifier = modifier.padding(innerPadding),
             channels = channels,
+            toDecode = sharedText,
             onChannelSelect = onNavigateToChannel,
             onChannelExport = onNavigateToExportChannel,
             onChannelEdit = onNavigateToEditChannel,
@@ -142,7 +144,8 @@ fun HomeScreen(
 @Composable
 private fun ChannelList(
     channels: List<Channel>,
-    onChannelSelect: (Long) -> Unit,
+    toDecode: String,
+    onChannelSelect: (Long, String) -> Unit,
     onChannelExport: (Long) -> Unit,
     onChannelEdit: (Long) -> Unit,
     onChannelDelete: (Channel) -> Unit,
@@ -169,6 +172,7 @@ private fun ChannelList(
             channels.forEach {
                 Channel(
                     channel = it,
+                    toDecode = toDecode,
                     onChannelSelect = onChannelSelect,
                     onChannelExport = onChannelExport,
                     onChannelEdit = onChannelEdit,
@@ -184,7 +188,8 @@ private fun ChannelList(
 @Composable
 private fun Channel(
     channel: Channel,
-    onChannelSelect: (Long) -> Unit,
+    toDecode: String,
+    onChannelSelect: (Long, String) -> Unit,
     onChannelExport: (Long) -> Unit,
     onChannelEdit: (Long) -> Unit,
     onChannelDelete: (Channel) -> Unit,
@@ -197,7 +202,7 @@ private fun Channel(
     ListItem(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onChannelSelect(channel.id) },
+            .clickable { onChannelSelect(channel.id, toDecode) },
         headlineContent = { Text(channel.name) },
         supportingContent = { Text(channel.description) },
         leadingContent = {

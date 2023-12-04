@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.hashapps.cadenas.ui.home.HOME_ROUTE
 import com.hashapps.cadenas.ui.home.homeScreen
-import com.hashapps.cadenas.ui.home.navigateToHome
 import com.hashapps.cadenas.ui.processing.navigateToProcessing
 import com.hashapps.cadenas.ui.processing.processingScreen
 import com.hashapps.cadenas.ui.channels.add.channelAddScreen
@@ -36,7 +35,7 @@ fun CadenasRootNavHost(
             onNavigateToSettings = { navController.navigateToSettingsGraph() },
             onNavigateToNewChannel = { navController.navigateToChannelAdd() },
             onNavigateToImportChannel = { navController.navigateToChannelImport() },
-            onNavigateToChannel = { navController.navigateToProcessing(it) },
+            onNavigateToChannel = { id, toDecode -> navController.navigateToProcessing(id, toDecode) },
             onNavigateToExportChannel = { navController.navigateToChannelExport(it) },
             onNavigateToEditChannel = { navController.navigateToChannelEdit(it) },
         )

@@ -13,7 +13,7 @@ fun NavGraphBuilder.homeScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToNewChannel: () -> Unit,
     onNavigateToImportChannel: () -> Unit,
-    onNavigateToChannel: (Long) -> Unit,
+    onNavigateToChannel: (Long, String) -> Unit,
     onNavigateToExportChannel: (Long) -> Unit,
     onNavigateToEditChannel: (Long) -> Unit,
 ) {
@@ -35,8 +35,4 @@ fun NavGraphBuilder.homeScreen(
             onNavigateToEditChannel = onNavigateToEditChannel,
         )
     }
-}
-
-fun NavController.navigateToHome(navOptions: NavOptions? = null) {
-    this.navigate(HOME_ROUTE, navOptions)
 }
