@@ -43,7 +43,15 @@ class ProcessingViewModel(
         viewModelScope.launch {
             val channelName =
                 channelRepository.getChannelStream(processingArgs.channelId).map { it.name }.first()
-            processingUiState = processingUiState.copy(channelName = channelName)
+            processingUiState = processingUiState.copy(
+                channelName = channelName,
+                toProcess = processingArgs.toDecode,
+                processingMode = if (processingArgs.toDecode.isEmpty()) {
+                    ProcessingMode.Encode
+                } else {
+                    ProcessingMode.Decode
+                }
+            )
         }
     }
 
