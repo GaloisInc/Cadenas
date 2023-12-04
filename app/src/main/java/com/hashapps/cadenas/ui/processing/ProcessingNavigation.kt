@@ -24,13 +24,6 @@ fun NavGraphBuilder.processingScreen(
 ) {
     composable(
         route = "$PROCESSING_ROUTE/{$CHANNEL_ID_ARG}",
-        deepLinks = listOf(
-            navDeepLink {
-                action = Intent.ACTION_SEND
-                mimeType = "text/plain"
-                uriPattern = "cadenas://{$CHANNEL_ID_ARG}"
-            }
-        ),
         arguments = listOf(navArgument(CHANNEL_ID_ARG) {
             type = NavType.LongType
         }),

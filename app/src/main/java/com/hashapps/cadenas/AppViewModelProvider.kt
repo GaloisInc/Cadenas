@@ -18,6 +18,7 @@ object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             HomeViewModel(
+                createSavedStateHandle(),
                 cadenasApplication().container.channelRepository
             )
         }
