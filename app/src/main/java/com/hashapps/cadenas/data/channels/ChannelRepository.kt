@@ -83,7 +83,7 @@ class ChannelRepository(
                     )
                 ),
                 languageModel = PyTorchGPT2LanguageModel(modelsDir.resolve(channel.selectedModel).path),
-                seed = channel.prompt,
+                prompt = channel.prompt,
             )
         }
     }
