@@ -163,7 +163,9 @@ private fun ChannelList(
                     .fillMaxWidth()
             ) {
                 Text(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     text = stringResource(R.string.channel_placeholder),
                 )

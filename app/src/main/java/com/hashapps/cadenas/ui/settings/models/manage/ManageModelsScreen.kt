@@ -87,7 +87,9 @@ private fun ModelList(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     text = stringResource(R.string.model_placeholder),
                 )
