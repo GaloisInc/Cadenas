@@ -3,81 +3,123 @@ package com.hashapps.cadenas.ui.processing
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.Cadenas
-import com.hashapps.cadenas.data.SettingsRepository
+import com.galois.cadenas.mbfte.TextCover
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
  * View model for the processing screens.
  *
- * @property[cadenasInitialized] Whether or not Cadenas is ready to process
- * @property[selectedProfile] The currently-selected messaging profile
- * @property[encodeUiState] The UI state for the encoding screen
- * @property[decodeUiState] The UI state for the decoding screen
+ * @property[processingUiState] The UI state for the processing screen
  */
 class ProcessingViewModel(
-    settingsRepository: SettingsRepository,
+    savedStateHandle: SavedStateHandle,
+    private val channelRepository: ChannelRepository,
 ) : ViewModel() {
-    val cadenasInitialized = settingsRepository.cadenasInitialized
+    private val processingArgs = ProcessingArgs(savedStateHandle)
 
-    val selectedProfile = settingsRepository.selectedProfile
+    private var textCover: TextCover? by mutableStateOf(null)
 
-    var encodeUiState by mutableStateOf(ProcessingUiState())
-        private set
+    val cadenasInitialized
+        get() = textCover != null
 
-    /**
-     * Update the encode screen UI state, only enabling the action if the new
-     * state is valid.
-     *
-     * @param[newEncodeUiState] The new UI state
-     */
-    fun updateEncodeUiState(newEncodeUiState: ProcessingUiState) {
-        encodeUiState = newEncodeUiState.copy()
+    init {
+        viewModelScope.launch {
+            textCover = channelRepository.createTextCoverForChannel(processingArgs.channelId)
+        }
     }
 
-    var decodeUiState by mutableStateOf(ProcessingUiState())
+    var processingUiState by mutableStateOf(ProcessingUiState())
         private set
 
+    init {
+        viewModelScope.launch {
+            val channelName =
+                channelRepository.getChannelStream(processingArgs.channelId).map { it.name }.first()
+            processingUiState = processingUiState.copy(
+                channelName = channelName,
+                toProcess = processingArgs.toDecode,
+                processingMode = if (processingArgs.toDecode.isEmpty()) {
+                    ProcessingMode.Encode
+                } else {
+                    ProcessingMode.Decode
+                }
+            )
+        }
+    }
+
     /**
-     * Update the decode screen UI state, only enabling the action if the new
-     * state is valid.
+     * Update the UI state.
      *
-     * @param[newDecodeUiState] The new UI state
+     * @param[newProcessingUiState] The new UI state
      */
-    fun updateDecodeUiState(newDecodeUiState: ProcessingUiState) {
-        decodeUiState = newDecodeUiState.copy()
+    fun updateProcessingUiState(newProcessingUiState: ProcessingUiState) {
+        processingUiState = newProcessingUiState.copy()
+    }
+
+    /**
+     * Enter encoding mode.
+     */
+    fun encodingMode() {
+        processingUiState = ProcessingUiState(
+            channelName = processingUiState.channelName,
+            processingMode = ProcessingMode.Encode
+        )
+    }
+
+    /**
+     * Enter decoding mode.
+     */
+    fun decodingMode() {
+        processingUiState = ProcessingUiState(
+            channelName = processingUiState.channelName,
+            processingMode = ProcessingMode.Decode
+        )
+    }
+
+    /**
+     * Encode or decode the input, based on the current processing mode.
+     */
+    fun processMessage() {
+        when (processingUiState.processingMode) {
+            ProcessingMode.Encode -> encodeMessage()
+            ProcessingMode.Decode -> decodeMessage()
+        }
     }
 
     /**
      * Attempt to encode the input message using the selected messaging
-     * profile, adding the profile's tag to the end (if any.)
+     * channel.
      */
-    fun encodeMessage(tag: String) {
+    private fun encodeMessage() {
         viewModelScope.launch {
-            encodeUiState = encodeUiState.copy(inProgress = true, result = null)
+            processingUiState = processingUiState.copy(inProgress = true, result = null)
             val encodedMessage = withContext(Dispatchers.Default) {
-                Cadenas.getInstance()?.encode(encodeUiState.toProcess)
+                textCover?.encodeUntilDecodable(processingUiState.toProcess)
             }
-            encodeUiState =
-                encodeUiState.copy(inProgress = false, result = encodedMessage?.plus(tag))
+            processingUiState =
+                processingUiState.copy(inProgress = false, result = encodedMessage?.coverText)
         }
     }
 
     /**
      * Attempt to decode the input message using the selected messaging
-     * profile, first removing the profile's tag (if any.)
+     * channel.
      */
-    fun decodeMessage(tag: String) {
+    private fun decodeMessage() {
         viewModelScope.launch {
-            decodeUiState = decodeUiState.copy(inProgress = true, result = null)
+            processingUiState = processingUiState.copy(inProgress = true, result = null)
             val decodedMessage = withContext(Dispatchers.Default) {
-                Cadenas.getInstance()?.decode(decodeUiState.toProcess.removeSuffix(tag))
+                textCover?.decode(processingUiState.toProcess)
             }
-            decodeUiState = decodeUiState.copy(inProgress = false, result = decodedMessage)
+            processingUiState = processingUiState.copy(inProgress = false, result = decodedMessage)
         }
     }
 }

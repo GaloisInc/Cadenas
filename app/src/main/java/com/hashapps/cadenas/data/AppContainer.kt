@@ -1,36 +1,26 @@
 package com.hashapps.cadenas.data
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.WorkManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-
-private const val CADENAS_SETTINGS_NAME = "cadenas_settings"
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = CADENAS_SETTINGS_NAME
-)
+import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 
 /**
  * Interface for containers providing data to Cadenas.
  *
- * Implementors must provide repositories for messaging profiles, the app's
- * settings (e.g. which messaging profile is active), and the models one may
+ * Implementors must provide repositories for messaging channels, the app's
+ * settings (e.g. which messaging channel is active), and the models one may
  * use to encode messages.
  *
  * While there currently isn't a huge benefit to having this interface, it
  * does provide a mechanism by which we may implement additional containers or
  * expose friendlier APIs than the repositories themselves.
  *
- * @property[profileRepository] Repository of Cadenas profiles
- * @property[settingsRepository] Repository of application settings
+ * @property[channelRepository] Repository of Cadenas channels
  * @property[modelRepository] Repository of available language models
  */
 interface AppContainer {
-    val profileRepository: ProfileRepository
-    val settingsRepository: SettingsRepository
+    val channelRepository: ChannelRepository
     val modelRepository: ModelRepository
 }
 
@@ -44,18 +34,11 @@ interface AppContainer {
 class AppDataContainer(
     private val context: Context
 ) : AppContainer {
-    override val profileRepository by lazy {
-        ProfileRepository(
-            profileDao = ProfileDatabase.getDatabase(context).profileDao(),
-        )
-    }
-
-    override val settingsRepository by lazy {
-        SettingsRepository(
-            dataStore = context.dataStore,
+    override val channelRepository by lazy {
+        ChannelRepository(
+            contentResolver = context.contentResolver,
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
-            profileDao = ProfileDatabase.getDatabase(context).profileDao(),
-            externalScope = CoroutineScope(SupervisorJob()),
+            channelDao = CadenasDatabase.getDatabase(context).channelDao(),
         )
     }
 
@@ -63,6 +46,7 @@ class AppDataContainer(
         ModelRepository(
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
             workManager = WorkManager.getInstance(context),
+            modelDao = CadenasDatabase.getDatabase(context).modelDao(),
         )
     }
 }

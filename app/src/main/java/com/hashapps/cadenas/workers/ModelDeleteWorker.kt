@@ -1,16 +1,29 @@
 package com.hashapps.cadenas.workers
 
 import android.content.Context
+import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.hashapps.cadenas.CadenasApplication
+import com.hashapps.cadenas.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
 class ModelDeleteWorker(
-    context: Context,
+    private val context: Context,
     params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        val notification = NotificationCompat.Builder(context, CadenasApplication.CHANNEL_ID)
+            .setContentTitle(context.getString(R.string.delete_title))
+            .setSmallIcon(R.drawable.baseline_delete_forever_24)
+            .build()
+
+        return ForegroundInfo(0, notification)
+    }
+
     override suspend fun doWork(): Result {
         val modelDir = inputData.getString(KEY_MODEL_DIR) ?: return Result.failure()
 

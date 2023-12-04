@@ -3,6 +3,8 @@ package com.hashapps.cadenas.ui.settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -11,45 +13,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.navigation.NavigationDestination
-
-/**
- * The [NavigationDestination] for the top-level settings screen.
- */
-object SettingsDestination : NavigationDestination {
-    override val route = "settings"
-    override val titleRes = R.string.settings
-    val icon = Icons.Filled.Settings
-}
 
 /**
  * Cadenas main settings screen.
- *
- * This view provides navigation back to the
- * [com.hashapps.cadenas.ui.processing.ProcessingScreen]s, as well as to the
- * views for model/profile management.
- *
- * This is intended to be extensible with additional settings destinations;
- * cosmetics of the app UI, import/export for profiles, etc.
  */
 @Composable
 fun SettingsScreen(
-    navigateUp: () -> Unit,
-    navigateToManageModels: () -> Unit,
-    navigateToManageProfiles: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToManageModels: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
-                title = stringResource(SettingsDestination.titleRes),
-                navigateUp = navigateUp,
+                title = stringResource(R.string.settings),
+                onNavigateBack = onNavigateBack,
             )
         }
     ) { innerPadding ->
         SettingsBody(
-            navigateToManageModels = navigateToManageModels,
-            navigateToManageProfiles = navigateToManageProfiles,
+            navigateToManageModels = onNavigateToManageModels,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -58,7 +41,6 @@ fun SettingsScreen(
 @Composable
 private fun SettingsBody(
     navigateToManageModels: () -> Unit,
-    navigateToManageProfiles: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,30 +65,10 @@ private fun SettingsBody(
                 },
                 trailingContent = {
                     Icon(
-                        imageVector = Icons.Filled.NavigateNext,
+                        imageVector = Icons.AutoMirrored.Filled.NavigateNext,
                         contentDescription = null,
                     )
                 }
-            )
-
-            Divider(thickness = 1.dp)
-
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.profiles)) },
-                modifier = Modifier.clickable(onClick = navigateToManageProfiles),
-                supportingContent = { Text(stringResource(R.string.manage_profiles_support)) },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Filled.SwitchAccount,
-                        contentDescription = null,
-                    )
-                },
-                trailingContent = {
-                    Icon(
-                        imageVector = Icons.Filled.NavigateNext,
-                        contentDescription = null,
-                    )
-                },
             )
         }
     }
@@ -117,25 +79,24 @@ private fun SettingsBody(
 fun SettingsTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
-    navigationNeeded: Boolean = true,
-    canNavigateUp: Boolean = true,
-    navigateUp: () -> Unit = {},
+    canNavigateBack: Boolean = true,
+    onNavigateBack: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
         modifier = modifier,
         navigationIcon = {
-            if (navigationNeeded) {
-                IconButton(
-                    enabled = canNavigateUp,
-                    onClick = navigateUp,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                    )
-                }
+            IconButton(
+                enabled = canNavigateBack,
+                onClick = onNavigateBack,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back),
+                )
             }
         },
+        actions = actions,
     )
 }
