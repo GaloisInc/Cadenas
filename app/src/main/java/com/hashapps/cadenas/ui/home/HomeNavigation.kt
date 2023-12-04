@@ -36,3 +36,7 @@ fun NavGraphBuilder.homeScreen(
         )
     }
 }
+
+fun NavController.navigateToHome(navOptions: NavOptions? = null) {
+    this.navigate(HOME_ROUTE, navOptions)
+}

@@ -16,6 +16,7 @@ import com.hashapps.cadenas.ui.channels.export.channelExportScreen
 import com.hashapps.cadenas.ui.channels.export.navigateToChannelExport
 import com.hashapps.cadenas.ui.channels.import.channelImportScreen
 import com.hashapps.cadenas.ui.channels.import.navigateToChannelImport
+import com.hashapps.cadenas.ui.home.navigateToHome
 import com.hashapps.cadenas.ui.settings.models.add.navigateToModelAdd
 
 /**
@@ -48,7 +49,7 @@ fun CadenasRootNavHost(
             onNavigateToAddModel = { navController.navigateToModelAdd() })
         channelExportScreen(onNavigateBack = { navController.popBackStack() })
         channelEditScreen(onNavigateBack = { navController.popBackStack() })
-        processingScreen { navController.popBackStack() }
+        processingScreen { navController.navigateToHome() }
         settingsGraph(navController)
     }
 }
