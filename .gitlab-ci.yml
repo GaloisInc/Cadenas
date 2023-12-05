@@ -125,7 +125,7 @@ package_release:
   only:
     - main
   script:
-    - mv app/build/outputs/apk/release/app-release-unsigned.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release.apk
+    - mv app/build/outputs/apk/release/app-release.apk ./deliverables/Cadenas-v$VERSION_NAME-$VERSION_CODE-release.apk
   artifacts:
     expire_in: 4 weeks
     paths:
