@@ -1,6 +1,7 @@
 package com.hashapps.cadenas.ui.home
 
 import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +26,7 @@ class HomeViewModel(
                 }
 
                 if (it.type.equals("text/plain")) {
-                    it.getStringExtra(Intent.EXTRA_TEXT) ?: ""
+                    Uri.encode(it.getStringExtra(Intent.EXTRA_TEXT) ?: "")
                 } else {
                     ""
                 }

@@ -25,7 +25,7 @@ fun NavGraphBuilder.processingScreen(
     onNavigateBack: () -> Unit,
 ) {
     composable(
-        route = "$PROCESSING_ROUTE/{$CHANNEL_ID_ARG}?{$TO_DECODE_ARG}",
+        route = "$PROCESSING_ROUTE/{$CHANNEL_ID_ARG}?$TO_DECODE_ARG={$TO_DECODE_ARG}",
         arguments = listOf(navArgument(CHANNEL_ID_ARG) {
             type = NavType.LongType
         }, navArgument(TO_DECODE_ARG) {
@@ -38,5 +38,5 @@ fun NavGraphBuilder.processingScreen(
 }
 
 fun NavController.navigateToProcessing(channelId: Long, toDecode: String, navOptions: NavOptions? = null) {
-    this.navigate("$PROCESSING_ROUTE/$channelId?$toDecode", navOptions)
+    this.navigate("$PROCESSING_ROUTE/$channelId?$TO_DECODE_ARG=$toDecode", navOptions)
 }
