@@ -74,7 +74,6 @@ fun ProcessingScreen(
         },
     ) { innerPadding ->
         ProcessingBody(
-            cadenasInitialized = viewModel.cadenasInitialized,
             processingUiState = viewModel.processingUiState,
             onValueChange = viewModel::updateProcessingUiState,
             enterEncodeMode = viewModel::encodingMode,
@@ -96,7 +95,6 @@ fun ProcessingScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProcessingBody(
-    cadenasInitialized: Boolean,
     processingUiState: ProcessingUiState,
     onValueChange: (ProcessingUiState) -> Unit,
     enterEncodeMode: () -> Unit,
@@ -169,7 +167,7 @@ private fun ProcessingBody(
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            enabled = cadenasInitialized && processingUiState.toProcess.isNotEmpty() && !processingUiState.inProgress,
+            enabled = processingUiState.toProcess.isNotEmpty() && !processingUiState.inProgress,
             onClick = action,
         ) {
             Text(

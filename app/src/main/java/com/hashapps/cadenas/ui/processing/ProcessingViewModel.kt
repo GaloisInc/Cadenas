@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.galois.cadenas.mbfte.TextCover
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -24,17 +23,6 @@ class ProcessingViewModel(
     private val channelRepository: ChannelRepository,
 ) : ViewModel() {
     private val processingArgs = ProcessingArgs(savedStateHandle)
-
-    private var textCover: TextCover? by mutableStateOf(null)
-
-    val cadenasInitialized
-        get() = textCover != null
-
-    init {
-        viewModelScope.launch {
-            textCover = channelRepository.createTextCoverForChannel(processingArgs.channelId)
-        }
-    }
 
     var processingUiState by mutableStateOf(ProcessingUiState())
         private set
@@ -101,9 +89,11 @@ class ProcessingViewModel(
     private fun encodeMessage() {
         viewModelScope.launch {
             processingUiState = processingUiState.copy(inProgress = true, result = null)
+            val textCover = channelRepository.createTextCoverForChannel(processingArgs.channelId)
             val encodedMessage = withContext(Dispatchers.Default) {
-                textCover?.encodeUntilDecodable(processingUiState.toProcess)
+                textCover.encodeUntilDecodable(processingUiState.toProcess)
             }
+            textCover.destroy()
             processingUiState =
                 processingUiState.copy(inProgress = false, result = encodedMessage?.coverText)
         }
@@ -116,9 +106,11 @@ class ProcessingViewModel(
     private fun decodeMessage() {
         viewModelScope.launch {
             processingUiState = processingUiState.copy(inProgress = true, result = null)
+            val textCover = channelRepository.createTextCoverForChannel(processingArgs.channelId)
             val decodedMessage = withContext(Dispatchers.Default) {
-                textCover?.decode(processingUiState.toProcess)
+                textCover.decode(processingUiState.toProcess)
             }
+            textCover.destroy()
             processingUiState = processingUiState.copy(inProgress = false, result = decodedMessage)
         }
     }
