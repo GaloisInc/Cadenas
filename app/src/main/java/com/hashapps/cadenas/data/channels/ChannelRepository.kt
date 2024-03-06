@@ -12,13 +12,13 @@ import com.galois.cadenas.crypto.SivAesWithSentinel
 import com.galois.cadenas.mbfte.TextCover
 import com.galois.cadenas.model.PyTorchGPT2LanguageModel
 import com.hashapps.cadenas.utils.toHex
+import com.hashapps.cadenas.utils.toHexBytes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.UUID
 import javax.crypto.KeyGenerator
 
 /**
@@ -79,7 +79,7 @@ class ChannelRepository(
             TextCover(
                 cryptoSystem = RandomPadding(
                     SivAesWithSentinel(
-                        channel.key.chunked(2).map { b -> b.toInt(16).toByte() }.toByteArray()
+                        channel.key.toHexBytes()
                     )
                 ),
                 languageModel = PyTorchGPT2LanguageModel(modelsDir.resolve(channel.selectedModel).path),
