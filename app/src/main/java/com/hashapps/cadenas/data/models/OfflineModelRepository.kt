@@ -24,18 +24,18 @@ class OfflineModelRepository(
     private val modelsDir: File,
     private val workManager: WorkManager,
     private val modelDao: ModelDao,
-) {
-    suspend fun insertModel(model: Model): Long = modelDao.insert(model)
-    suspend fun deleteModel(model: Model) {
+): ModelRepository {
+    override suspend fun insertModel(model: Model): Long = modelDao.insert(model)
+    override suspend fun deleteModel(model: Model) {
         modelDao.delete(model)
         deleteFilesForModel(model.name)
     }
 
-    fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
-    fun getModelStreamWithHash(hash: String): Flow<Model?> = modelDao.getModelWithHash(hash)
-    fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
+    override fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
+    override fun getModelStreamWithHash(hash: String): Flow<Model?> = modelDao.getModelWithHash(hash)
+    override fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
 
-    val modelDownloaderState = workManager
+    override val modelDownloaderState = workManager
         .getWorkInfosForUniqueWorkLiveData("downloadModel")
         .asFlow()
         .map { it.getOrNull(0) }
@@ -48,7 +48,7 @@ class OfflineModelRepository(
      * @param[url] The HTTPS URL of the model ZIP
      * @param[modelName] The name of the model/directory to store the model to
      */
-    fun downloadModelFromAndSaveAs(url: String, modelName: String) {
+    override fun downloadModelFromAndSaveAs(url: String, modelName: String) {
         val data = Data.Builder()
 
         data.putString(ModelDownloadWorker.KEY_MODEL_URL, url)
