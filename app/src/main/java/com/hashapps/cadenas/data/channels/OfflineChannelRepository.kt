@@ -32,13 +32,13 @@ class OfflineChannelRepository(
     private val modelsDir: File,
     private val channelDao: ChannelDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) {
-    suspend fun insertChannel(channel: Channel): Long = channelDao.insert(channel)
-    suspend fun updateChannel(channel: Channel): Unit = channelDao.update(channel)
-    suspend fun deleteChannel(channel: Channel): Unit = channelDao.delete(channel)
+): ChannelRepository {
+    override suspend fun insertChannel(channel: Channel): Long = channelDao.insert(channel)
+    override suspend fun updateChannel(channel: Channel): Unit = channelDao.update(channel)
+    override suspend fun deleteChannel(channel: Channel): Unit = channelDao.delete(channel)
 
-    fun getChannelStream(id: Long): Flow<Channel> = channelDao.getChannel(id)
-    fun getAllChannelsStream(): Flow<List<Channel>> = channelDao.getAllChannels()
+    override fun getChannelStream(id: Long): Flow<Channel> = channelDao.getChannel(id)
+    override fun getAllChannelsStream(): Flow<List<Channel>> = channelDao.getAllChannels()
 
     private companion object {
         val KEYGEN: KeyGenerator = KeyGenerator.getInstance("AES").also { it.init(256) }
@@ -47,12 +47,12 @@ class OfflineChannelRepository(
     /**
      * Generate and return an AES-256 key as ASCII-Hex.
      */
-    fun genKey(): String = KEYGEN.generateKey().encoded.toHex()
+    override fun genKey(): String = KEYGEN.generateKey().encoded.toHex()
 
     /**
      * Save a channel's QR bitmap to disk.
      */
-    suspend fun saveQRBitmap(qrBitmap: ImageBitmap, channelId: Long) = withContext(ioDispatcher) {
+    override suspend fun saveQRBitmap(qrBitmap: ImageBitmap, channelId: Long) = withContext(ioDispatcher) {
         val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(
                 MediaStore.VOLUME_EXTERNAL_PRIMARY
@@ -68,12 +68,14 @@ class OfflineChannelRepository(
         contentResolver.openOutputStream(qrUri).use {
             it?.also { qrBitmap.asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 0, it) }
         }
+
+        Unit
     }
 
     /**
      * Create a [TextCover] for the profile with given ID.
      */
-    suspend fun createTextCoverForChannel(id: Long): TextCover {
+    override suspend fun createTextCoverForChannel(id: Long): TextCover {
         return withContext(ioDispatcher) {
             val channel = getChannelStream(id).first()
             TextCover(
