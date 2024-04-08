@@ -2,6 +2,7 @@ package com.hashapps.cadenas.data
 
 import android.content.Context
 import androidx.work.WorkManager
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.channels.OfflineChannelRepository
 import com.hashapps.cadenas.data.models.ModelRepository
 
@@ -16,11 +17,11 @@ import com.hashapps.cadenas.data.models.ModelRepository
  * does provide a mechanism by which we may implement additional containers or
  * expose friendlier APIs than the repositories themselves.
  *
- * @property[offlineChannelRepository] Repository of Cadenas channels
+ * @property[channelRepository] Repository of Cadenas channels
  * @property[modelRepository] Repository of available language models
  */
 interface AppContainer {
-    val offlineChannelRepository: OfflineChannelRepository
+    val channelRepository: ChannelRepository
     val modelRepository: ModelRepository
 }
 
@@ -34,7 +35,7 @@ interface AppContainer {
 class AppDataContainer(
     private val context: Context
 ) : AppContainer {
-    override val offlineChannelRepository by lazy {
+    override val channelRepository by lazy {
         OfflineChannelRepository(
             contentResolver = context.contentResolver,
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },

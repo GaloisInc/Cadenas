@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.channels.OfflineChannelRepository
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 import com.hashapps.cadenas.ui.channels.isValid
@@ -21,10 +21,10 @@ import kotlinx.coroutines.launch
  * @property[models] The list of all downloaded models
  */
 class ChannelAddViewModel(
-    private val offlineChannelRepository: OfflineChannelRepository,
+    private val channelRepository: ChannelRepository,
     modelRepository: ModelRepository,
 ) : ViewModel() {
-    var channelUiState by mutableStateOf(ChannelUiState(key = offlineChannelRepository.genKey()))
+    var channelUiState by mutableStateOf(ChannelUiState(key = channelRepository.genKey()))
         private set
 
     /**
@@ -47,7 +47,7 @@ class ChannelAddViewModel(
     fun saveChannel() {
         viewModelScope.launch {
             if (channelUiState.isValid()) {
-                offlineChannelRepository.insertChannel(channelUiState.toChannel())
+                channelRepository.insertChannel(channelUiState.toChannel())
             }
         }
     }

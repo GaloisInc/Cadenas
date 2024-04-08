@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.channels.OfflineChannelRepository
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
  */
 class ProcessingViewModel(
     savedStateHandle: SavedStateHandle,
-    private val offlineChannelRepository: OfflineChannelRepository,
+    private val channelRepository: ChannelRepository,
 ) : ViewModel() {
     private val processingArgs = ProcessingArgs(savedStateHandle)
 
@@ -30,7 +30,7 @@ class ProcessingViewModel(
     init {
         viewModelScope.launch {
             val channelName =
-                offlineChannelRepository.getChannelStream(processingArgs.channelId).map { it.name }.first()
+                channelRepository.getChannelStream(processingArgs.channelId).map { it.name }.first()
             processingUiState = processingUiState.copy(
                 channelName = channelName,
                 toProcess = processingArgs.toDecode,
@@ -89,7 +89,7 @@ class ProcessingViewModel(
     private fun encodeMessage() {
         viewModelScope.launch {
             processingUiState = processingUiState.copy(inProgress = true, result = null)
-            val textCover = offlineChannelRepository.createTextCoverForChannel(processingArgs.channelId)
+            val textCover = channelRepository.createTextCoverForChannel(processingArgs.channelId)
             val encodedMessage = withContext(Dispatchers.Default) {
                 textCover.encodeUntilDecodable(processingUiState.toProcess)
             }
@@ -106,7 +106,7 @@ class ProcessingViewModel(
     private fun decodeMessage() {
         viewModelScope.launch {
             processingUiState = processingUiState.copy(inProgress = true, result = null)
-            val textCover = offlineChannelRepository.createTextCoverForChannel(processingArgs.channelId)
+            val textCover = channelRepository.createTextCoverForChannel(processingArgs.channelId)
             val decodedMessage = withContext(Dispatchers.Default) {
                 textCover.decode(processingUiState.toProcess)
             }

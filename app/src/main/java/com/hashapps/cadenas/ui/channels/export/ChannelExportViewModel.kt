@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.data.channels.Channel
-import com.hashapps.cadenas.data.channels.OfflineChannelRepository
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +50,7 @@ suspend fun QRCode.toImageBitmap(): ImageBitmap {
 @OptIn(ExperimentalCoroutinesApi::class)
 class ChannelExportViewModel(
     savedStateHandle: SavedStateHandle,
-    private val offlineChannelRepository: OfflineChannelRepository,
+    private val channelRepository: ChannelRepository,
     private val modelRepository: ModelRepository,
 ) : ViewModel() {
     private val channelExportArgs = ChannelExportArgs(savedStateHandle)
@@ -63,7 +63,7 @@ class ChannelExportViewModel(
 
     init {
         viewModelScope.launch {
-            qrBitmap = offlineChannelRepository.getChannelStream(channelExportArgs.channelId)
+            qrBitmap = channelRepository.getChannelStream(channelExportArgs.channelId)
                 .flatMapLatest { channel ->
                     channelName = channel.name
                     channelId = channel.id
@@ -82,7 +82,7 @@ class ChannelExportViewModel(
     fun saveQRBitmap() {
         viewModelScope.launch {
             if (qrBitmap != null && channelId != null) {
-                offlineChannelRepository.saveQRBitmap(qrBitmap!!, channelId!!)
+                channelRepository.saveQRBitmap(qrBitmap!!, channelId!!)
             }
         }
     }
