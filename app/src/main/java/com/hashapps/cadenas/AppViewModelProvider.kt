@@ -19,27 +19,27 @@ object AppViewModelProvider {
         initializer {
             HomeViewModel(
                 createSavedStateHandle(),
-                cadenasApplication().container.channelRepository
+                cadenasApplication().container.offlineChannelRepository
             )
         }
 
         initializer {
             ProcessingViewModel(
                 createSavedStateHandle(),
-                cadenasApplication().container.channelRepository,
+                cadenasApplication().container.offlineChannelRepository,
             )
         }
 
         initializer {
             ChannelAddViewModel(
-                cadenasApplication().container.channelRepository,
+                cadenasApplication().container.offlineChannelRepository,
                 cadenasApplication().container.modelRepository,
             )
         }
 
         initializer {
             ChannelImportViewModel(
-                cadenasApplication().container.channelRepository,
+                cadenasApplication().container.offlineChannelRepository,
                 cadenasApplication().container.modelRepository,
             )
         }
@@ -47,7 +47,7 @@ object AppViewModelProvider {
         initializer {
             ChannelExportViewModel(
                 createSavedStateHandle(),
-                cadenasApplication().container.channelRepository,
+                cadenasApplication().container.offlineChannelRepository,
                 cadenasApplication().container.modelRepository,
             )
         }
@@ -55,7 +55,7 @@ object AppViewModelProvider {
         initializer {
             ChannelEditViewModel(
                 createSavedStateHandle(),
-                cadenasApplication().container.channelRepository,
+                cadenasApplication().container.offlineChannelRepository,
             )
         }
 

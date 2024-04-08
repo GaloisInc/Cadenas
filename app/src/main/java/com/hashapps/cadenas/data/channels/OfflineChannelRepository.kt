@@ -27,7 +27,7 @@ import javax.crypto.KeyGenerator
  * Loosely wraps around the [ChannelDao] methods, and provides key-generation
  * capabilities for channel creation.
  */
-class ChannelRepository(
+class OfflineChannelRepository(
     private val contentResolver: ContentResolver,
     private val modelsDir: File,
     private val channelDao: ChannelDao,

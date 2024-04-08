@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.channels.OfflineChannelRepository
 import com.hashapps.cadenas.data.channels.isValid
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 import com.hashapps.cadenas.ui.channels.isValid
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  */
 class ChannelEditViewModel(
     savedStateHandle: SavedStateHandle,
-    private val channelRepository: ChannelRepository,
+    private val offlineChannelRepository: OfflineChannelRepository,
 ) : ViewModel() {
     private val channelEditArgs = ChannelEditArgs(savedStateHandle)
 
@@ -32,7 +32,7 @@ class ChannelEditViewModel(
 
     init {
         viewModelScope.launch {
-            val channel = channelRepository.getChannelStream(channelEditArgs.channelId)
+            val channel = offlineChannelRepository.getChannelStream(channelEditArgs.channelId)
                 .filterNotNull()
                 .first()
             channelUiState = channel.toChannelUiState(actionEnabled = channel.isValid())
@@ -54,7 +54,7 @@ class ChannelEditViewModel(
     fun updateChannel() {
         viewModelScope.launch {
             if (channelUiState.isValid()) {
-                channelRepository.updateChannel(channelUiState.toChannel())
+                offlineChannelRepository.updateChannel(channelUiState.toChannel())
             }
         }
     }
