@@ -9,9 +9,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.models.OfflineModelRepository
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +51,7 @@ suspend fun QRCode.toImageBitmap(): ImageBitmap {
 class ChannelExportViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
-    private val modelRepository: OfflineModelRepository,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
     private val channelExportArgs = ChannelExportArgs(savedStateHandle)
 

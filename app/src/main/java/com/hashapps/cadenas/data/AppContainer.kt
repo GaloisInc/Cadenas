@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.WorkManager
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.channels.OfflineChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.data.models.OfflineModelRepository
 
 /**
@@ -22,7 +23,7 @@ import com.hashapps.cadenas.data.models.OfflineModelRepository
  */
 interface AppContainer {
     val channelRepository: ChannelRepository
-    val modelRepository: OfflineModelRepository
+    val modelRepository: ModelRepository
 }
 
 /**

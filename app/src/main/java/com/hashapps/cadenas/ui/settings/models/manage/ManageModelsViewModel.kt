@@ -2,8 +2,8 @@ package com.hashapps.cadenas.ui.settings.models.manage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.models.OfflineModelRepository
 import com.hashapps.cadenas.data.models.Model
+import com.hashapps.cadenas.data.models.ModelRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
  * @property[models] The list of all downloaded models
  */
 class ManageModelsViewModel(
-    private val modelRepository: OfflineModelRepository,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
     val models = modelRepository.getAllModelsStream().stateIn(
         scope = viewModelScope,
