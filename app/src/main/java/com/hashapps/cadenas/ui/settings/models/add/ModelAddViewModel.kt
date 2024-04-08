@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.data.models.OfflineModelRepository
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
 import com.hashapps.cadenas.ui.settings.models.isValid
 import com.hashapps.cadenas.ui.settings.models.toModel
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  * @property[modelDownloaderState] The state of the model-downloading worker
  */
 class ModelAddViewModel(
-    private val modelRepository: ModelRepository,
+    private val modelRepository: OfflineModelRepository,
 ) : ViewModel() {
     var modelUiState: ModelUiState by mutableStateOf(ModelUiState())
         private set

@@ -8,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.models.Model
-import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.data.models.OfflineModelRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ChannelImportViewModel(
     private val channelRepository: ChannelRepository,
-    private val modelRepository: ModelRepository,
+    private val modelRepository: OfflineModelRepository,
 ) : ViewModel() {
     var modelInQR: Model? by mutableStateOf(null)
         private set

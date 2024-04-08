@@ -20,7 +20,7 @@ import java.io.File
  * @property[modelDownloaderState] The state of the worker responsible for
  * downloading models from the Internet
  */
-class ModelRepository(
+class OfflineModelRepository(
     private val modelsDir: File,
     private val workManager: WorkManager,
     private val modelDao: ModelDao,

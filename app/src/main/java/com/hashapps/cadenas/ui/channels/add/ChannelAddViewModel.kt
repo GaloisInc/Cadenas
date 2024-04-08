@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.channels.ChannelRepository
-import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.data.models.OfflineModelRepository
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 import com.hashapps.cadenas.ui.channels.isValid
 import com.hashapps.cadenas.ui.channels.toChannel
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
  */
 class ChannelAddViewModel(
     private val channelRepository: ChannelRepository,
-    modelRepository: ModelRepository,
+    modelRepository: OfflineModelRepository,
 ) : ViewModel() {
     var channelUiState by mutableStateOf(ChannelUiState(key = channelRepository.genKey()))
         private set

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.WorkManager
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.channels.OfflineChannelRepository
-import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.data.models.OfflineModelRepository
 
 /**
  * Interface for containers providing data to Cadenas.
@@ -22,7 +22,7 @@ import com.hashapps.cadenas.data.models.ModelRepository
  */
 interface AppContainer {
     val channelRepository: ChannelRepository
-    val modelRepository: ModelRepository
+    val modelRepository: OfflineModelRepository
 }
 
 /**
@@ -44,7 +44,7 @@ class AppDataContainer(
     }
 
     override val modelRepository by lazy {
-        ModelRepository(
+        OfflineModelRepository(
             modelsDir = context.filesDir.resolve("models").also { it.mkdir() },
             workManager = WorkManager.getInstance(context),
             modelDao = CadenasDatabase.getDatabase(context).modelDao(),
