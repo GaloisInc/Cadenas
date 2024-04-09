@@ -2,8 +2,8 @@ package com.hashapps.cadenas.ui.settings.models.manage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.data.models.Model
+import com.hashapps.cadenas.data.models.ModelRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
