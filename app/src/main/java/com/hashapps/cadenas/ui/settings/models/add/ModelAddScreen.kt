@@ -2,8 +2,10 @@ package com.hashapps.cadenas.ui.settings.models.add
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,6 +41,8 @@ import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
+import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_NAME
+import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_URL
 import com.hashapps.cadenas.ui.settings.models.isNameValid
 import com.hashapps.cadenas.ui.settings.models.isUrlValid
 import com.hashapps.cadenas.workers.ModelDownloadWorker
@@ -123,6 +127,29 @@ fun ModelAddScreen(
             ) {
                 Text(
                     text = stringResource(R.string.download),
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            Spacer(modifier = Modifier.size(8.dp))
+
+            Button(
+                onClick = {
+                    viewModel.updateUiState(
+                        viewModel.modelUiState.copy(
+                            name = SAMPLE_MODEL_NAME,
+                            url = SAMPLE_MODEL_URL
+                        )
+                    )
+                    downloading = true
+                    viewModel.downloadSampleModel()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !downloading && SAMPLE_MODEL_NAME !in modelNames,
+            ) {
+                Text(
+                    text = stringResource(R.string.download_sample_model),
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge
                 )
             }

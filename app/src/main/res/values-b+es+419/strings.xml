@@ -64,4 +64,5 @@
     <string name="encode">Codificar</string>
     <string name="decode">Descodificar</string>
     <string name="execute">Ejecutar</string>
+    <string name="download_sample_model">Descargar modelo de muestra</string>
 </resources>
