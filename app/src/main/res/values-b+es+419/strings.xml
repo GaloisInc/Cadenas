@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Configuración</string>
     <string name="share_button">Compartir mensaje codificado</string>
@@ -35,9 +34,9 @@
     <string name="edit">Editar</string>
     <string name="name_error">Los nombres de los modelos deben ser alfabéticos (solo letras) y únicos</string>
     <string name="model">Modelo</string>
-    <string name="download_title">Descargando modelo...</string>
+    <string name="download_title">Descargando modelo…</string>
     <string name="notification_channel_name">Gestión de modelos</string>
-    <string name="delete_title">Eliminando modelo...</string>
+    <string name="delete_title">Eliminando modelo…</string>
     <string name="export">Exportar</string>
     <string name="export_channel">Exportar un canal - %1$s</string>
     <string name="qr_description">Un código QR que represente el canal a exportar</string>
