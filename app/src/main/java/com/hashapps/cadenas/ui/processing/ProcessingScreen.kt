@@ -129,7 +129,12 @@ private fun ProcessingBody(
                         count = ProcessingMode.entries.size
                     ),
                 ) {
-                    Text(mode.toString())
+                    Text(
+                        when (mode) {
+                            ProcessingMode.Encode -> stringResource(R.string.encode)
+                            ProcessingMode.Decode -> stringResource(R.string.decode)
+                        }
+                    )
                 }
             }
         }
@@ -173,7 +178,7 @@ private fun ProcessingBody(
             onClick = action,
         ) {
             Text(
-                text = stringResource(R.string.go),
+                text = stringResource(R.string.execute),
                 style = MaterialTheme.typography.titleLarge,
             )
         }
