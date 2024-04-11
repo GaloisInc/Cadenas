@@ -134,7 +134,7 @@ fun ModelAddScreen(
             Button(
                 onClick = {},
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !downloading,
+                enabled = !downloading && SAMPLE_MODEL_NAME !in modelNames,
             ) {
                 Text(
                     text = stringResource(R.string.download_sample_model),
