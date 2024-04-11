@@ -41,6 +41,8 @@ import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
+import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_NAME
+import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_URL
 import com.hashapps.cadenas.ui.settings.models.isNameValid
 import com.hashapps.cadenas.ui.settings.models.isUrlValid
 import com.hashapps.cadenas.workers.ModelDownloadWorker
@@ -132,7 +134,16 @@ fun ModelAddScreen(
             Spacer(modifier = Modifier.size(8.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    viewModel.updateUiState(
+                        viewModel.modelUiState.copy(
+                            name = SAMPLE_MODEL_NAME,
+                            url = SAMPLE_MODEL_URL
+                        )
+                    )
+                    downloading = true
+                    viewModel.downloadSampleModel()
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !downloading && SAMPLE_MODEL_NAME !in modelNames,
             ) {
