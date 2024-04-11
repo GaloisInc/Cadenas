@@ -31,7 +31,8 @@ class ModelAddViewModel(
      * if the new state is valid.
      */
     fun updateUiState(newModelUiState: ModelUiState) {
-        modelUiState = newModelUiState.copy(actionEnabled = newModelUiState.isValid(modelNames.value))
+        modelUiState =
+            newModelUiState.copy(actionEnabled = newModelUiState.isValid(modelNames.value))
     }
 
     val modelDownloaderState = modelRepository.modelDownloaderState.stateIn(
