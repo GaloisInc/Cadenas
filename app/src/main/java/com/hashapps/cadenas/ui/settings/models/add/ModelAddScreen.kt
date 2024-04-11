@@ -127,6 +127,18 @@ fun ModelAddScreen(
                 )
             }
 
+            Button(
+                onClick = {},
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !downloading,
+            ) {
+                Text(
+                    text = stringResource(R.string.download_sample_model),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
             val fileName = workerState?.progress?.getString(ModelDownloadWorker.PROGRESS)
             if (downloading && fileName != null) {
                 LinearProgressIndicator(
