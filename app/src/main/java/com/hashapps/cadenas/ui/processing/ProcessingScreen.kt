@@ -82,7 +82,7 @@ fun ProcessingScreen(
                 ProcessingMode.Encode -> stringResource(R.string.plaintext_message_label)
                 ProcessingMode.Decode -> stringResource(R.string.encoded_message_label)
             },
-            toProcessSupport = when(viewModel.processingUiState.processingMode) {
+            toProcessSupport = when (viewModel.processingUiState.processingMode) {
                 ProcessingMode.Encode -> stringResource(R.string.plaintext_message_support)
                 ProcessingMode.Decode -> stringResource(R.string.encoded_message_support)
             },
@@ -92,7 +92,6 @@ fun ProcessingScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProcessingBody(
     processingUiState: ProcessingUiState,
@@ -114,7 +113,7 @@ private fun ProcessingBody(
     ) {
         val focusManager = LocalFocusManager.current
 
-        SingleChoiceSegmentedButtonRow (
+        SingleChoiceSegmentedButtonRow(
             modifier = modifier.fillMaxWidth(),
         ) {
             ProcessingMode.entries.forEachIndexed { index, mode ->
@@ -125,7 +124,10 @@ private fun ProcessingBody(
                         ProcessingMode.Encode -> enterEncodeMode
                         ProcessingMode.Decode -> enterDecodeMode
                     },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = ProcessingMode.entries.size),
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = ProcessingMode.entries.size
+                    ),
                 ) {
                     Text(mode.toString())
                 }
