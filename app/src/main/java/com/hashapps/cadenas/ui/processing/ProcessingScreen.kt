@@ -82,7 +82,7 @@ fun ProcessingScreen(
                 ProcessingMode.Encode -> stringResource(R.string.plaintext_message_label)
                 ProcessingMode.Decode -> stringResource(R.string.encoded_message_label)
             },
-            toProcessSupport = when(viewModel.processingUiState.processingMode) {
+            toProcessSupport = when (viewModel.processingUiState.processingMode) {
                 ProcessingMode.Encode -> stringResource(R.string.plaintext_message_support)
                 ProcessingMode.Decode -> stringResource(R.string.encoded_message_support)
             },
@@ -104,6 +104,22 @@ private fun ProcessingBody(
     action: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (processingUiState.showEditWarning) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(stringResource(R.string.attention)) },
+            text = { Text(stringResource(R.string.edit_warning)) },
+            modifier = Modifier.padding(16.dp),
+            confirmButton = {
+                TextButton(
+                    onClick = { onValueChange(processingUiState.copy(showEditWarning = false)) }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            },
+        )
+    }
+
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -114,7 +130,7 @@ private fun ProcessingBody(
     ) {
         val focusManager = LocalFocusManager.current
 
-        SingleChoiceSegmentedButtonRow (
+        SingleChoiceSegmentedButtonRow(
             modifier = modifier.fillMaxWidth(),
         ) {
             ProcessingMode.entries.forEachIndexed { index, mode ->
@@ -125,9 +141,17 @@ private fun ProcessingBody(
                         ProcessingMode.Encode -> enterEncodeMode
                         ProcessingMode.Decode -> enterDecodeMode
                     },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = ProcessingMode.entries.size),
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = ProcessingMode.entries.size
+                    ),
                 ) {
-                    Text(mode.toString())
+                    Text(
+                        when (mode) {
+                            ProcessingMode.Encode -> stringResource(R.string.encode)
+                            ProcessingMode.Decode -> stringResource(R.string.decode)
+                        }
+                    )
                 }
             }
         }
@@ -171,7 +195,7 @@ private fun ProcessingBody(
             onClick = action,
         ) {
             Text(
-                text = stringResource(R.string.go),
+                text = stringResource(R.string.execute),
                 style = MaterialTheme.typography.titleLarge,
             )
         }
@@ -224,6 +248,8 @@ private fun ProcessingBody(
             }
         }
     }
+
+
 }
 
 private fun shareMessage(context: Context, message: String?) {

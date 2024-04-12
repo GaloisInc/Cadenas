@@ -14,6 +14,7 @@ enum class ProcessingMode {
  * @property[toProcess] The string to be encoded/decoded
  * @property[result] A nullable string giving the processing result
  * @property[inProgress] Whether or not processing is in-progress
+ * @property[showEditWarning] Whether or not to show the output-edit warning
  */
 data class ProcessingUiState(
     val channelName: String = "",
@@ -21,4 +22,5 @@ data class ProcessingUiState(
     val processingMode: ProcessingMode = ProcessingMode.Encode,
     val result: String? = null,
     val inProgress: Boolean = false,
+    val showEditWarning: Boolean = false,
 )

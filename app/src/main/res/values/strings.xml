@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cadenas</string>
+    <string name="app_name" translatable="false">Cadenas</string>
     <string name="settings">Settings</string>
     <string name="share_button">Share encoded message</string>
     <string name="cadenas_message">Encoded Message</string>
@@ -37,9 +37,8 @@
     <string name="model">Model</string>
     <string name="download_title">Downloading model…</string>
     <string name="notification_channel_name">Model Management</string>
-    <string name="notification_channel_description">Notification channel for model-management tasks, such as downloading and deleting.</string>
+    <string name="notification_channel_description" translatable="false">Notification channel for model-management tasks, such as downloading and deleting.</string>
     <string name="delete_title">Deleting model…</string>
-    <string name="go">Go!</string>
     <string name="export">Export</string>
     <string name="export_channel">Export Channel - %1$s</string>
     <string name="qr_description">A QR code representing the channel to be exported.</string>
@@ -64,4 +63,9 @@
     <string name="ok">OK</string>
     <string name="duplicate_model_name">A model with this name is already installed</string>
     <string name="choose_decoder">Choose Decoder</string>
+    <string name="encode">Encode</string>
+    <string name="decode">Decode</string>
+    <string name="execute">Execute</string>
+    <string name="download_sample_model">Download Sample Model</string>
+    <string name="edit_warning">Do not edit the output before sharing! This will prevent it from being decodable!</string>
 </resources>
