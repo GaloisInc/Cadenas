@@ -95,7 +95,7 @@ class ProcessingViewModel(
             }
             textCover.destroy()
             processingUiState =
-                processingUiState.copy(inProgress = false, result = encodedMessage?.coverText)
+                processingUiState.copy(inProgress = false, showEditWarning = true, result = encodedMessage?.coverText)
         }
     }
 

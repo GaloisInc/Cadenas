@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     platform("androidx.compose:compose-bom:2024.04.00")
-    implementation("androidx.compose.material3:material3:1.3.0-alpha04")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.material:material-icons-core")
