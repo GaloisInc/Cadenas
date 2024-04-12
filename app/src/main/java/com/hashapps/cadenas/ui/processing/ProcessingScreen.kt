@@ -92,6 +92,7 @@ fun ProcessingScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProcessingBody(
     processingUiState: ProcessingUiState,
@@ -103,6 +104,22 @@ private fun ProcessingBody(
     action: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (processingUiState.showEditWarning) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(stringResource(R.string.attention)) },
+            text = { Text(stringResource(R.string.edit_warning)) },
+            modifier = Modifier.padding(16.dp),
+            confirmButton = {
+                TextButton(
+                    onClick = { onValueChange(processingUiState.copy(showEditWarning = false)) }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            },
+        )
+    }
+
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -231,6 +248,8 @@ private fun ProcessingBody(
             }
         }
     }
+
+
 }
 
 private fun shareMessage(context: Context, message: String?) {
