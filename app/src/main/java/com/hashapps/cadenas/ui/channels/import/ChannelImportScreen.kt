@@ -213,7 +213,7 @@ private fun ChannelImportBody(
                     modifier = Modifier.padding(16.dp),
                     confirmButton = {
                         TextButton(onClick = onDismissModelError) {
-                            Text(stringResource(R.string.ok))
+                            Text(stringResource(R.string.add_model))
                         }
                     },
                 )
