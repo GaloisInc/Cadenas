@@ -289,6 +289,6 @@ private fun saveMessage(context: Context, message: String?) {
         clipboardManager.setPrimaryClip(ClipData.newPlainText   ("", message))
         // Only show a toast for Android 12 and lower. (Above that there is an indication.)
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)
-            Toast.makeText(context, R.string.ok, Toast.LENGTH_SHORT).show() //FIXME: copied needs to be language based!!
+            Toast.makeText(context, R.string.ok, Toast.LENGTH_SHORT).show()
     }
 }
