@@ -1,6 +1,7 @@
 <resources>
     <string name="settings">Configuración</string>
     <string name="share_button">Compartir mensaje codificado</string>
+    <string name="save_to_clipboard_button">Guardar mensaje codificado en el portapapeles</string>
     <string name="cadenas_message">Mensaje codificado</string>
     <string name="plaintext_message_label">Mensaje privado</string>
     <string name="plaintext_message_support">Escribe un mensaje para codificar</string>
