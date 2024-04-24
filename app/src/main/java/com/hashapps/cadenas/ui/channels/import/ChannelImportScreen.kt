@@ -48,7 +48,7 @@ import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import java.util.concurrent.Executors
 
-private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([0-9a-fA-F]{32})""")
+private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+);model:([0-9a-fA-F]{32});url:(https://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()!@:%_+.~#?&/=]*))""")
 
 /**
  * Cadenas channel-importing screen.
