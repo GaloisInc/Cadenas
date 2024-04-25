@@ -64,7 +64,7 @@ private val channelRegex = Regex("""key:([0-9a-fA-F]{64});prompt:([\p{Print}\s]+
 fun ChannelImportScreen(
     onNavigateBack: () -> Unit,
     onNavigateToChannelEdit: (Long) -> Unit,
-    onNavigateToAddModel: () -> Unit,
+    onNavigateToAddModel: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelImportViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -126,7 +126,7 @@ private fun ChannelImportBody(
     getModel: (hash: String) -> Model?,
     onImportClick: (Channel) -> Unit,
     modifier: Modifier = Modifier,
-    onDismissModelError: () -> Unit,
+    onDismissModelError: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -212,7 +212,7 @@ private fun ChannelImportBody(
                     text = { Text(stringResource(R.string.model_not_found)) },
                     modifier = Modifier.padding(16.dp),
                     confirmButton = {
-                        TextButton(onClick = onDismissModelError) {
+                        TextButton(onClick = { onDismissModelError(channelParts!![4]) }) {
                             Text(stringResource(R.string.add_model))
                         }
                     },

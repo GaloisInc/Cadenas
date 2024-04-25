@@ -42,11 +42,11 @@ fun CadenasRootNavHost(
         )
         channelAddScreen(
             onNavigateBack = { navController.popBackStack() },
-            onNavigateToAddModel = { navController.navigateToModelAdd() })
+            onNavigateToAddModel = { navController.navigateToModelAdd(it) })
         channelImportScreen(
             onNavigateBack = { navController.popBackStack() },
             onNavigateToChannelEdit = { navController.navigateToChannelEdit(it) },
-            onNavigateToAddModel = { navController.navigateToModelAdd() })
+            onNavigateToAddModel = { navController.navigateToModelAdd(it) })
         channelExportScreen(onNavigateBack = { navController.popBackStack() })
         channelEditScreen(onNavigateBack = { navController.popBackStack() })
         processingScreen { navController.navigateToHome() }
