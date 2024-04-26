@@ -23,6 +23,7 @@ data class ModelUiState(
  */
 fun ModelUiState.toModel(hash: String): Model = Model(
     name = name,
+    url = url,
     hash = hash,
 )
 

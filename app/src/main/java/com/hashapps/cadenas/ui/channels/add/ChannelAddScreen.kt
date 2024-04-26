@@ -31,7 +31,7 @@ private const val MAX_LEN = 128
 @Composable
 fun ChannelAddScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToAddModel: () -> Unit,
+    onNavigateToAddModel: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -66,7 +66,7 @@ private fun ChannelAddBody(
     modifier: Modifier = Modifier,
     models: List<Model>,
     onChannelValueChange: (ChannelUiState) -> Unit,
-    onAddModel: () -> Unit = {},
+    onAddModel: (String) -> Unit = {},
     onSaveClick: () -> Unit,
 ) {
     Column(
@@ -103,7 +103,7 @@ fun ChannelInputForm(
     modifier: Modifier = Modifier,
     models: List<Model>,
     onValueChange: (ChannelUiState) -> Unit = {},
-    onAddModel: () -> Unit = {},
+    onAddModel: (String) -> Unit = {},
     editing: Boolean = false,
 ) {
     ElevatedCard(
@@ -194,7 +194,7 @@ fun ChannelInputForm(
                         text = { Text(stringResource(R.string.add_model)) },
                         onClick = {
                             expanded = false
-                            onAddModel()
+                            onAddModel("")
                         },
                         leadingIcon = {
                             Icon(

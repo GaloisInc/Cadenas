@@ -11,11 +11,13 @@ import androidx.room.PrimaryKey
  * are predictable, etc.
  *
  * @property[name] The name associated with the model (must be unique)
+ * @property[url] The URL this model was acquired from
  * @property[hash] An MD5 hash of the PTL file defining the model weights
  */
 @Entity(tableName = "model")
 data class Model(
     @PrimaryKey
     val name: String,
+    val url: String,
     val hash: String,
 )

@@ -67,6 +67,7 @@ object AppViewModelProvider {
 
         initializer {
             ModelAddViewModel(
+                createSavedStateHandle(),
                 cadenasApplication().container.modelRepository,
             )
         }

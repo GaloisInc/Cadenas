@@ -1,7 +1,11 @@
 package com.hashapps.cadenas.ui.processing
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -11,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -129,6 +134,7 @@ private fun ProcessingBody(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         val focusManager = LocalFocusManager.current
+        val context = LocalContext.current
 
         SingleChoiceSegmentedButtonRow(
             modifier = modifier.fillMaxWidth(),
@@ -245,6 +251,17 @@ private fun ProcessingBody(
                         text = processingUiState.result,
                     )
                 }
+                if (processingUiState.processingMode == ProcessingMode.Encode) {
+                    IconButton(
+                        enabled = processingUiState.result != null,
+                        onClick = { saveMessage(context, processingUiState.result) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ContentPaste,
+                            contentDescription = stringResource(R.string.save_to_clipboard_button)
+                        )
+                    }
+                }
             }
         }
     }
@@ -264,5 +281,16 @@ private fun shareMessage(context: Context, message: String?) {
                 context.getString(R.string.cadenas_message)
             )
         )
+    }
+}
+
+private fun saveMessage(context: Context, message: String?) {
+    if (message != null) {
+        val clipboardManager = context.getSystemService( Context.CLIPBOARD_SERVICE) as ClipboardManager
+        // When setting the clipboard text.
+        clipboardManager.setPrimaryClip(ClipData.newPlainText   ("", message))
+        // Only show a toast for Android 12 and lower. (Above that there is an indication.)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)
+            Toast.makeText(context, R.string.ok, Toast.LENGTH_SHORT).show()
     }
 }

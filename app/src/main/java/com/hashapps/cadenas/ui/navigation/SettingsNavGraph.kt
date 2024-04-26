@@ -29,7 +29,7 @@ fun NavGraphBuilder.settingsGraph(
         )
         manageModelsScreen(
             onNavigateBack = { navController.popBackStack() },
-            onNavigateToModelAdd = { navController.navigateToModelAdd() })
+            onNavigateToModelAdd = { navController.navigateToModelAdd(it) })
         modelAddScreen(onNavigateBack = { navController.popBackStack() })
     }
 }
