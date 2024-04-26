@@ -1,6 +1,7 @@
 package com.hashapps.cadenas.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -12,7 +13,11 @@ import com.hashapps.cadenas.data.models.ModelDao
 /**
  * Room database storing Cadenas messaging channels.
  */
-@Database(entities = [Model::class, Channel::class], version = 13, exportSchema = false)
+@Database(
+    entities = [Model::class, Channel::class],
+    version = 14,
+    autoMigrations = [AutoMigration(from = 13, to = 14)],
+)
 abstract class CadenasDatabase : RoomDatabase() {
     abstract fun channelDao(): ChannelDao
     abstract fun modelDao(): ModelDao
