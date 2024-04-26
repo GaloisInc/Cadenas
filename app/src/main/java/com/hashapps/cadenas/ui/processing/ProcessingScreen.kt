@@ -251,14 +251,16 @@ private fun ProcessingBody(
                         text = processingUiState.result,
                     )
                 }
-                IconButton(
-                    enabled = processingUiState.result != null,
-                    onClick = { saveMessage(context, processingUiState.result) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ContentPaste,
-                        contentDescription = stringResource(R.string.save_to_clipboard_button)
-                    )
+                if (processingUiState.processingMode == ProcessingMode.Encode) {
+                    IconButton(
+                        enabled = processingUiState.result != null,
+                        onClick = { saveMessage(context, processingUiState.result) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ContentPaste,
+                            contentDescription = stringResource(R.string.save_to_clipboard_button)
+                        )
+                    }
                 }
             }
         }
