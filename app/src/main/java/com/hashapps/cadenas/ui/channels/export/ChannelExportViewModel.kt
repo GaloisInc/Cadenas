@@ -23,8 +23,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-private fun Channel.toQRCode(hash: String): QRCode = QRCode(
-    data = "key:$key;prompt:$prompt;model:$hash",
+private fun Channel.toQRCode(hash: String, url: String): QRCode = QRCode(
+    data = "key:$key;prompt:$prompt;model:$hash;url:$url",
     errorCorrectionLevel = ErrorCorrectionLevel.Q,
 )
 
@@ -69,7 +69,7 @@ class ChannelExportViewModel(
                     channelId = channel.id
                     modelRepository.getModelStream(channel.selectedModel)
                         .map { model ->
-                            channel.toQRCode(model.hash).toImageBitmap()
+                            channel.toQRCode(model.hash, model.url).toImageBitmap()
                         }
                 }
                 .first()

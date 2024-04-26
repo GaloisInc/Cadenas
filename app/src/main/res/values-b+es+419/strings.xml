@@ -9,7 +9,7 @@
     <string name="encoded_message_label">Mensaje codificado</string>
     <string name="encoded_message_support">Escribe un mensaje para decodificar</string>
     <string name="prompt_label">Texto inicial</string>
-    <string name="prompt_support">Texto para activar el modelo (%1$d / $2$d)</string>
+    <string name="prompt_support">Texto para activar el modelo (%1$d / %2$d)</string>
     <string name="url_label">URL del modelo</string>
     <string name="url_support">Y una URL HTTPS donde se pueda descargar el ZIP</string>
     <string name="url_error">Necesitas una URL HTTPS válida</string>

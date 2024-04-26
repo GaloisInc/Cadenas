@@ -3,6 +3,7 @@ package com.hashapps.cadenas.ui.settings.models.add
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.models.ModelRepository
@@ -23,10 +24,19 @@ import kotlinx.coroutines.launch
  * @property[modelDownloaderState] The state of the model-downloading worker
  */
 class ModelAddViewModel(
+    savedStateHandle: SavedStateHandle,
     private val modelRepository: ModelRepository,
 ) : ViewModel() {
+    private val processingArgs = ProcessingArgs(savedStateHandle)
+
     var modelUiState: ModelUiState by mutableStateOf(ModelUiState())
         private set
+
+    init {
+        viewModelScope.launch {
+            modelUiState = modelUiState.copy(url = processingArgs.modelUrl)
+        }
+    }
 
     /**
      * Update the model-add screen UI state, only enabling the download button
