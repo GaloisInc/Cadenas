@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -272,11 +271,25 @@ fun ChannelInputForm(
     }
 }
 
+/**
+ * Interface for TimesInMS.
+ * This gives us an easy way to get translatable
+ * string labels and millisecond values.
+ *
+ * Note: the getLabel returns the resource id, not the string.
+ */
 interface ITimesInMS {
     fun getLabel() : Int
     fun getTime() : Int
 }
 
+/**
+ * An enum with all the possible options for how
+ * long to cache messages for a given channel.
+ *
+ * All entries on this list will appear in the
+ * drop down menu.
+ */
 public enum class TimesInMS : ITimesInMS {
     THIRTY_SECONDS {
         override fun getLabel() = R.string.thirty_seconds
@@ -307,6 +320,12 @@ public enum class TimesInMS : ITimesInMS {
         override fun getTime() = 60*60*1000
     },
 }
+
+/**
+ * This function takes the value in milliseconds and
+ * translates to an enum TimesInMS.  On a failed match
+ * the shortest 30 seconds value is returned.
+ */
 private fun getLabelFromMS(ms: Int) : TimesInMS {
     TimesInMS.entries.forEach() {
         if (it.getTime() == ms) return it;
