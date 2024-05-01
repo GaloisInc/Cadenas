@@ -67,4 +67,13 @@
     <string name="execute">Ejecutar</string>
     <string name="download_sample_model">Descargar modelo de muestra</string>
     <string name="edit_warning">¡No edites el resultado antes de compartirlo! ¡Esto evitará que sea decodificable!</string>
+    <string name="channel_cache_checkbox_label">Sin mensajes en caché</string>
+    <string name="channel_cache_checkbox_label_checked">Mensajes de caché durante</string>
+    <string name="thirty_seconds">30 segundos</string>
+    <string name="one_minute">1 minuto</string>
+    <string name="five_minutes">5 minutos</string>
+    <string name="ten_minutes">10 minutos</string>
+    <string name="fifteen_minutes">15 minutos</string>
+    <string name="thirty_minutes">30 minutos</string>
+    <string name="one_hour">1 hora</string>
 </resources>

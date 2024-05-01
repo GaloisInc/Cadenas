@@ -69,4 +69,13 @@
     <string name="execute">Execute</string>
     <string name="download_sample_model">Download Sample Model</string>
     <string name="edit_warning">Do not edit the output before sharing! This will prevent it from being decodable!</string>
+    <string name="channel_cache_checkbox_label">No cached messages</string>
+    <string name="channel_cache_checkbox_label_checked">Cache messages for</string>
+    <string name="thirty_seconds">30 seconds</string>
+    <string name="one_minute">1 minute</string>
+    <string name="five_minutes">5 minutes</string>
+    <string name="ten_minutes">10 minutes</string>
+    <string name="fifteen_minutes">15 minutes</string>
+    <string name="thirty_minutes">30 minutes</string>
+    <string name="one_hour">1 hour</string>
 </resources>
