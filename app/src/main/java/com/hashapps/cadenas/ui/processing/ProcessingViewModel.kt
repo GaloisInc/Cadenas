@@ -40,8 +40,11 @@ class ProcessingViewModel(
         viewModelScope.launch {
             val channelName =
                 channelRepository.getChannelStream(processingArgs.channelId).map { it.name }.first()
+            val cachingTimeMS =
+                channelRepository.getChannelStream(processingArgs.channelId).map { it.cachingTimeMS }.first()
             processingUiState = processingUiState.copy(
                 channelName = channelName,
+                channelCacheTimeInMS = cachingTimeMS,
                 toProcess = processingArgs.toDecode,
                 processingMode = if (processingArgs.toDecode.isEmpty()) {
                     ProcessingMode.Encode
@@ -49,9 +52,6 @@ class ProcessingViewModel(
                     ProcessingMode.Decode
                 }
             )
-
-            val cachingTimeMS =
-                channelRepository.getChannelStream(processingArgs.channelId).map { it.cachingTimeMS }.first()
             setTimerChannelInfo(processingArgs.channelId, cachingTimeMS)
         }
     }
@@ -71,6 +71,7 @@ class ProcessingViewModel(
     fun encodingMode() {
         processingUiState = ProcessingUiState(
             channelName = processingUiState.channelName,
+            channelCacheTimeInMS = processingUiState.channelCacheTimeInMS,
             cachedMessages = processingUiState.cachedMessages,
             processingMode = ProcessingMode.Encode
         )
@@ -82,6 +83,7 @@ class ProcessingViewModel(
     fun decodingMode() {
         processingUiState = ProcessingUiState(
             channelName = processingUiState.channelName,
+            channelCacheTimeInMS = processingUiState.channelCacheTimeInMS,
             cachedMessages = processingUiState.cachedMessages,
             processingMode = ProcessingMode.Decode
         )
@@ -147,6 +149,13 @@ class ProcessingViewModel(
     }
 
     /**
+     * Delete all items from the message cache for the current channel.
+     */
+    fun clearMessageCache() {
+        messageCache.clearMessages(TimedRefresh.currentChannelId)
+    }
+
+    /**
      * This is a single timer that will continuously refresh all Processing
      * Views every second.
      */
@@ -160,14 +169,9 @@ class ProcessingViewModel(
             //start the timer
             scheduler.scheduleAtFixedRate({
                 if (currentView != null) {
-                    currentView!!.processingUiState = ProcessingUiState(
-                        channelName = currentView!!.processingUiState.channelName,
+                    currentView!!.processingUiState = currentView!!.processingUiState.copy(
                         cachedMessages = currentView!!.messageCache.updateMessages(currentChannelId, currentCacheTime),
-                        toProcess= currentView!!.processingUiState.toProcess,
-                        processingMode = currentView!!.processingUiState.processingMode,
-                        result = currentView!!.processingUiState.result,
-                        inProgress = currentView!!.processingUiState.inProgress,
-                        showEditWarning = currentView!!.processingUiState.showEditWarning,
+                        updateBit = currentView!!.processingUiState.updateBit+1
                     )
                 }
             }, 0, 1000, TimeUnit.MILLISECONDS)

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
-import com.hashapps.cadenas.ui.cache.displayMessageCache
+import com.hashapps.cadenas.ui.cache.DisplayMessageCache
 
 /**
  * Cadenas message-processing screen.
@@ -93,6 +93,7 @@ fun ProcessingScreen(
                 ProcessingMode.Decode -> stringResource(R.string.encoded_message_support)
             },
             action = { viewModel.processMessage() },
+            clearMessageCache = { viewModel.clearMessageCache() },
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -108,6 +109,7 @@ private fun ProcessingBody(
     toProcessLabel: String,
     toProcessSupport: String,
     action: () -> Unit,
+    clearMessageCache: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (processingUiState.showEditWarning) {
@@ -266,7 +268,10 @@ private fun ProcessingBody(
             }
         }
         //display the message cache for this channel
-        displayMessageCache(processingUiState.cachedMessages)
+        DisplayMessageCache(
+            processingUiState.cachedMessages,
+            processingUiState.channelCacheTimeInMS,
+            clearMessageCache)
     }
 
 

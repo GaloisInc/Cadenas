@@ -27,6 +27,7 @@
     <string name="attention">Advertencia</string>
     <string name="delete_channel_question">¿Estás seguro/a? Esto no se puede deshacer</string>
     <string name="delete_model_question">¿Estás seguro/a? Esto no se puede deshacer y se eliminarán todos los canales de este modelo</string>
+    <string name="delete_message_cache_question">¿Estás seguro/a? Esto no se puede deshacer</string>
     <string name="add_model">Agregar modelo</string>
     <string name="model_name_label">Nombre del modelo</string>
     <string name="model_name_support">Dale un nombre a este modelo</string>
@@ -67,6 +68,8 @@
     <string name="execute">Ejecutar</string>
     <string name="download_sample_model">Descargar modelo de muestra</string>
     <string name="edit_warning">¡No edites el resultado antes de compartirlo! ¡Esto evitará que sea decodificable!</string>
+    <string name="message_cache_label">Caché de Mensajes</string>
+    <string name="expand">Expandirse</string>
     <string name="channel_cache_checkbox_label">Sin mensajes en caché</string>
     <string name="channel_cache_checkbox_label_checked">Mensajes de caché durante</string>
     <string name="thirty_seconds">30 segundos</string>
