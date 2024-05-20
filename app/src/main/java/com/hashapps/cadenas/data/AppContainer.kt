@@ -6,6 +6,8 @@ import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.channels.OfflineChannelRepository
 import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.data.models.OfflineModelRepository
+import com.hashapps.cadenas.ui.cache.ActiveMessageCache
+import com.hashapps.cadenas.ui.cache.MessageCache
 
 /**
  * Interface for containers providing data to Cadenas.
@@ -24,6 +26,7 @@ import com.hashapps.cadenas.data.models.OfflineModelRepository
 interface AppContainer {
     val channelRepository: ChannelRepository
     val modelRepository: ModelRepository
+    val messageCache: MessageCache
 }
 
 /**
@@ -51,4 +54,10 @@ class AppDataContainer(
             modelDao = CadenasDatabase.getDatabase(context).modelDao(),
         )
     }
+
+    override val messageCache by lazy {
+        ActiveMessageCache(
+        ) //always starts empty!  No data kept between application instances.
+    }
+
 }

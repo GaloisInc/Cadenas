@@ -224,6 +224,7 @@ private fun ChannelImportBody(
                     key = channelParts!![1],
                     prompt = channelParts!![2],
                     selectedModel = model.name,
+                    cachingTimeMS = 0,
                 )
                 AlertDialog(
                     onDismissRequest = {},

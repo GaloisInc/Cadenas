@@ -28,6 +28,7 @@
     <string name="attention">Warning</string>
     <string name="delete_channel_question">Are you sure? This cannot be undone!</string>
     <string name="delete_model_question">Are you sure? This cannot be undone, and all of this model\'s channels will be deleted!</string>
+    <string name="delete_message_cache_question">Are you sure? This cannot be undone!</string>
     <string name="add_model">Add Model</string>
     <string name="model_name_label">Model Name</string>
     <string name="model_name_support">Give this model a name</string>
@@ -69,4 +70,15 @@
     <string name="execute">Execute</string>
     <string name="download_sample_model">Download Sample Model</string>
     <string name="edit_warning">Do not edit the output before sharing! This will prevent it from being decodable!</string>
+    <string name="message_cache_label">Message Cache</string>
+    <string name="expand">Expand</string>
+    <string name="channel_cache_checkbox_label">No cached messages</string>
+    <string name="channel_cache_checkbox_label_checked">Cache messages for</string>
+    <string name="thirty_seconds">30 seconds</string>
+    <string name="one_minute">1 minute</string>
+    <string name="five_minutes">5 minutes</string>
+    <string name="ten_minutes">10 minutes</string>
+    <string name="fifteen_minutes">15 minutes</string>
+    <string name="thirty_minutes">30 minutes</string>
+    <string name="one_hour">1 hour</string>
 </resources>

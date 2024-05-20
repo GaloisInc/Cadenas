@@ -21,6 +21,7 @@ import com.hashapps.cadenas.data.models.Model
  * @property[key] The secret key shared by communicating messengers
  * @property[prompt] Prompt text for the language model
  * @property[selectedModel] The model associated with the channel
+ * @property[cachingTimeMS] Num miliseconds keep cache of messages for this channel, 0= no caching enabled
  * this channel
  */
 @Entity(
@@ -43,6 +44,8 @@ data class Channel(
     val prompt: String,
     @ColumnInfo(index = true)
     val selectedModel: String,
+    @ColumnInfo(defaultValue = "0")
+    val cachingTimeMS: Int, //in miliseconds, 0= no caching enabled
 )
 
 fun Channel.isValid(): Boolean {
