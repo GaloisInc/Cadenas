@@ -47,6 +47,7 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 @Composable
 fun ChannelExportScreen(
     onNavigateBack: () -> Unit,
+    onNavigateBackAfterSave: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelExportViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -86,7 +87,7 @@ fun ChannelExportScreen(
                     )) {
                         PackageManager.PERMISSION_GRANTED -> {
                             viewModel.saveQRBitmap()
-                            onNavigateBack()
+                            onNavigateBackAfterSave()
                         }
 
                         else -> {
@@ -95,7 +96,7 @@ fun ChannelExportScreen(
                     }
                 } else {
                     viewModel.saveQRBitmap()
-                    onNavigateBack()
+                    onNavigateBackAfterSave()
                 }
             },
         )

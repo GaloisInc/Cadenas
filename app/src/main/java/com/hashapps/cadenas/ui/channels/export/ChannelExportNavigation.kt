@@ -19,6 +19,7 @@ const val CHANNEL_EXPORT_ROUTE = "channel_export"
 
 fun NavGraphBuilder.channelExportScreen(
     onNavigateBack: () -> Unit,
+    onNavigateBackAfterSave: () -> Unit,
 ) {
     composable(
         route = "$CHANNEL_EXPORT_ROUTE/{$CHANNEL_ID_ARG}",
@@ -26,7 +27,10 @@ fun NavGraphBuilder.channelExportScreen(
             type = NavType.LongType
         })
     ) {
-        ChannelExportScreen(onNavigateBack = onNavigateBack)
+        ChannelExportScreen(
+            onNavigateBack = onNavigateBack,
+            onNavigateBackAfterSave = onNavigateBackAfterSave,
+        )
     }
 }
 
