@@ -79,4 +79,5 @@
     <string name="fifteen_minutes">15 minutos</string>
     <string name="thirty_minutes">30 minutos</string>
     <string name="one_hour">1 hora</string>
+    <string name="qr_code_save_notification">El código QR del canal se guardó en tu biblioteca de fotos.</string>
 </resources>

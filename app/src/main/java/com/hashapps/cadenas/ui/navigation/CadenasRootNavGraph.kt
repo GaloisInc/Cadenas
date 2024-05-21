@@ -47,9 +47,12 @@ fun CadenasRootNavHost(
             onNavigateBack = { navController.popBackStack() },
             onNavigateToChannelEdit = { navController.navigateToChannelEdit(it) },
             onNavigateToAddModel = { navController.navigateToModelAdd(it) })
-        channelExportScreen(onNavigateBack = { navController.popBackStack() })
+        channelExportScreen(
+            onNavigateBack = { navController.popBackStack() },
+            onNavigateBackAfterSave = { navController.navigateToHome(true) }
+        )
         channelEditScreen(onNavigateBack = { navController.popBackStack() })
-        processingScreen { navController.navigateToHome() }
+        processingScreen { navController.navigateToHome(false) }
         settingsGraph(navController)
     }
 }
