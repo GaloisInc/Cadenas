@@ -3,6 +3,7 @@ package com.hashapps.cadenas.ui.channels.add
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -136,6 +138,55 @@ fun ChannelInputForm(
                 imeAction = ImeAction.Next,
             ),
         )
+
+        var checkedState by remember { mutableStateOf(false) }
+        var expandedState by remember { mutableStateOf(false) }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .toggleable(
+                    value = checkedState,
+                    enabled = true,
+                    onValueChange = {
+                        if (!checkedState) {
+                            //we're changing from unchecked to checked
+                            expandedState = true
+                        } else {
+                            //we're changing from checked to unchecked
+                            onValueChange(channelUiState.copy(cachingTimeMS = 0))
+                        }
+                                    },
+                    role = Role.Checkbox
+                )
+                .padding(horizontal = 8.dp),
+        ) {
+            checkedState = channelUiState.cachingTimeMS > 0
+            Checkbox(
+                checked = checkedState,
+                onCheckedChange = null, //logic moved above to give assessable options
+            )
+            Text(
+                if (checkedState) stringResource(R.string.channel_cache_checkbox_label_checked) + " " +
+                        stringResource(getLabelFromMS(channelUiState.cachingTimeMS).getLabel())
+                else (stringResource(R.string.channel_cache_checkbox_label))
+            )
+            DropdownMenu(
+                modifier = Modifier,
+                expanded = expandedState,
+                onDismissRequest = { expandedState = false },
+            ) {
+                TimesInMS.entries.forEach() {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(it.getLabel())) },
+                        onClick = {
+                            onValueChange(channelUiState.copy(cachingTimeMS = it.getTime()))
+                            expandedState = false //close dropdown
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
+        }
     }
 
     if (!editing) {
@@ -219,3 +270,66 @@ fun ChannelInputForm(
         }
     }
 }
+
+/**
+ * Interface for TimesInMS.
+ * This gives us an easy way to get translatable
+ * string labels and millisecond values.
+ *
+ * Note: the getLabel returns the resource id, not the string.
+ */
+interface ITimesInMS {
+    fun getLabel() : Int
+    fun getTime() : Int
+}
+
+/**
+ * An enum with all the possible options for how
+ * long to cache messages for a given channel.
+ *
+ * All entries on this list will appear in the
+ * drop down menu.
+ */
+public enum class TimesInMS : ITimesInMS {
+    THIRTY_SECONDS {
+        override fun getLabel() = R.string.thirty_seconds
+        override fun getTime() = 30*1000
+    },
+    ONE_MINUTE {
+        override fun getLabel() = R.string.one_minute
+        override fun getTime() = 60*1000
+    },
+    FIVE_MINUTES {
+        override fun getLabel() = R.string.five_minutes
+        override fun getTime() = 5*60*1000
+    },
+    TEN_MINUTES {
+        override fun getLabel() = R.string.ten_minutes
+        override fun getTime() = 10*60*1000
+    },
+    FIFTEEN_MINUTES {
+        override fun getLabel() = R.string.fifteen_minutes
+        override fun getTime() = 15*60*1000
+    },
+    THIRTY_MINUTES {
+        override fun getLabel() = R.string.thirty_minutes
+        override fun getTime() = 30*60*1000
+    },
+    ONE_HOUR {
+        override fun getLabel() = R.string.one_hour
+        override fun getTime() = 60*60*1000
+    },
+}
+
+/**
+ * This function takes the value in milliseconds and
+ * translates to an enum TimesInMS.  On a failed match
+ * the shortest 30 seconds value is returned.
+ */
+private fun getLabelFromMS(ms: Int) : TimesInMS {
+    TimesInMS.entries.forEach() {
+        if (it.getTime() == ms) return it;
+    }
+    return TimesInMS.THIRTY_SECONDS
+}
+

@@ -7,11 +7,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.ui.cache.Message
+import com.hashapps.cadenas.ui.cache.MessageCache
+import java.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+
 
 /**
  * View model for the processing screens.
@@ -21,6 +28,7 @@ import kotlinx.coroutines.withContext
 class ProcessingViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
+    private val messageCache: MessageCache
 ) : ViewModel() {
     private val processingArgs = ProcessingArgs(savedStateHandle)
 
@@ -28,11 +36,15 @@ class ProcessingViewModel(
         private set
 
     init {
+        setTimerState(this)
         viewModelScope.launch {
             val channelName =
                 channelRepository.getChannelStream(processingArgs.channelId).map { it.name }.first()
+            val cachingTimeMS =
+                channelRepository.getChannelStream(processingArgs.channelId).map { it.cachingTimeMS }.first()
             processingUiState = processingUiState.copy(
                 channelName = channelName,
+                channelCacheTimeInMS = cachingTimeMS,
                 toProcess = processingArgs.toDecode,
                 processingMode = if (processingArgs.toDecode.isEmpty()) {
                     ProcessingMode.Encode
@@ -40,6 +52,7 @@ class ProcessingViewModel(
                     ProcessingMode.Decode
                 }
             )
+            setTimerChannelInfo(processingArgs.channelId, cachingTimeMS)
         }
     }
 
@@ -58,6 +71,8 @@ class ProcessingViewModel(
     fun encodingMode() {
         processingUiState = ProcessingUiState(
             channelName = processingUiState.channelName,
+            channelCacheTimeInMS = processingUiState.channelCacheTimeInMS,
+            cachedMessages = processingUiState.cachedMessages,
             processingMode = ProcessingMode.Encode
         )
     }
@@ -68,6 +83,8 @@ class ProcessingViewModel(
     fun decodingMode() {
         processingUiState = ProcessingUiState(
             channelName = processingUiState.channelName,
+            channelCacheTimeInMS = processingUiState.channelCacheTimeInMS,
+            cachedMessages = processingUiState.cachedMessages,
             processingMode = ProcessingMode.Decode
         )
     }
@@ -96,6 +113,14 @@ class ProcessingViewModel(
             textCover.destroy()
             processingUiState =
                 processingUiState.copy(inProgress = false, showEditWarning = true, result = encodedMessage?.coverText)
+            messageCache.insertMessage(
+                Message(
+                    message = processingUiState.toProcess,
+                    time = Instant.now(),
+                    processingMode = ProcessingMode.Encode,
+                    channelId = processingArgs.channelId
+                )
+            )
         }
     }
 
@@ -112,6 +137,56 @@ class ProcessingViewModel(
             }
             textCover.destroy()
             processingUiState = processingUiState.copy(inProgress = false, result = decodedMessage)
+            messageCache.insertMessage(
+                Message(
+                    message = decodedMessage.toString(),
+                    time = Instant.now(),
+                    processingMode = ProcessingMode.Decode,
+                    channelId = processingArgs.channelId
+                )
+            )
+        }
+    }
+
+    /**
+     * Delete all items from the message cache for the current channel.
+     */
+    fun clearMessageCache() {
+        messageCache.clearMessages(TimedRefresh.currentChannelId)
+    }
+
+    /**
+     * This is a single timer that will continuously refresh all Processing
+     * Views every second.
+     */
+    private companion object TimedRefresh {
+        val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+        var currentView: ProcessingViewModel? = null
+        var currentChannelId: Long = -1
+        var currentCacheTime: Int = 0
+
+        init {
+            //start the timer
+            scheduler.scheduleAtFixedRate({
+                if (currentView != null) {
+                    currentView!!.processingUiState = currentView!!.processingUiState.copy(
+                        cachedMessages = currentView!!.messageCache.updateMessages(currentChannelId, currentCacheTime),
+                        updateBit = currentView!!.processingUiState.updateBit+1
+                    )
+                }
+            }, 0, 1000, TimeUnit.MILLISECONDS)
+        }
+
+        /**
+         * Modifies the Processing View and UI State that are being updated via the timer thread.
+         */
+        fun setTimerState(viewModel: ProcessingViewModel) {
+            currentView = viewModel
+        }
+        fun setTimerChannelInfo(channelId: Long, cacheTime: Int) {
+            currentChannelId = channelId
+            currentCacheTime = cacheTime
         }
     }
 }
+

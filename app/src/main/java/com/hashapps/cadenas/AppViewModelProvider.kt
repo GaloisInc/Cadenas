@@ -27,6 +27,7 @@ object AppViewModelProvider {
             ProcessingViewModel(
                 createSavedStateHandle(),
                 cadenasApplication().container.channelRepository,
+                cadenasApplication().container.messageCache,
             )
         }
 

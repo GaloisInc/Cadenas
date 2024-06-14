@@ -33,8 +33,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,10 +66,23 @@ fun HomeScreen(
     onNavigateToExportChannel: (Long) -> Unit,
     onNavigateToEditChannel: (Long) -> Unit,
     modifier: Modifier = Modifier,
+    savedQRCodeNotificationRequired: Boolean = false,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val channels by viewModel.channels.collectAsState()
     val sharedText by viewModel.sharedTextState.collectAsState()
+
+    var savedQRCodeNotificationRequired by rememberSaveable { mutableStateOf(savedQRCodeNotificationRequired) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    if (savedQRCodeNotificationRequired) {
+        val message = stringResource(R.string.qr_code_save_notification)
+        LaunchedEffect(snackbarHostState) {
+            snackbarHostState.showSnackbar(
+                message = message
+            )
+        }
+        savedQRCodeNotificationRequired = false;
+    }
 
     Scaffold(
         topBar = {
@@ -134,7 +150,10 @@ fun HomeScreen(
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
-    ) { innerPadding ->
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+        ) { innerPadding ->
         ChannelList(
             modifier = modifier.padding(innerPadding),
             channels = channels,

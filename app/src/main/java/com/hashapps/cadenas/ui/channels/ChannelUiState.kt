@@ -17,6 +17,7 @@ import com.hashapps.cadenas.data.channels.Channel
  * @property[selectedModel] The model associated with the channel
  * this channel
  * @property[actionEnabled] Whether or not the save action is enabled
+ * @property[cachingTimeMS] Num milliseconds keep cache of messages for this channel, 0 = no caching enabled
  */
 data class ChannelUiState(
     val id: Long = 0,
@@ -26,6 +27,7 @@ data class ChannelUiState(
     val prompt: String = "",
     val selectedModel: String = "",
     val actionEnabled: Boolean = false,
+    val cachingTimeMS: Int = 0, //0 = no caching enabled
 )
 
 /**
@@ -38,6 +40,7 @@ fun ChannelUiState.toChannel(): Channel = Channel(
     key = key,
     prompt = prompt,
     selectedModel = selectedModel,
+    cachingTimeMS = cachingTimeMS,
 )
 
 /**
@@ -54,6 +57,7 @@ fun Channel.toChannelUiState(
     prompt = prompt,
     selectedModel = selectedModel,
     actionEnabled = actionEnabled,
+    cachingTimeMS = cachingTimeMS,
 )
 
 /**
