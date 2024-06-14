@@ -256,7 +256,7 @@ private fun ProcessingBody(
                 }
                 if (processingUiState.processingMode == ProcessingMode.Encode) {
                     IconButton(
-                        enabled = processingUiState.result != null,
+                        enabled = true,
                         onClick = { saveMessage(context, processingUiState.result) },
                     ) {
                         Icon(
