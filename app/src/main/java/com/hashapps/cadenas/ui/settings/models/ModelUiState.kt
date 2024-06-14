@@ -3,7 +3,7 @@ package com.hashapps.cadenas.ui.settings.models
 import com.hashapps.cadenas.data.models.Model
 
 const val SAMPLE_MODEL_NAME = "microfic"
-const val SAMPLE_MODEL_URL = "https://owncloud.galois.com/index.php/s/wWN7x38TdaXEjUS/download"
+const val SAMPLE_MODEL_URL = "https://owncloud.galois.com/index.php/s/OCxmKKkJVl9Z9gX/download"
 
 /**
  * UI state for the model-adding screen.
