@@ -10,6 +10,8 @@ import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
 import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_NAME
 import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_URL
+import com.hashapps.cadenas.ui.settings.models.SPANISH_SAMPLE_MODEL_NAME
+import com.hashapps.cadenas.ui.settings.models.SPANISH_SAMPLE_MODEL_URL
 import com.hashapps.cadenas.ui.settings.models.isValid
 import com.hashapps.cadenas.ui.settings.models.toModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -79,6 +81,17 @@ class ModelAddViewModel(
     fun downloadSampleModel() {
         if (SAMPLE_MODEL_NAME !in modelNames.value) {
             modelRepository.downloadModelFromAndSaveAs(SAMPLE_MODEL_URL, SAMPLE_MODEL_NAME)
+        }
+    }
+
+    /**
+     * Start the model-downloading worker to fetch the sample Spanish model.
+     *
+     * Only does work if the sample hasn't already been installed
+     */
+    fun downloadSpanishSampleModel() {
+        if (SPANISH_SAMPLE_MODEL_NAME !in modelNames.value) {
+            modelRepository.downloadModelFromAndSaveAs(SPANISH_SAMPLE_MODEL_URL, SPANISH_SAMPLE_MODEL_NAME)
         }
     }
 

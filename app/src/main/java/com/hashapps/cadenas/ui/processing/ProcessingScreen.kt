@@ -112,7 +112,7 @@ private fun ProcessingBody(
     clearMessageCache: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (processingUiState.showEditWarning) {
+    if (processingUiState.showEditWarning && !processingUiState.result.isNullOrBlank()) {
         AlertDialog(
             onDismissRequest = {},
             title = { Text(stringResource(R.string.attention)) },

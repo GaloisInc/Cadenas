@@ -43,6 +43,8 @@ import com.hashapps.cadenas.ui.settings.SettingsTopAppBar
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
 import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_NAME
 import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_URL
+import com.hashapps.cadenas.ui.settings.models.SPANISH_SAMPLE_MODEL_NAME
+import com.hashapps.cadenas.ui.settings.models.SPANISH_SAMPLE_MODEL_URL
 import com.hashapps.cadenas.ui.settings.models.isNameValid
 import com.hashapps.cadenas.ui.settings.models.isUrlValid
 import com.hashapps.cadenas.workers.ModelDownloadWorker
@@ -149,6 +151,27 @@ fun ModelAddScreen(
             ) {
                 Text(
                     text = stringResource(R.string.download_sample_model),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            Button(
+                onClick = {
+                    viewModel.updateUiState(
+                        viewModel.modelUiState.copy(
+                            name = SPANISH_SAMPLE_MODEL_NAME,
+                            url = SPANISH_SAMPLE_MODEL_URL
+                        )
+                    )
+                    downloading = true
+                    viewModel.downloadSpanishSampleModel()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !downloading && SPANISH_SAMPLE_MODEL_NAME !in modelNames,
+            ) {
+                Text(
+                    text = stringResource(R.string.download_sample_spanish_model),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge
                 )
