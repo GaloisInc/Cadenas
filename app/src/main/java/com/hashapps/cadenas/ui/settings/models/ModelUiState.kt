@@ -5,6 +5,9 @@ import com.hashapps.cadenas.data.models.Model
 const val SAMPLE_MODEL_NAME = "microfic"
 const val SAMPLE_MODEL_URL = "https://owncloud.galois.com/index.php/s/OCxmKKkJVl9Z9gX/download"
 
+const val SPANISH_SAMPLE_MODEL_NAME = "gptes"
+const val SPANISH_SAMPLE_MODEL_URL = "https://owncloud.galois.com/index.php/s/i7GjrRAy0lPJyeQ/download"
+
 /**
  * UI state for the model-adding screen.
  *
