@@ -82,4 +82,5 @@
     <string name="thirty_minutes">30 minutes</string>
     <string name="one_hour">1 hour</string>
     <string name="qr_code_save_notification">The channel QR Code was saved to your photo library.</string>
+    <string name="download_sample_spanish_model">Download Sample Spanish Model</string>
 </resources>
