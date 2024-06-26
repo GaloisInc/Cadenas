@@ -81,4 +81,9 @@
     <string name="one_hour">1 hora</string>
     <string name="qr_code_save_notification">El código QR del canal se guardó en tu biblioteca de fotos.</string>
     <string name="download_sample_spanish_model">Descargar modelo de muestra en español</string>
+    <string name="biometrics_login_title">"Inicio de sesión biométrico para Cadenas"</string>
+    <string name="biometrics_login_prompt">"Inicie sesión con su credencial biométrica"</string>
+    <string name="biometrics_login_pswd_prompt">"Usar contraseña de cuenta"</string>
+    <string name="biometrics_failure_msg">"Error de autenticación"</string>
+    <string name="biometrics_error_msg">"Error de autenticación: "</string>
 </resources>
