@@ -1,15 +1,18 @@
 package com.hashapps.cadenas.ui.channels.add
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -228,14 +231,30 @@ fun ChannelInputForm(
                 OutlinedTextField(
                     modifier = Modifier
                         .menuAnchor()
-                        .fillMaxWidth(),
+                        .fillMaxWidth(1f),
                     readOnly = true,
                     value = channelUiState.selectedModel,
                     onValueChange = {},
-                    label = { Text(stringResource(R.string.model)) },
+                    label = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clickable(
+                                    enabled = true,
+                                    onClick = { onValueChange(channelUiState.copy(displayModelHelp = true)) },
+                                    role = Role.Button,
+                                )
+                        )
+                        {
+                            Text(stringResource(R.string.model))
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
+                                contentDescription = null,
+                            )
+                        }
+                    },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 )
-
                 ExposedDropdownMenu(
                     modifier = Modifier.fillMaxWidth(),
                     expanded = expanded,
@@ -266,6 +285,25 @@ fun ChannelInputForm(
                         )
                     }
                 }
+            }
+
+            if (channelUiState.displayModelHelp) {
+                AlertDialog(
+                    onDismissRequest = {
+                        onValueChange(channelUiState.copy(displayModelHelp = false))
+                    },
+                    text = { Text(stringResource(R.string.model_help_text)) },
+                    modifier = Modifier.padding(16.dp),
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                onValueChange(channelUiState.copy(displayModelHelp = false))
+                            }
+                        ) {
+                            Text(stringResource(R.string.ok))
+                        }
+                    },
+                )
             }
         }
     }
@@ -332,4 +370,3 @@ private fun getLabelFromMS(ms: Int) : TimesInMS {
     }
     return TimesInMS.THIRTY_SECONDS
 }
-
