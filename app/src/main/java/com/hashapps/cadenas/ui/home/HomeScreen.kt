@@ -55,6 +55,7 @@ import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
+import com.hashapps.cadenas.ui.components.PanicButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,6 +104,7 @@ fun HomeScreen(
                         )
                     }
                 },
+                actions = { PanicButton(viewModel) },
             )
         },
         floatingActionButton = {

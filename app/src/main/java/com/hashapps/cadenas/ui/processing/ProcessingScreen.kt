@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.cache.DisplayMessageCache
+import com.hashapps.cadenas.ui.components.PanicButton
 
 /**
  * Cadenas message-processing screen.
@@ -63,19 +63,7 @@ fun ProcessingScreen(
                         )
                     }
                 },
-                actions = {
-                    if (viewModel.processingUiState.processingMode == ProcessingMode.Encode) {
-                        IconButton(
-                            enabled = viewModel.processingUiState.result != null,
-                            onClick = { shareMessage(context, viewModel.processingUiState.result) },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Share,
-                                contentDescription = stringResource(R.string.share_button)
-                            )
-                        }
-                    }
-                },
+                actions = { PanicButton(viewModel, onNavigateBack) },
             )
         },
     ) { innerPadding ->
