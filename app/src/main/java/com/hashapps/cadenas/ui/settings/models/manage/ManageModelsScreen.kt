@@ -19,6 +19,7 @@ import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
+import com.hashapps.cadenas.ui.components.PanicButton
 
 /**
  * Cadenas model-management screen.\
@@ -50,16 +51,26 @@ fun ManageModelsScreen(
                         )
                     }
                 },
-                actions = {
-                    IconButton(onClick = { onNavigateToModelAdd("") }) {
-                        Icon(
-                            imageVector = Icons.Filled.CreateNewFolder,
-                            contentDescription = stringResource(R.string.add_model)
-                        )
-                    }
-                }
+                actions = { PanicButton(viewModel, onNavigateBack) }
             )
         },
+        floatingActionButton = {
+            Box(
+                modifier = Modifier.wrapContentSize(Alignment.TopStart),
+            ) {
+                ExtendedFloatingActionButton(
+                    text = { Text(stringResource(R.string.add_model)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.CreateNewFolder,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = { onNavigateToModelAdd("") }
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
     ) { innerPadding ->
         ModelList(
             modifier = modifier.padding(innerPadding),

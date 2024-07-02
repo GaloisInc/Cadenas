@@ -12,7 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
+import com.hashapps.cadenas.ui.components.PanicButton
+import com.hashapps.cadenas.ui.components.TopViewModel
 
 /**
  * Cadenas main settings screen.
@@ -81,7 +85,7 @@ fun SettingsTopAppBar(
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = true,
     onNavigateBack: () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {},
+    viewModel: TopViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
@@ -97,6 +101,6 @@ fun SettingsTopAppBar(
                 )
             }
         },
-        actions = actions,
+        actions = { PanicButton(viewModel, onNavigateBack) },
     )
 }
