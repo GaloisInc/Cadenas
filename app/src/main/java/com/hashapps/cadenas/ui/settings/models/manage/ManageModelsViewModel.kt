@@ -1,9 +1,10 @@
 package com.hashapps.cadenas.ui.settings.models.manage
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.ui.components.TopViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
  */
 class ManageModelsViewModel(
     private val modelRepository: ModelRepository,
-) : ViewModel() {
+    private val channelRepository: ChannelRepository,
+) : TopViewModel(channelRepository) {
     val models = modelRepository.getAllModelsStream().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),

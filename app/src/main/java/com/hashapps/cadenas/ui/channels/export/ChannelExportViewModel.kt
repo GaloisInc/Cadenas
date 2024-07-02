@@ -7,11 +7,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.ui.components.TopViewModel
 import io.github.g0dkar.qrcode.ErrorCorrectionLevel
 import io.github.g0dkar.qrcode.QRCode
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +52,7 @@ class ChannelExportViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
     private val modelRepository: ModelRepository,
-) : ViewModel() {
+) : TopViewModel(channelRepository) {
     private val channelExportArgs = ChannelExportArgs(savedStateHandle)
 
     var qrBitmap: ImageBitmap? by mutableStateOf(null)
