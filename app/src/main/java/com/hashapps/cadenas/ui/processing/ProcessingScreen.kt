@@ -207,35 +207,7 @@ private fun ProcessingBody(
                         .fillMaxWidth()
                 )
             }
-
             if (processingUiState.result != null) {
-                Row(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        LocalContext.current.resources.getQuantityString(
-                            R.plurals.result_length,
-                            processingUiState.result.length,
-                            processingUiState.result.length,
-                        )
-                    )
-
-                    IconButton(
-                        onClick = { onValueChange(processingUiState.copy(result = null)) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(R.string.clear),
-                        )
-                    }
-                }
-
-                HorizontalDivider(thickness = 1.dp)
-
                 SelectionContainer {
                     Text(
                         modifier = Modifier.padding(8.dp),
@@ -243,14 +215,37 @@ private fun ProcessingBody(
                     )
                 }
                 if (processingUiState.processingMode == ProcessingMode.Encode) {
-                    IconButton(
-                        enabled = true,
-                        onClick = { saveMessage(context, processingUiState.result) },
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.ContentPaste,
-                            contentDescription = stringResource(R.string.save_to_clipboard_button)
-                        )
+                        IconButton(
+                            enabled = true,
+                            onClick = { saveMessage(context, processingUiState.result) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.ContentPaste,
+                                contentDescription = stringResource(R.string.save_to_clipboard_button)
+                            )
+                        }
+                        IconButton(
+                            enabled = true,
+                            onClick = { shareMessage(context, processingUiState.result) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Share,
+                                contentDescription = stringResource(R.string.share_button)
+                            )
+                        }
+                        IconButton(
+                            enabled = true,
+                            onClick = { onValueChange(processingUiState.copy(result = null)) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(R.string.clear),
+                            )
+                        }
                     }
                 }
             }

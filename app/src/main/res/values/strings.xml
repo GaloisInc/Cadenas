@@ -85,4 +85,9 @@
     <string name="download_sample_spanish_model">Download Sample Spanish Model</string>
     <string name="emergency">Emergency</string>
     <string name="emergency_message">Delete ALL content now.</string>
+    <string name="biometrics_login_title">"Biometric login for Cadenas"</string>
+    <string name="biometrics_login_prompt">"Log in using your biometric credential"</string>
+    <string name="biometrics_login_pswd_prompt">"Use account password"</string>
+    <string name="biometrics_failure_msg">"Authentication failed"</string>
+    <string name="biometrics_error_msg">"Authentication error: "</string>
 </resources>
