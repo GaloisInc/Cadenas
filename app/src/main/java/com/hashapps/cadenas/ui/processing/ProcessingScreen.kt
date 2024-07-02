@@ -206,19 +206,7 @@ private fun ProcessingBody(
                         .fillMaxWidth()
                 )
             }
-
             if (processingUiState.result != null) {
-
-                IconButton(
-                    onClick = { onValueChange(processingUiState.copy(result = null)) },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = stringResource(R.string.clear),
-                    )
-                }
-
                 SelectionContainer {
                     Text(
                         modifier = Modifier.padding(8.dp),
@@ -232,6 +220,15 @@ private fun ProcessingBody(
                     ) {
                         IconButton(
                             enabled = true,
+                            onClick = { saveMessage(context, processingUiState.result) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.ContentPaste,
+                                contentDescription = stringResource(R.string.save_to_clipboard_button)
+                            )
+                        }
+                        IconButton(
+                            enabled = true,
                             onClick = { shareMessage(context, processingUiState.result) },
                         ) {
                             Icon(
@@ -241,11 +238,11 @@ private fun ProcessingBody(
                         }
                         IconButton(
                             enabled = true,
-                            onClick = { saveMessage(context, processingUiState.result) },
+                            onClick = { onValueChange(processingUiState.copy(result = null)) },
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.ContentPaste,
-                                contentDescription = stringResource(R.string.save_to_clipboard_button)
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(R.string.clear),
                             )
                         }
                     }
