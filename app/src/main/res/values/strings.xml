@@ -83,4 +83,9 @@
     <string name="one_hour">1 hour</string>
     <string name="qr_code_save_notification">The channel QR Code was saved to your photo library.</string>
     <string name="download_sample_spanish_model">Download Sample Spanish Model</string>
+    <string name="biometrics_login_title">"Biometric login for Cadenas"</string>
+    <string name="biometrics_login_prompt">"Log in using your biometric credential"</string>
+    <string name="biometrics_login_pswd_prompt">"Use account password"</string>
+    <string name="biometrics_failure_msg">"Authentication failed"</string>
+    <string name="biometrics_error_msg">"Authentication error: "</string>
 </resources>
