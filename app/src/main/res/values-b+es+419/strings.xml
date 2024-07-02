@@ -81,4 +81,6 @@
     <string name="one_hour">1 hora</string>
     <string name="qr_code_save_notification">El código QR del canal se guardó en tu biblioteca de fotos.</string>
     <string name="download_sample_spanish_model">Descargar modelo de muestra en español</string>
+    <string name="emergency">Emergencia</string>
+    <string name="emergency_message">Eliminar TODO el contenido ahora</string>
 </resources>
