@@ -72,16 +72,16 @@ fun HomeScreen(
     val channels by viewModel.channels.collectAsState()
     val sharedText by viewModel.sharedTextState.collectAsState()
 
-    var savedQRCodeNotificationRequired by rememberSaveable { mutableStateOf(savedQRCodeNotificationRequired) }
+    var qrCodeNotificationRequired by rememberSaveable { mutableStateOf(savedQRCodeNotificationRequired) }
     val snackbarHostState = remember { SnackbarHostState() }
-    if (savedQRCodeNotificationRequired) {
+    if (qrCodeNotificationRequired) {
         val message = stringResource(R.string.qr_code_save_notification)
         LaunchedEffect(snackbarHostState) {
             snackbarHostState.showSnackbar(
                 message = message
             )
         }
-        savedQRCodeNotificationRequired = false;
+        qrCodeNotificationRequired = false
     }
 
     Scaffold(
