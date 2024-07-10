@@ -1,9 +1,12 @@
 package com.hashapps.cadenas
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -41,9 +44,19 @@ class MainActivity : AppCompatActivity() {
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
                 //Biometric features are currently unavailable.
                 startApp()
-            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-                // Could prompt the user to create credentials, but for now just start the app.
-                startApp()
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                // Prompts the user to create credentials that your app accepts.
+                val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+                    putExtra(
+                        Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                        BIOMETRIC_STRONG or DEVICE_CREDENTIAL
+                    )
+                }
+                val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                    getAuthenticationAndStartApp()
+                }
+                launcher.launch(enrollIntent)
+            }
         }
     }
 
