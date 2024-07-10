@@ -29,8 +29,7 @@ import kotlinx.coroutines.launch
 class ModelAddViewModel(
     savedStateHandle: SavedStateHandle,
     private val modelRepository: ModelRepository,
-    private val channelRepository: ChannelRepository,
-) : TopViewModel(channelRepository) {
+) : TopViewModel(modelRepository) {
     private val processingArgs = ProcessingArgs(savedStateHandle)
 
     var modelUiState: ModelUiState by mutableStateOf(ModelUiState())

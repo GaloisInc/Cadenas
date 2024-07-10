@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.ui.cache.Message
 import com.hashapps.cadenas.ui.cache.MessageCache
 import com.hashapps.cadenas.ui.components.TopViewModel
@@ -28,8 +29,9 @@ import java.util.concurrent.TimeUnit
 class ProcessingViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
+    private val modelRepository: ModelRepository,
     private val messageCache: MessageCache
-) : TopViewModel(channelRepository) {
+) : TopViewModel(modelRepository) {
     private val processingArgs = ProcessingArgs(savedStateHandle)
 
     var processingUiState by mutableStateOf(ProcessingUiState())

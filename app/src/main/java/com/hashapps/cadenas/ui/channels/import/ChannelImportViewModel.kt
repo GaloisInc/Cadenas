@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class ChannelImportViewModel(
     private val channelRepository: ChannelRepository,
     private val modelRepository: ModelRepository,
-) : TopViewModel(channelRepository) {
+) : TopViewModel(modelRepository) {
     var modelInQR: Model? by mutableStateOf(null)
         private set
 

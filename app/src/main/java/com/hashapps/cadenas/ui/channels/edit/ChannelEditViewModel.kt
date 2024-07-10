@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.channels.isValid
+import com.hashapps.cadenas.data.models.ModelRepository
 import com.hashapps.cadenas.ui.channels.ChannelUiState
 import com.hashapps.cadenas.ui.channels.isValid
 import com.hashapps.cadenas.ui.channels.toChannel
@@ -24,7 +25,8 @@ import kotlinx.coroutines.launch
 class ChannelEditViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
-) : TopViewModel(channelRepository) {
+    private val modelRepository: ModelRepository,
+) : TopViewModel(modelRepository) {
     private val channelEditArgs = ChannelEditArgs(savedStateHandle)
 
     var channelUiState by mutableStateOf(ChannelUiState())

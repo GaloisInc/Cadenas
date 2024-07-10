@@ -16,8 +16,7 @@ import kotlinx.coroutines.launch
  */
 class ManageModelsViewModel(
     private val modelRepository: ModelRepository,
-    private val channelRepository: ChannelRepository,
-) : TopViewModel(channelRepository) {
+) : TopViewModel(modelRepository) {
     val models = modelRepository.getAllModelsStream().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class ChannelAddViewModel(
     private val channelRepository: ChannelRepository,
     modelRepository: ModelRepository,
-) : TopViewModel(channelRepository) {
+) : TopViewModel(modelRepository) {
     var channelUiState by mutableStateOf(ChannelUiState(key = channelRepository.genKey()))
         private set
 

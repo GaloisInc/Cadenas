@@ -52,7 +52,7 @@ class ChannelExportViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
     private val modelRepository: ModelRepository,
-) : TopViewModel(channelRepository) {
+) : TopViewModel(modelRepository) {
     private val channelExportArgs = ChannelExportArgs(savedStateHandle)
 
     var qrBitmap: ImageBitmap? by mutableStateOf(null)

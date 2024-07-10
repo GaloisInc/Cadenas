@@ -31,7 +31,7 @@ fun PanicButton(viewModel: TopViewModel, onNavigateBack: (() -> Unit)? = null)  
             onDeleteConfirm = {
                 panicButtonState = false
                 onNavigateBack?.invoke()
-                viewModel.deleteAllChannels()
+                viewModel.deleteAllModels()
             },
             onDeleteCancel = { panicButtonState = false },
         )

@@ -2,19 +2,19 @@ package com.hashapps.cadenas.ui.components
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
 import kotlinx.coroutines.launch
 
 open class TopViewModel(
-    private val channelRepository: ChannelRepository,
+    private val modelRepository: ModelRepository,
 ) : ViewModel() {
 
     /**
      * Delete all channels
      */
-    fun deleteAllChannels() {
+    fun deleteAllModels() {
         viewModelScope.launch {
-            channelRepository.deleteAllChannels()
+            modelRepository.deleteAllModels()
         }
     }
 
