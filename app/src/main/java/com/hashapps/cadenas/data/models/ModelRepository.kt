@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface ModelRepository {
     suspend fun insertModel(model: Model): Long
     suspend fun deleteModel(model: Model)
-
+    suspend fun deleteAllModels()
     fun getModelStream(name: String): Flow<Model>
     fun getModelStreamWithHash(hash: String): Flow<Model?>
     fun getAllModelsStream(): Flow<List<Model>>
