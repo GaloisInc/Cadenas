@@ -10,9 +10,14 @@ const val MANAGE_MODELS_ROUTE = "manage_models"
 fun NavGraphBuilder.manageModelsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToModelAdd: (String) -> Unit,
+    onNavigateToModelAddDisk: () -> Unit,
 ) {
     composable(MANAGE_MODELS_ROUTE) {
-        ManageModelsScreen(onNavigateBack = onNavigateBack, onNavigateToModelAdd = onNavigateToModelAdd)
+        ManageModelsScreen(
+            onNavigateBack = onNavigateBack,
+            onNavigateToModelAdd = onNavigateToModelAdd,
+            onNavigateToModelAddDisk = onNavigateToModelAddDisk
+        )
     }
 }
 
