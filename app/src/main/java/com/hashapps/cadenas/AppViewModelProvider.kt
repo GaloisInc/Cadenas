@@ -13,6 +13,7 @@ import com.hashapps.cadenas.ui.channels.add.ChannelAddViewModel
 import com.hashapps.cadenas.ui.channels.edit.ChannelEditViewModel
 import com.hashapps.cadenas.ui.channels.export.ChannelExportViewModel
 import com.hashapps.cadenas.ui.channels.import.ChannelImportViewModel
+import com.hashapps.cadenas.ui.settings.models.disk.ModelAddDiskViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -69,6 +70,12 @@ object AppViewModelProvider {
         initializer {
             ModelAddViewModel(
                 createSavedStateHandle(),
+                cadenasApplication().container.modelRepository,
+            )
+        }
+
+        initializer {
+            ModelAddDiskViewModel(
                 cadenasApplication().container.modelRepository,
             )
         }
