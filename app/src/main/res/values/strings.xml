@@ -92,4 +92,6 @@
     <string name="from_url">From URL</string>
     <string name="from_disk">From Disk</string>
     <string name="install">Install</string>
+    <string name="choose_zip">Choose a ZIP…</string>
+    <string name="zip_chosen">ZIP chosen!</string>
 </resources>

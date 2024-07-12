@@ -90,4 +90,6 @@
     <string name="from_url">Desde URL</string>
     <string name="from_disk">From disco</string>
     <string name="install">Instalar</string>
+    <string name="choose_zip">Elija un archivo ZIP…</string>
+    <string name="zip_chosen">¡Archivo ZIP elegido!</string>
 </resources>
