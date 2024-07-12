@@ -37,6 +37,12 @@ class ModelAddDiskViewModel(
             newModelUiState.copy(actionEnabled = newModelUiState.isValid(modelNames.value))
     }
 
+    val modelInstallerState = modelRepository.modelInstallerState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = null,
+    )
+
     /**
      * If a valid name has been entered and a valid ZIP selected, start the
      * model-installation worker.
