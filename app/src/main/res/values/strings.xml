@@ -91,4 +91,5 @@
     <string name="biometrics_error_msg">"Authentication error: "</string>
     <string name="from_url">From URL</string>
     <string name="from_disk">From Disk</string>
+    <string name="install">Install</string>
 </resources>
