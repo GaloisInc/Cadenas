@@ -1,5 +1,6 @@
 package com.hashapps.cadenas.ui.settings.models.disk
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 class ModelAddDiskViewModel(
     private val modelRepository: ModelRepository,
 ) : ViewModel() {
-    var modelUiState: ModelUiState by mutableStateOf(ModelUiState())
+    var modelUiState: ModelUiState by mutableStateOf(ModelUiState(onDisk = true))
         private set
 
     val modelNames = modelRepository.getAllModelsStream().map { model ->
@@ -47,7 +48,14 @@ class ModelAddDiskViewModel(
      * If a valid name has been entered and a valid ZIP selected, start the
      * model-installation worker.
      */
-    fun installModel() {}
+    fun installModel() {
+        if (modelUiState.isValid(modelNames.value)) {
+            modelRepository.installModelFromAndSaveAs(
+                Uri.parse(modelUiState.file),
+                modelUiState.name
+            )
+        }
+    }
 
     /**
      * Save an installed model to the database.
