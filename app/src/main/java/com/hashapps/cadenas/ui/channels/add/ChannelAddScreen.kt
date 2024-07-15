@@ -37,6 +37,7 @@ private const val MAX_LEN = 128
 fun ChannelAddScreen(
     onNavigateBack: () -> Unit,
     onNavigateToAddModel: (String) -> Unit,
+    onNavigateToAddModelDisk: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -57,6 +58,7 @@ fun ChannelAddScreen(
             models = models,
             onChannelValueChange = viewModel::updateUiState,
             onAddModel = onNavigateToAddModel,
+            onAddModelDisk = onNavigateToAddModelDisk,
             onSaveClick = {
                 viewModel.saveChannel()
                 onNavigateBack()
@@ -72,6 +74,7 @@ private fun ChannelAddBody(
     models: List<Model>,
     onChannelValueChange: (ChannelUiState) -> Unit,
     onAddModel: (String) -> Unit = {},
+    onAddModelDisk: () -> Unit = {},
     onSaveClick: () -> Unit,
 ) {
     Column(
@@ -86,6 +89,7 @@ private fun ChannelAddBody(
             models = models,
             onValueChange = onChannelValueChange,
             onAddModel = onAddModel,
+            onAddModelDisk = onAddModelDisk,
         )
 
         Button(
@@ -109,6 +113,7 @@ fun ChannelInputForm(
     models: List<Model>,
     onValueChange: (ChannelUiState) -> Unit = {},
     onAddModel: (String) -> Unit = {},
+    onAddModelDisk: () -> Unit = {},
     editing: Boolean = false,
 ) {
     ElevatedCard(
