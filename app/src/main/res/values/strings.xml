@@ -89,4 +89,9 @@
     <string name="biometrics_login_pswd_prompt">"Use account password"</string>
     <string name="biometrics_failure_msg">"Authentication failed"</string>
     <string name="biometrics_error_msg">"Authentication error: "</string>
+    <string name="from_url">From URL</string>
+    <string name="from_disk">From Disk</string>
+    <string name="install">Install</string>
+    <string name="choose_zip">Choose a ZIP…</string>
+    <string name="zip_chosen">ZIP chosen!</string>
 </resources>

@@ -10,6 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.SimCardDownload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,6 +39,7 @@ private const val MAX_LEN = 128
 fun ChannelAddScreen(
     onNavigateBack: () -> Unit,
     onNavigateToAddModel: (String) -> Unit,
+    onNavigateToAddModelDisk: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChannelAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -57,6 +60,7 @@ fun ChannelAddScreen(
             models = models,
             onChannelValueChange = viewModel::updateUiState,
             onAddModel = onNavigateToAddModel,
+            onAddModelDisk = onNavigateToAddModelDisk,
             onSaveClick = {
                 viewModel.saveChannel()
                 onNavigateBack()
@@ -72,6 +76,7 @@ private fun ChannelAddBody(
     models: List<Model>,
     onChannelValueChange: (ChannelUiState) -> Unit,
     onAddModel: (String) -> Unit = {},
+    onAddModelDisk: () -> Unit = {},
     onSaveClick: () -> Unit,
 ) {
     Column(
@@ -86,6 +91,7 @@ private fun ChannelAddBody(
             models = models,
             onValueChange = onChannelValueChange,
             onAddModel = onAddModel,
+            onAddModelDisk = onAddModelDisk,
         )
 
         Button(
@@ -109,6 +115,7 @@ fun ChannelInputForm(
     models: List<Model>,
     onValueChange: (ChannelUiState) -> Unit = {},
     onAddModel: (String) -> Unit = {},
+    onAddModelDisk: () -> Unit = {},
     editing: Boolean = false,
 ) {
     ElevatedCard(
@@ -158,7 +165,7 @@ fun ChannelInputForm(
                             //we're changing from checked to unchecked
                             onValueChange(channelUiState.copy(cachingTimeMS = 0))
                         }
-                                    },
+                    },
                     role = Role.Checkbox
                 )
                 .padding(horizontal = 8.dp),
@@ -261,10 +268,24 @@ fun ChannelInputForm(
                     onDismissRequest = { expanded = false },
                 ) {
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.add_model)) },
+                        text = { Text(stringResource(R.string.from_url)) },
                         onClick = {
                             expanded = false
                             onAddModel("")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = null,
+                            )
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.from_disk)) },
+                        onClick = {
+                            expanded = false
+                            onAddModelDisk()
                         },
                         leadingIcon = {
                             Icon(
