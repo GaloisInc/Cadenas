@@ -21,7 +21,7 @@ const val SPANISH_SAMPLE_MODEL_URL =
 data class ModelUiState(
     val name: String = "",
     val url: String = "",
-    val file: String = "",
+    val file: String? = null,
     val onDisk: Boolean = false,
     val actionEnabled: Boolean = false,
 )
@@ -57,4 +57,4 @@ fun ModelUiState.isUrlValid() = urlRegex.matches(url)
  * Return true iff the model name and URL are valid.
  */
 fun ModelUiState.isValid(modelNames: List<String>) =
-    isNameValid(modelNames) && ((onDisk && file.isNotEmpty()) || (!onDisk && isUrlValid()))
+    isNameValid(modelNames) && ((onDisk && !file.isNullOrEmpty()) || (!onDisk && isUrlValid()))

@@ -187,7 +187,7 @@ private fun ModelInputForm(
     ) {
         val launcher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-                onValueChange(modelUiState.copy(file = uri.toString()))
+                onValueChange(modelUiState.copy(file = uri?.toString()))
             }
 
         Button(
@@ -197,7 +197,7 @@ private fun ModelInputForm(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                text = if (modelUiState.file.isEmpty()) {
+                text = if (modelUiState.file.isNullOrEmpty()) {
                     stringResource(R.string.choose_zip)
                 } else {
                     stringResource(R.string.zip_chosen)
