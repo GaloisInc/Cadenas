@@ -10,6 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.SimCardDownload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -163,7 +165,7 @@ fun ChannelInputForm(
                             //we're changing from checked to unchecked
                             onValueChange(channelUiState.copy(cachingTimeMS = 0))
                         }
-                                    },
+                    },
                     role = Role.Checkbox
                 )
                 .padding(horizontal = 8.dp),
@@ -266,10 +268,24 @@ fun ChannelInputForm(
                     onDismissRequest = { expanded = false },
                 ) {
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.add_model)) },
+                        text = { Text(stringResource(R.string.from_url)) },
                         onClick = {
                             expanded = false
                             onAddModel("")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = null,
+                            )
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.from_disk)) },
+                        onClick = {
+                            expanded = false
+                            onAddModelDisk()
                         },
                         leadingIcon = {
                             Icon(
