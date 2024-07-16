@@ -74,38 +74,33 @@ fun ManageModelsScreen(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                 ) {
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.from_url)) },
-                            onClick = {
-                                expanded = false
-                                onNavigateToModelAdd("")
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.CloudDownload,
-                                    contentDescription = null
-                                )
-                            }
-                        )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.from_url)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToModelAdd("")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.CloudDownload,
+                                contentDescription = null
+                            )
+                        }
+                    )
 
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.from_disk)) },
-                            onClick = {
-                                expanded = false
-                                onNavigateToModelAddDisk()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.SimCardDownload,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                    }
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.from_disk)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToModelAddDisk()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.SimCardDownload,
+                                contentDescription = null
+                            )
+                        }
+                    )
                 }
             }
         },
