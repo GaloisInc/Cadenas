@@ -9,6 +9,8 @@ import com.hashapps.cadenas.ui.settings.models.manage.manageModelsScreen
 import com.hashapps.cadenas.ui.settings.models.add.modelAddScreen
 import com.hashapps.cadenas.ui.settings.models.manage.navigateToManageModels
 import com.hashapps.cadenas.ui.settings.models.add.navigateToModelAdd
+import com.hashapps.cadenas.ui.settings.models.disk.modelAddDiskScreen
+import com.hashapps.cadenas.ui.settings.models.disk.navigateToModelAddDisk
 import com.hashapps.cadenas.ui.settings.settingsScreen
 
 const val SETTINGS_GRAPH_ROUTE = "settings"
@@ -29,8 +31,10 @@ fun NavGraphBuilder.settingsGraph(
         )
         manageModelsScreen(
             onNavigateBack = { navController.popBackStack() },
-            onNavigateToModelAdd = { navController.navigateToModelAdd(it) })
+            onNavigateToModelAdd = { navController.navigateToModelAdd(it) },
+            onNavigateToModelAddDisk = { navController.navigateToModelAddDisk() })
         modelAddScreen(onNavigateBack = { navController.popBackStack() })
+        modelAddDiskScreen { navController.popBackStack() }
     }
 }
 

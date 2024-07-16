@@ -1,10 +1,17 @@
 package com.hashapps.cadenas.data.models
 
+import android.net.Uri
 import androidx.lifecycle.asFlow
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
 import com.hashapps.cadenas.workers.ModelDeleteWorker
 import com.hashapps.cadenas.workers.ModelDownloadWorker
-import kotlinx.coroutines.flow.*
+import com.hashapps.cadenas.workers.ModelInstallWorker
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.io.File
 
 /**
@@ -24,7 +31,7 @@ class OfflineModelRepository(
     private val modelsDir: File,
     private val workManager: WorkManager,
     private val modelDao: ModelDao,
-): ModelRepository {
+) : ModelRepository {
     override suspend fun insertModel(model: Model): Long = modelDao.insert(model)
     override suspend fun deleteModel(model: Model) {
         modelDao.delete(model)
@@ -32,7 +39,9 @@ class OfflineModelRepository(
     }
 
     override fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
-    override fun getModelStreamWithHash(hash: String): Flow<Model?> = modelDao.getModelWithHash(hash)
+    override fun getModelStreamWithHash(hash: String): Flow<Model?> =
+        modelDao.getModelWithHash(hash)
+
     override fun getAllModelsStream(): Flow<List<Model>> = modelDao.getAllModels()
 
     override val modelDownloaderState = workManager
@@ -66,6 +75,40 @@ class OfflineModelRepository(
                 "downloadModel",
                 ExistingWorkPolicy.KEEP,
                 modelDownloadRequest,
+            )
+    }
+
+    override val modelInstallerState = workManager
+        .getWorkInfosForUniqueWorkLiveData("installModel")
+        .asFlow()
+        .map { it.getOrNull(0) }
+
+    /**
+     * Install a model from the device, and save it to Cadenas with a given
+     * name. Work is performed asynchronously such that even application death
+     * will not cancel the download.
+     *
+     * @param[uri] The media store URI of the model ZIP
+     * @param[modelName] The name of the model/directory to store the model to
+     */
+    override fun installModelFromAndSaveAs(uri: Uri, modelName: String) {
+        val data = Data.Builder()
+
+        data.putString(ModelInstallWorker.KEY_MODEL_URI, uri.toString())
+
+        val outDir = modelsDir.resolve(modelName)
+        data.putString(ModelInstallWorker.KEY_MODEL_DIR, outDir.path)
+
+        val modelInstallRequest = OneTimeWorkRequestBuilder<ModelInstallWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setInputData(data.build())
+            .build()
+
+        workManager
+            .enqueueUniqueWork(
+                "installModel",
+                ExistingWorkPolicy.KEEP,
+                modelInstallRequest,
             )
     }
 

@@ -6,18 +6,23 @@ const val SAMPLE_MODEL_NAME = "microfic"
 const val SAMPLE_MODEL_URL = "https://owncloud.galois.com/index.php/s/OCxmKKkJVl9Z9gX/download"
 
 const val SPANISH_SAMPLE_MODEL_NAME = "gptes"
-const val SPANISH_SAMPLE_MODEL_URL = "https://owncloud.galois.com/index.php/s/i7GjrRAy0lPJyeQ/download"
+const val SPANISH_SAMPLE_MODEL_URL =
+    "https://owncloud.galois.com/index.php/s/i7GjrRAy0lPJyeQ/download"
 
 /**
  * UI state for the model-adding screen.
  *
  * @property[name] The name of the model
  * @property[url] The model download URL
+ * @property[file] The model file URI
+ * @property[onDisk] Whether the URL refers to a location on disk or not
  * @property[actionEnabled] Whether or not the download action is enabled
  */
 data class ModelUiState(
     val name: String = "",
     val url: String = "",
+    val file: String? = null,
+    val onDisk: Boolean = false,
     val actionEnabled: Boolean = false,
 )
 
@@ -36,7 +41,8 @@ private val nameRegex =
 /**
  * Return true iff the model name is alphanumeric.
  */
-fun ModelUiState.isNameValid(modelNames: List<String>) = nameRegex.matches(name) && name !in modelNames
+fun ModelUiState.isNameValid(modelNames: List<String>) =
+    nameRegex.matches(name) && name !in modelNames
 
 private val urlRegex =
     Regex("""https://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()!@:%_+.~#?&/=]*)""")
@@ -51,4 +57,4 @@ fun ModelUiState.isUrlValid() = urlRegex.matches(url)
  * Return true iff the model name and URL are valid.
  */
 fun ModelUiState.isValid(modelNames: List<String>) =
-    isNameValid(modelNames) && isUrlValid()
+    isNameValid(modelNames) && ((onDisk && !file.isNullOrEmpty()) || (!onDisk && isUrlValid()))

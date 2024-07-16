@@ -18,6 +18,7 @@ import com.hashapps.cadenas.ui.channels.import.channelImportScreen
 import com.hashapps.cadenas.ui.channels.import.navigateToChannelImport
 import com.hashapps.cadenas.ui.home.navigateToHome
 import com.hashapps.cadenas.ui.settings.models.add.navigateToModelAdd
+import com.hashapps.cadenas.ui.settings.models.disk.navigateToModelAddDisk
 
 /**
  * Top-level navigation host for Cadenas (post setup).
@@ -42,7 +43,8 @@ fun CadenasRootNavHost(
         )
         channelAddScreen(
             onNavigateBack = { navController.popBackStack() },
-            onNavigateToAddModel = { navController.navigateToModelAdd(it) })
+            onNavigateToAddModel = { navController.navigateToModelAdd(it) },
+            onNavigateToAddModelDisk = { navController.navigateToModelAddDisk() })
         channelImportScreen(
             onNavigateBack = { navController.popBackStack() },
             onNavigateToChannelEdit = { navController.navigateToChannelEdit(it) },

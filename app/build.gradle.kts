@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     platform("androidx.compose:compose-bom:2024.06.00")
+    implementation("androidx.biometric:biometric:1.1.0")
     implementation("androidx.compose.material3:material3-android:1.2.1")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -70,8 +71,8 @@ android {
         applicationId = "com.hashapps.cadenas"
         minSdk = 21
         targetSdk = 34
-        versionCode = 9
-        versionName = "0.4.2"
+        versionCode = 10
+        versionName = "0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

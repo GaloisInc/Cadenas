@@ -1,6 +1,7 @@
 <resources>
     <string name="settings">Configuración</string>
     <string name="share_button">Compartir mensaje codificado</string>
+    <string name="sms_button">El mensaje de texto codificado</string>
     <string name="save_to_clipboard_button">Guardar mensaje codificado en el portapapeles</string>
     <string name="cadenas_message">Mensaje codificado</string>
     <string name="plaintext_message_label">Mensaje privado</string>
@@ -31,6 +32,7 @@
     <string name="add_model">Agregar modelo</string>
     <string name="model_name_label">Nombre del modelo</string>
     <string name="model_name_support">Dale un nombre a este modelo</string>
+    <string name="model_help_text">Seleccione o importe un nuevo modelo de lenguaje grande para utilizarlo en el cifrado.  Este modelo debe ser previamente entrenado y convertido a un formato utilizable por Cadenas.</string>
     <string name="download">Descargar</string>
     <string name="channel_menu">Configuración del canal</string>
     <string name="edit">Editar</string>
@@ -81,4 +83,14 @@
     <string name="one_hour">1 hora</string>
     <string name="qr_code_save_notification">El código QR del canal se guardó en tu biblioteca de fotos.</string>
     <string name="download_sample_spanish_model">Descargar modelo de muestra en español</string>
+    <string name="biometrics_login_title">"Inicio de sesión biométrico para Cadenas"</string>
+    <string name="biometrics_login_prompt">"Inicie sesión con su credencial biométrica"</string>
+    <string name="biometrics_login_pswd_prompt">"Usar contraseña de cuenta"</string>
+    <string name="biometrics_failure_msg">"Error de autenticación"</string>
+    <string name="biometrics_error_msg">"Error de autenticación: "</string>
+    <string name="from_url">Desde URL</string>
+    <string name="from_disk">From disco</string>
+    <string name="install">Instalar</string>
+    <string name="choose_zip">Elija un archivo ZIP…</string>
+    <string name="zip_chosen">¡Archivo ZIP elegido!</string>
 </resources>
