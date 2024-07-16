@@ -31,6 +31,7 @@
     <string name="add_model">Agregar modelo</string>
     <string name="model_name_label">Nombre del modelo</string>
     <string name="model_name_support">Dale un nombre a este modelo</string>
+    <string name="model_help_text">Seleccione o importe un nuevo modelo de lenguaje grande para utilizarlo en el cifrado.  Este modelo debe ser previamente entrenado y convertido a un formato utilizable por Cadenas.</string>
     <string name="download">Descargar</string>
     <string name="channel_menu">Configuración del canal</string>
     <string name="edit">Editar</string>
@@ -88,4 +89,9 @@
     <string name="biometrics_login_pswd_prompt">"Usar contraseña de cuenta"</string>
     <string name="biometrics_failure_msg">"Error de autenticación"</string>
     <string name="biometrics_error_msg">"Error de autenticación: "</string>
+    <string name="from_url">Desde URL</string>
+    <string name="from_disk">From disco</string>
+    <string name="install">Instalar</string>
+    <string name="choose_zip">Elija un archivo ZIP…</string>
+    <string name="zip_chosen">¡Archivo ZIP elegido!</string>
 </resources>

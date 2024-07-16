@@ -9,6 +9,7 @@ import com.hashapps.cadenas.ui.home.HomeViewModel
 import com.hashapps.cadenas.ui.components.TopViewModel
 import com.hashapps.cadenas.ui.settings.models.manage.ManageModelsViewModel
 import com.hashapps.cadenas.ui.settings.models.add.ModelAddViewModel
+import com.hashapps.cadenas.ui.settings.models.disk.ModelAddDiskViewModel
 import com.hashapps.cadenas.ui.processing.ProcessingViewModel
 import com.hashapps.cadenas.ui.channels.add.ChannelAddViewModel
 import com.hashapps.cadenas.ui.channels.edit.ChannelEditViewModel
@@ -79,6 +80,12 @@ object AppViewModelProvider {
 
         initializer {
             TopViewModel(
+                cadenasApplication().container.modelRepository,
+            )
+        }
+
+        initializer {
+            ModelAddDiskViewModel(
                 cadenasApplication().container.modelRepository,
             )
         }

@@ -33,6 +33,7 @@ import com.hashapps.cadenas.ui.components.PanicButton
 fun ManageModelsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToModelAdd: (String) -> Unit,
+    onNavigateToModelAddDisk: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ManageModelsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
@@ -55,6 +56,7 @@ fun ManageModelsScreen(
             )
         },
         floatingActionButton = {
+            var expanded by remember { mutableStateOf(false) }
             Box(
                 modifier = Modifier.wrapContentSize(Alignment.TopStart),
             ) {
@@ -66,8 +68,45 @@ fun ManageModelsScreen(
                             contentDescription = null
                         )
                     },
-                    onClick = { onNavigateToModelAdd("") }
+                    onClick = { expanded = true }
                 )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.from_url)) },
+                            onClick = {
+                                expanded = false
+                                onNavigateToModelAdd("")
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.CloudDownload,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.from_disk)) },
+                            onClick = {
+                                expanded = false
+                                onNavigateToModelAddDisk()
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.SimCardDownload,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center,

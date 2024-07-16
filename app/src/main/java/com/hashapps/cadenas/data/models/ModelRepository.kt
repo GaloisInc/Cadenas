@@ -1,5 +1,6 @@
 package com.hashapps.cadenas.data.models
 
+import android.net.Uri
 import androidx.work.WorkInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -19,4 +20,8 @@ interface ModelRepository {
     val modelDownloaderState: Flow<WorkInfo?>
 
     fun downloadModelFromAndSaveAs(url: String, modelName: String)
+
+    val modelInstallerState: Flow<WorkInfo?>
+
+    fun installModelFromAndSaveAs(uri: Uri, modelName: String)
 }

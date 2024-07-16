@@ -28,6 +28,7 @@ data class ChannelUiState(
     val selectedModel: String = "",
     val actionEnabled: Boolean = false,
     val cachingTimeMS: Int = 0, //0 = no caching enabled
+    var displayModelHelp: Boolean = false,
 )
 
 /**
