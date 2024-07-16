@@ -1,12 +1,20 @@
 package com.hashapps.cadenas.ui.processing
 
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Build
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,9 +24,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.Sms
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +53,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.cache.DisplayMessageCache
+
 
 /**
  * Cadenas message-processing screen.
@@ -229,11 +253,11 @@ private fun ProcessingBody(
                         }
                         IconButton(
                             enabled = true,
-                            onClick = { shareMessage(context, processingUiState.result) },
+                            onClick = { sendTextMessage(context, processingUiState.result) },
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.Share,
-                                contentDescription = stringResource(R.string.share_button)
+                                imageVector = Icons.Outlined.Sms,
+                                contentDescription = stringResource(R.string.sms_button)
                             )
                         }
                         IconButton(
@@ -271,6 +295,21 @@ private fun shareMessage(context: Context, message: String?) {
                 context.getString(R.string.cadenas_message)
             )
         )
+    }
+}
+
+private fun sendTextMessage(context: Context, message: String?) {
+    if (message != null) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            data = Uri.parse("smsto:")  // Only SMS apps respond to this.
+            type = "text/plain"
+            putExtra("sms_body", message)
+        }
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            shareMessage(context, message)
+        }
     }
 }
 
