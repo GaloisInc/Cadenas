@@ -71,8 +71,8 @@ android {
         applicationId = "com.hashapps.cadenas"
         minSdk = 21
         targetSdk = 34
-        versionCode = 9
-        versionName = "0.4.2"
+        versionCode = 10
+        versionName = "0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
