@@ -108,5 +108,6 @@ both technical and theoretical:
 - Alex J Malozemoff
 - Hari Menon
 - Chris Phifer
+- Hazel Shackleton
 - Tom Shrimpton
 - Shauna Sweet
