@@ -53,6 +53,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.ui.cache.DisplayMessageCache
+import com.hashapps.cadenas.ui.components.PanicButton
 
 
 /**
@@ -87,6 +88,7 @@ fun ProcessingScreen(
                         )
                     }
                 },
+                actions = { PanicButton(viewModel, onNavigateBack) },
             )
         },
     ) { innerPadding ->

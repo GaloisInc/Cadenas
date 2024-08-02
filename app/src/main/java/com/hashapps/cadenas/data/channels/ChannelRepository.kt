@@ -13,6 +13,7 @@ interface ChannelRepository {
     suspend fun insertChannel(channel: Channel): Long
     suspend fun updateChannel(channel: Channel)
     suspend fun deleteChannel(channel: Channel)
+    suspend fun deleteAllChannels()
 
     fun getChannelStream(id: Long): Flow<Channel>
     fun getAllChannelsStream(): Flow<List<Channel>>
