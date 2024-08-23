@@ -71,7 +71,7 @@
     <string name="decode">Decode</string>
     <string name="execute">Execute</string>
     <string name="download_sample_model">Download Sample Model</string>
-    <string name="edit_warning">Do not edit the output before sharing! This will prevent it from being decodable!</string>
+    <string name="edit_warning">Do not edit the output before sharing! This will prevent it from being decoded. Be careful with platforms such as Mastodon that may modify text.</string>
     <string name="message_cache_label">Message Cache</string>
     <string name="expand">Expand</string>
     <string name="channel_cache_checkbox_label">No cached messages</string>
@@ -85,6 +85,8 @@
     <string name="one_hour">1 hour</string>
     <string name="qr_code_save_notification">The channel QR Code was saved to your photo library.</string>
     <string name="download_sample_spanish_model">Download Sample Spanish Model</string>
+    <string name="emergency">Emergency</string>
+    <string name="emergency_message">Delete ALL content now.</string>
     <string name="biometrics_login_title">"Biometric login for Cadenas"</string>
     <string name="biometrics_login_prompt">"Log in using your biometric credential"</string>
     <string name="biometrics_login_pswd_prompt">"Use account password"</string>

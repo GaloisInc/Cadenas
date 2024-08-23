@@ -4,9 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hashapps.cadenas.data.channels.ChannelRepository
 import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.ui.components.TopViewModel
 import com.hashapps.cadenas.ui.settings.models.ModelUiState
 import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_NAME
 import com.hashapps.cadenas.ui.settings.models.SAMPLE_MODEL_URL
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 class ModelAddViewModel(
     savedStateHandle: SavedStateHandle,
     private val modelRepository: ModelRepository,
-) : ViewModel() {
+) : TopViewModel(modelRepository) {
     private val processingArgs = ProcessingArgs(savedStateHandle)
 
     var modelUiState: ModelUiState by mutableStateOf(ModelUiState())

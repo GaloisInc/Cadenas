@@ -37,7 +37,10 @@ class OfflineModelRepository(
         modelDao.delete(model)
         deleteFilesForModel(model.name)
     }
-
+    override suspend fun deleteAllModels() {
+        modelDao.deleteAll()
+        deleteAllModelFiles()
+    }
     override fun getModelStream(name: String): Flow<Model> = modelDao.getModel(name)
     override fun getModelStreamWithHash(hash: String): Flow<Model?> =
         modelDao.getModelWithHash(hash)
@@ -127,5 +130,14 @@ class OfflineModelRepository(
             .build()
 
         workManager.enqueue(modelDeleteWOrkRequest)
+    }
+
+    private fun deleteAllModelFiles() {
+        val toDeleteDir = modelsDir
+        if (toDeleteDir.exists() && toDeleteDir.isDirectory) {
+            toDeleteDir.listFiles()?.forEach { file ->
+                deleteFilesForModel(file.name)
+            }
+        }
     }
 }

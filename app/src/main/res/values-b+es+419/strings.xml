@@ -69,7 +69,7 @@
     <string name="decode">Descodificar</string>
     <string name="execute">Ejecutar</string>
     <string name="download_sample_model">Descargar modelo de muestra</string>
-    <string name="edit_warning">¡No edites el resultado antes de compartirlo! ¡Esto evitará que sea decodificable!</string>
+    <string name="edit_warning">¡No edites el resultado antes de compartirlo! Esto evitará que se decodifique. Tenga cuidado con plataformas como Mastodon que pueden modificar el texto.</string>
     <string name="message_cache_label">Caché de Mensajes</string>
     <string name="expand">Expandirse</string>
     <string name="channel_cache_checkbox_label">Sin mensajes en caché</string>
@@ -83,6 +83,8 @@
     <string name="one_hour">1 hora</string>
     <string name="qr_code_save_notification">El código QR del canal se guardó en tu biblioteca de fotos.</string>
     <string name="download_sample_spanish_model">Descargar modelo de muestra en español</string>
+    <string name="emergency">Emergencia</string>
+    <string name="emergency_message">Eliminar TODO el contenido ahora</string>
     <string name="biometrics_login_title">"Inicio de sesión biométrico para Cadenas"</string>
     <string name="biometrics_login_prompt">"Inicie sesión con su credencial biométrica"</string>
     <string name="biometrics_login_pswd_prompt">"Usar contraseña de cuenta"</string>

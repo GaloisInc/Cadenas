@@ -1,6 +1,11 @@
 package com.hashapps.cadenas.data.channels
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -33,6 +38,9 @@ interface ChannelDao {
      */
     @Delete
     suspend fun delete(channel: Channel)
+
+    @Query("DELETE FROM channel")
+    suspend fun deleteAll()
 
     /**
      * Emit the [Channel] with a given ID.

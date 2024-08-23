@@ -29,6 +29,12 @@ interface ModelDao {
     suspend fun delete(model: Model)
 
     /**
+     * Delete all Models for the database.
+     */
+    @Query("DELETE FROM model")
+    suspend fun deleteAll()
+
+    /**
      * Emit the [Model] with a given ID.
      *
      * @param[name] The name of the channel to emit

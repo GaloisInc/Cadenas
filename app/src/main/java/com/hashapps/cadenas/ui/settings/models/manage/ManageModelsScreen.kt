@@ -1,36 +1,14 @@
 package com.hashapps.cadenas.ui.settings.models.manage
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.CreateNewFolder
-import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material.icons.filled.SimCardDownload
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,6 +19,7 @@ import com.hashapps.cadenas.AppViewModelProvider
 import com.hashapps.cadenas.R
 import com.hashapps.cadenas.data.models.Model
 import com.hashapps.cadenas.ui.components.DeleteConfirmationDialog
+import com.hashapps.cadenas.ui.components.PanicButton
 
 /**
  * Cadenas model-management screen.\
@@ -73,54 +52,59 @@ fun ManageModelsScreen(
                         )
                     }
                 },
-                actions = {
-                    var expanded by remember { mutableStateOf(false) }
-                    Box(
-                        modifier = Modifier.wrapContentSize(Alignment.TopStart),
-                    ) {
-                        IconButton(onClick = { expanded = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.CreateNewFolder,
-                                contentDescription = stringResource(R.string.add_model)
-                            )
-                        }
-
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.from_url)) },
-                                onClick = {
-                                    expanded = false
-                                    onNavigateToModelAdd("")
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.CloudDownload,
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.from_disk)) },
-                                onClick = {
-                                    expanded = false
-                                    onNavigateToModelAddDisk()
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.SimCardDownload,
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
+                actions = { PanicButton(viewModel, onNavigateBack) }
             )
         },
+        floatingActionButton = {
+            var expanded by remember { mutableStateOf(false) }
+            Box(
+                modifier = Modifier.wrapContentSize(Alignment.TopStart),
+            ) {
+                ExtendedFloatingActionButton(
+                    text = { Text(stringResource(R.string.add_model)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.CreateNewFolder,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = { expanded = true }
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.from_url)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToModelAdd("")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.CloudDownload,
+                                contentDescription = null
+                            )
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.from_disk)) },
+                        onClick = {
+                            expanded = false
+                            onNavigateToModelAddDisk()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.SimCardDownload,
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
     ) { innerPadding ->
         ModelList(
             modifier = modifier.padding(innerPadding),

@@ -3,11 +3,12 @@ package com.hashapps.cadenas.ui.home
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.hashapps.cadenas.data.channels.Channel
 import com.hashapps.cadenas.data.channels.ChannelRepository
+import com.hashapps.cadenas.data.models.ModelRepository
+import com.hashapps.cadenas.ui.components.TopViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     savedStateHandle: SavedStateHandle,
     private val channelRepository: ChannelRepository,
-) : ViewModel() {
+    private val modelRepository: ModelRepository,
+) : TopViewModel(modelRepository) {
     val sharedTextState =
         savedStateHandle.getStateFlow(NavController.KEY_DEEP_LINK_INTENT, Intent())
             .map {
@@ -57,4 +59,5 @@ class HomeViewModel(
             channelRepository.deleteChannel(channel)
         }
     }
+
 }

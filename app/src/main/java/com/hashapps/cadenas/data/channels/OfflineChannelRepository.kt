@@ -36,6 +36,7 @@ class OfflineChannelRepository(
     override suspend fun insertChannel(channel: Channel): Long = channelDao.insert(channel)
     override suspend fun updateChannel(channel: Channel): Unit = channelDao.update(channel)
     override suspend fun deleteChannel(channel: Channel): Unit = channelDao.delete(channel)
+    override suspend fun deleteAllChannels(): Unit = channelDao.deleteAll()
 
     override fun getChannelStream(id: Long): Flow<Channel> = channelDao.getChannel(id)
     override fun getAllChannelsStream(): Flow<List<Channel>> = channelDao.getAllChannels()
