@@ -20,5 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontwarn javax.annotation.Nullable
+-dontwarn java.lang.invoke.StringConcatFactory
 -keep class com.facebook.jni.** { *; }
 -keep class org.pytorch.** { *; }
+-keep class com.galois.cadenas.** { *; }
