@@ -86,8 +86,8 @@ kotlin {
             dependsOn(commonMain)
             dependsOn(androidMain)
             dependencies {
-                implementation("androidx.test:core:1.5.0")
-                implementation("androidx.test:rules:1.5.0")
+                implementation("androidx.test:core:1.6.1")
+                implementation("androidx.test:rules:1.6.1")
             }
         }
     }

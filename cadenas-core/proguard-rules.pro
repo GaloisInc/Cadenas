@@ -1,2 +1,4 @@
+-dontwarn java.lang.invoke.StringConcatFactory
 -keep class org.pytorch.** { *; }
 -keep class com.facebook.jni.** { *; }
+-keep class com.galois.cadenas.** { *; }
